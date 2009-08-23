@@ -1,0 +1,10 @@
+def build(bld):
+    prg = bld.new_task_gen(
+            features='cc cshlib',
+            target='valadate-0.0',
+            gir='valadate-0.0',
+            vnum=bld.env['VERSION'],
+            uselib='GLIB',
+            ccflags=['-ggdb'])
+    prg.find_sources_in_dirs('.')
+# vim: set ft=python:
