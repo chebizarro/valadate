@@ -1,6 +1,7 @@
 using GLib;
 
 namespace Valadate {
-	interface Fixture {
+	public interface Fixture {
+		public virtual int dummy() { return 0; }
 	}
 }
