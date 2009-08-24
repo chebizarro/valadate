@@ -1,6 +1,7 @@
 NAME = "valadate"
 APPNAME = 'valadate'
 VERSION = '0.1'
+API_VERSION = '0.0'
 
 srcdir = '.'
 blddir = 'build'
@@ -22,6 +23,6 @@ def configure(conf):
             args='--cflags --libs')
 
 def build(bld):
-    bld.add_subdirs('lib')
+    bld.add_subdirs('lib test')
 
-# vim: set ft=python:
+# vim: set ft=python sw=4 sts=4 et:

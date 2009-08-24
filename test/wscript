@@ -1,0 +1,11 @@
+def build(bld):
+    lib = bld.new_task_gen(
+            features='cc cshlib',
+            target='test-0',
+            gir='test-0',
+            uselib='GLIB',
+            uselib_local='valadate-0.0',
+            ccflags=['-ggdb'],
+            install_path=None)
+    lib.find_sources_in_dirs('.')
+# vim: set ft=python sw=4 sts=4 et:
