@@ -23,6 +23,6 @@ def configure(conf):
             args='--cflags --libs')
 
 def build(bld):
-    bld.add_subdirs('lib test')
+    bld.add_subdirs('lib test runner')
 
 # vim: set ft=python sw=4 sts=4 et:

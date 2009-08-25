@@ -1,0 +1,12 @@
+def build(bld):
+    prg = bld.new_task_gen(
+            features='cc cprogram',
+            target='valadate',
+            vapi_dirs='../vapi',
+            packages='gobject-introspection-1.0',
+            uselib='GLIB GIR',
+            uselib_local='valadate-0.0',
+            ccflags=['-ggdb'])
+    prg.find_sources_in_dirs('.')
+
+# vim: set ft=python:
