@@ -78,9 +78,26 @@ void process_file(owned string file)
 	// - r.load_typelib with the thing we've got
 	r.load_typelib(tl, 0);
 	typelibs.prepend((owned)tl);
-	// XXX: This is not per-typelib, since it's done on the repository
-	// anyway...
-	// - search it for fixtures
+}
+
+void gather_tests() throws RepositoryError
+{
+	var r = Repository.get_default();
+	var namespaces = r.get_loaded_namespaces();
+	// - search GIRepository for fixtures
+	foreach(string ns in namespaces) {
+		var n_infos = r.get_n_infos(ns);
+		for(int i = 0; i < n_infos; i++) {
+			var info = r.get_info(ns, i);
+			stdout.printf("Found info %s of type %i\n",
+					info.get_name(), info.get_type());
+			if(info.get_type() != InfoType.OBJECT)
+				break;
+			stdout.printf("Info %s is an object...\n",
+					info.get_name());
+			// Check whether the class is a fixture...
+		}
+	}
 	// - search fixtures for test methods
 	// - create the cases
 	// - run the cases
@@ -102,6 +119,8 @@ int main(string[] args)
 		foreach(string file in files) {
 			process_file(file);
 		}
+
+		gather_tests();
 	} catch(Error e) {
 		stderr.printf("%s\n", e.message);
 		return 1;
