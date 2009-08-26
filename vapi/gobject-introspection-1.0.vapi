@@ -26,7 +26,11 @@ namespace Introspection {
 		public bool is_registered (string namespace_, string version);
 		public BaseInfo? find_by_name (string namespace_, string name);
 		public Typelib require (string namespace_, string? version = null, RepositoryLoadFlags flags = 0) throws RepositoryError;
+		[NoArrayLength]
+		[CCode(array_length = false, array_null_terminated = true)]
 		public string[] get_dependencies (string namespace_);
+		[NoArrayLength]
+		[CCode(array_length = false, array_null_terminated = true)]
 		public string[] get_loaded_namespaces ();
 		public BaseInfo? find_by_gtype (Type type);
 		public int get_n_infos (string namespace_);
