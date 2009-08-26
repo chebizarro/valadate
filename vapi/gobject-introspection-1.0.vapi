@@ -43,9 +43,9 @@ namespace Introspection {
 	[Compact]
 	[CCode (cname = "GTypelib", cprefix = "g_typelib_", free_function = "g_typelib_free")]
 	public class Typelib {
-		public static Typelib new_from_memory (uchar[] memory);
+		public static Typelib new_from_memory (owned uchar[] memory);
 		public static Typelib new_from_const_memory (uchar[] memory);
-		public static Typelib new_from_mapped_file (MappedFile mfile);
+		public static Typelib new_from_mapped_file (owned MappedFile mfile);
 
 		public bool symbol (string name, out void* symbol);
 		public unowned string get_namespace ();
