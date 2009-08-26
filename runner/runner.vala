@@ -80,20 +80,38 @@ void process_file(owned string file)
 	typelibs.prepend((owned)tl);
 }
 
-void gather_tests() throws RepositoryError
+bool is_fixture(ObjectInfo oi)
+{
+	var n_ifs = oi.get_n_interfaces();
+	for(int i = 0; i < n_ifs; ++i) {
+		InterfaceInfo ii = oi.get_interface(i);
+		stdout.printf("Found interface %s...\n", ii.get_name());
+		if(ii.get_g_type() == typeof(Valadate.Fixture)) {
+			stdout.printf("                  ... is Fixture!\n");
+			return true;
+		}
+	}
+	return false;
+}
+
+void gather_tests()
 {
 	var r = Repository.get_default();
 	var namespaces = r.get_loaded_namespaces();
 	// - search GIRepository for fixtures
 	foreach(string ns in namespaces) {
 		var n_infos = r.get_n_infos(ns);
-		for(int i = 0; i < n_infos; i++) {
+		for(int i = 0; i < n_infos; ++i) {
 			var info = r.get_info(ns, i);
 			stdout.printf("Found info %s of type %i\n",
 					info.get_name(), info.get_type());
 			if(info.get_type() != InfoType.OBJECT)
 				break;
 			stdout.printf("Info %s is an object...\n",
+					info.get_name());
+			if(!is_fixture((ObjectInfo)info))
+				break;
+			stdout.printf("Info %s is a fixture...\n",
 					info.get_name());
 			// Check whether the class is a fixture...
 		}

@@ -2,7 +2,7 @@ def build(bld):
     lib = bld.new_task_gen(
             features='cc cshlib',
             target='valadate-0.0',
-            gir='valadate-0.0',
+            gir='Valadate-0.0',
             uselib='GLIB',
             ccflags=['-ggdb'],
             vnum='0.0')
