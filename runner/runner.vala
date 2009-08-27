@@ -85,8 +85,10 @@ bool is_fixture(ObjectInfo oi)
 	var n_ifs = oi.get_n_interfaces();
 	for(int i = 0; i < n_ifs; ++i) {
 		InterfaceInfo ii = oi.get_interface(i);
-		stdout.printf("Found interface %s...\n", ii.get_name());
-		if(ii.get_g_type() == typeof(Valadate.Fixture)) {
+		stdout.printf("Found interface %s.%s...\n",
+				ii.get_namespace(), ii.get_name());
+		if(ii.get_namespace() == "Valadate" &&
+				ii.get_name() == "Fixture") {
 			stdout.printf("                  ... is Fixture!\n");
 			return true;
 		}
