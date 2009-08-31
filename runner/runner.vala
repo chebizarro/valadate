@@ -11,11 +11,25 @@ errordomain GirError {
 [CCode(array_length=false, array_null_terminated=true)]
 string[] files = null;
 
+[NoArrayLength]
+[CCode(array_length=false, array_null_terminated=true)]
+string[] libs = null;
+int nextlib = 0;
+
+[NoArrayLength]
+[CCode(array_length=false, array_null_terminated=true)]
+string[] typelib_path = null;
+
 SList<Typelib> typelibs = null;
 
 const OptionEntry[] options = {
 // long-name, short-name, flags, argtype, ref var, description, metavar
-	{"", 0, 0, OptionArg.FILENAME_ARRAY, ref files, "GIR files of test modules to run", "GIR-OR-TYPELIB..."},
+	{"library", 'l', 0, OptionArg.FILENAME_ARRAY, ref libs,
+		"Shared library corresponding to the GIR files", "LIB"},
+	{"typelib-dir", 'd', 0, OptionArg.FILENAME_ARRAY, ref typelib_path,
+		"Additional search directory for typelib files", "DIR"},
+	{"", 0, 0, OptionArg.FILENAME_ARRAY, ref files,
+		"GIR files of test modules to run", "GIR-OR-TYPELIB..."},
 	{null, 0, 0, 0, null, null, null}
 };
 
@@ -42,11 +56,18 @@ string compile_typelib(string gir_file) throws SpawnError, GirError
 	}
 
 	// Execute g-ir-compiler to (re)generate the typelib
+	var args = new string[]{"g-ir-compiler"};
+	if(libs != null & libs[nextlib] != null) {
+		args += "-l";
+		args += libs[nextlib];
+	}
+	args += "-o";
+	args += typelib_file;
+	args += gir_file;
 	int status;
 	Process.spawn_sync(
 			null, // working directory - inherit
-			new string[] { "g-ir-compiler", "-o", typelib_file,
-					gir_file }, // arguments
+			args, // arguments
 			null, // environment - inherit
 			SpawnFlags.SEARCH_PATH, // flags - command in path
 			null, // child setup func
@@ -137,7 +158,11 @@ int main(string[] args)
 			return 1;
 		}
 
-		foreach(string file in files) {
+		for(int i = typelib_path.length - 1; i >= 0; --i) {
+			Repository.prepend_search_path(typelib_path[i]);
+		}
+
+		foreach(weak string file in files) {
 			process_file(file);
 		}
 
