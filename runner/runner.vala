@@ -5,6 +5,7 @@ errordomain GirError {
 	NOT_A_GIR,
 	CANNOT_READ,
 	COMPILATION_FAILED,
+	TYPE_NOT_LOADED,
 }
 
 [NoArrayLength]
@@ -121,9 +122,13 @@ bool is_fixture(ObjectInfo oi)
 	return false;
 }
 
-void gather_test_cases(ObjectInfo type_info)
+void gather_test_cases(TestSuite ns_suite, ObjectInfo type_info)
+	throws GirError
 {
 	var n_methods = type_info.get_n_methods();
+	var suite = new TestSuite(type_info.get_name());
+	ns_suite.add_suite(suite);
+
 	for(int i = 0; i < n_methods; ++i) {
 		var method = type_info.get_method(i);
 		if(verbose)
@@ -134,17 +139,21 @@ void gather_test_cases(ObjectInfo type_info)
 				method.get_name().has_prefix("test_")) {
 			if(verbose)
 				stdout.printf("        is test\n");
-			// FIXME: Register a test case here!
+			suite.add(new TestInfo(type_info,
+						method).make_case());
 		}
 	}
 }
 
 void gather_tests()
+	throws GirError
 {
 	var r = Repository.get_default();
 	var namespaces = r.get_loaded_namespaces();
+	var root = TestSuite.get_root();
 	// - search GIRepository for fixtures
 	foreach(string ns in namespaces) {
+		TestSuite ns_suite = null;
 		var n_infos = r.get_n_infos(ns);
 		for(int i = 0; i < n_infos; ++i) {
 			var info = r.get_info(ns, i);
@@ -155,8 +164,12 @@ void gather_tests()
 				break;
 			if(!is_fixture((ObjectInfo)info))
 				break;
-			gather_test_cases((ObjectInfo)info);
+			if(ns_suite == null)
+				ns_suite = new TestSuite(ns);
+			gather_test_cases(ns_suite, (ObjectInfo)info);
 		}
+		if(ns_suite != null)
+			root.add_suite(ns_suite);
 	}
 	// - search fixtures for test methods
 	// - create the cases
