@@ -121,6 +121,24 @@ bool is_fixture(ObjectInfo oi)
 	return false;
 }
 
+void gather_test_cases(ObjectInfo type_info)
+{
+	var n_methods = type_info.get_n_methods();
+	for(int i = 0; i < n_methods; ++i) {
+		var method = type_info.get_method(i);
+		if(verbose)
+			stdout.printf("    Method %s: flags=%i\n",
+					method.get_name(),
+					method.get_flags());
+		if((method.get_flags() & FunctionInfoFlags.IS_METHOD) != 0 &&
+				method.get_name().has_prefix("test_")) {
+			if(verbose)
+				stdout.printf("        is test\n");
+			// FIXME: Register a test case here!
+		}
+	}
+}
+
 void gather_tests()
 {
 	var r = Repository.get_default();
@@ -137,6 +155,7 @@ void gather_tests()
 				break;
 			if(!is_fixture((ObjectInfo)info))
 				break;
+			gather_test_cases((ObjectInfo)info);
 		}
 	}
 	// - search fixtures for test methods
