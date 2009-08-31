@@ -115,7 +115,8 @@ void gather_tests()
 				break;
 			stdout.printf("Info %s is a fixture...\n",
 					info.get_name());
-			// Check whether the class is a fixture...
+			Type t = ((ObjectInfo)info).get_g_type();
+			stdout.printf("GType %i (%s)\n", t, t.name());
 		}
 	}
 	// - search fixtures for test methods
