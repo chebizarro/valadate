@@ -1,4 +1,8 @@
 #!/bin/sh
 dir=`dirname $0`/build/default
 export LD_LIBRARY_PATH=$dir/lib:$dir/test:$LD_LIBRARY_PATH
-"$dir/runner/valadate" "$@" -L test -g "$dir/test/Test-0.gir"
+if [ "$1" = "--gdb" ]; then
+	shift
+	prefix="gdb --args" 
+fi
+$prefix "$dir/runner/valadate" "$@" -L test -g "$dir/test/Test-0.gir"
