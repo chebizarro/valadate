@@ -23,18 +23,19 @@ string[] typelib_path = null;
 
 bool verbose = false;
 
-SList<Typelib> typelibs = null;
+SList<Typelib> typelibs = null; // If we dropped them, gobject-introspection would unload them.
+SList<TestInfo> tests = null; // Stash away the TestInfo objects, because TestCase does not hold them
 
 const OptionEntry[] options = {
 // long-name, short-name, flags, argtype, ref var, description, metavar
-	{"library", 'l', 0, OptionArg.FILENAME_ARRAY, ref libs,
-		"Shared library corresponding to the GIR files", "LIB"},
+	{"library", 'L', 0, OptionArg.FILENAME_ARRAY, ref libs,
+		"Shared library corresponding to the GIR file", "LIB"},
 	{"typelib-dir", 'd', 0, OptionArg.FILENAME_ARRAY, ref typelib_path,
 		"Additional search directory for typelib files", "DIR"},
-	{"verbose", 'v', 0, OptionArg.NONE, ref verbose,
+	{"verbose-search", 'V', 0, OptionArg.NONE, ref verbose,
 		"Report classes and methods found", ""},
-	{"", 0, 0, OptionArg.FILENAME_ARRAY, ref files,
-		"GIR files of test modules to run", "GIR-OR-TYPELIB..."},
+	{"gir", 'g', 0, OptionArg.FILENAME_ARRAY, ref files,
+		"GIR or typelib file of test modules to run", "GIR"},
 	{null, 0, 0, 0, null, null, null}
 };
 
@@ -139,8 +140,9 @@ void gather_test_cases(TestSuite ns_suite, ObjectInfo type_info)
 				method.get_name().has_prefix("test_")) {
 			if(verbose)
 				stdout.printf("        is test\n");
-			suite.add(new TestInfo(type_info,
-						method).make_case());
+			TestInfo test = new TestInfo(type_info, method);
+			suite.add(test.make_case());
+			tests.prepend((owned)test);
 		}
 	}
 }
@@ -182,6 +184,20 @@ int main(string[] args)
 	try {
 		op.add_main_entries(options, null);
 		op.set_help_enabled(true);
+		op.set_description(
+			"Test Options:\n" +
+			"  -l                             List test cases available in a test executable\n" +
+			"  -seed=RANDOMSEED               Provide a random seed to reproduce test\n" +
+			"                                 runs using random numbers\n" +
+			"  --verbose                      Run tests verbosely\n" +
+			"  -q, --quiet                    Run tests quietly\n" +
+			"  -p TESTPATH                    execute all tests matching TESTPATH\n" +
+			"  -m {perf|slow|thorough|quick}  Execute tests according modes\n" +
+			"  --debug-log                    debug test logging output\n" +
+			"  -k, --keep-going               gtester-specific argument\n" +
+			"  --GTestLogFD=N                 gtester-specific argument\n" +
+			"  --GTestSkipCount=N             gtester-specific argument\n");
+		op.set_ignore_unknown_options(true);
 		op.parse(ref args);
 
 		if(files.length == 0) {
@@ -198,6 +214,9 @@ int main(string[] args)
 		}
 
 		gather_tests();
+
+		Test.init(ref args);
+		Test.run();
 	} catch(Error e) {
 		stderr.printf("%s\n", e.message);
 		return 1;
