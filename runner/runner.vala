@@ -20,6 +20,8 @@ int nextlib = 0;
 [CCode(array_length=false, array_null_terminated=true)]
 string[] typelib_path = null;
 
+bool verbose = false;
+
 SList<Typelib> typelibs = null;
 
 const OptionEntry[] options = {
@@ -28,6 +30,8 @@ const OptionEntry[] options = {
 		"Shared library corresponding to the GIR files", "LIB"},
 	{"typelib-dir", 'd', 0, OptionArg.FILENAME_ARRAY, ref typelib_path,
 		"Additional search directory for typelib files", "DIR"},
+	{"verbose", 'v', 0, OptionArg.NONE, ref verbose,
+		"Report classes and methods found", ""},
 	{"", 0, 0, OptionArg.FILENAME_ARRAY, ref files,
 		"GIR files of test modules to run", "GIR-OR-TYPELIB..."},
 	{null, 0, 0, 0, null, null, null}
@@ -106,11 +110,11 @@ bool is_fixture(ObjectInfo oi)
 	var n_ifs = oi.get_n_interfaces();
 	for(int i = 0; i < n_ifs; ++i) {
 		InterfaceInfo ii = oi.get_interface(i);
-		stdout.printf("Found interface %s.%s...\n",
-				ii.get_namespace(), ii.get_name());
+		if(verbose)
+			stdout.printf("Found interface %s.%s...\n",
+					ii.get_namespace(), ii.get_name());
 		if(ii.get_namespace() == "Valadate" &&
 				ii.get_name() == "Fixture") {
-			stdout.printf("                  ... is Fixture!\n");
 			return true;
 		}
 	}
@@ -126,18 +130,13 @@ void gather_tests()
 		var n_infos = r.get_n_infos(ns);
 		for(int i = 0; i < n_infos; ++i) {
 			var info = r.get_info(ns, i);
-			stdout.printf("Found info %s of type %i\n",
-					info.get_name(), info.get_type());
+			if(verbose)
+				stdout.printf("Found info %s of type %i\n",
+						info.get_name(), info.get_type());
 			if(info.get_type() != InfoType.OBJECT)
 				break;
-			stdout.printf("Info %s is an object...\n",
-					info.get_name());
 			if(!is_fixture((ObjectInfo)info))
 				break;
-			stdout.printf("Info %s is a fixture...\n",
-					info.get_name());
-			Type t = ((ObjectInfo)info).get_g_type();
-			stdout.printf("GType %i (%s)\n", t, t.name());
 		}
 	}
 	// - search fixtures for test methods
