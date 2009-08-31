@@ -3,6 +3,7 @@ def build(bld):
             features='cc cprogram',
             target='valadate',
             vapi_dirs='../vapi',
+            includes='../vapi',
             packages='gobject-introspection-1.0 posix',
             uselib='GLIB GIR',
             uselib_local='valadate-0.0',

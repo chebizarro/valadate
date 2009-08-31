@@ -1,6 +1,6 @@
 using GLib;
 
-[CCode (cprefix = "GI", lower_case_cprefix = "g_i", cheader_filename = "girepository.h")]
+[CCode (cprefix = "GI", lower_case_cprefix = "g_i", cheader_filename = "girepository-fixes.h")]
 namespace Introspection {
 
 	[CCode (cprefix = "G_IREPOSITORY_ERROR_")]
@@ -113,7 +113,7 @@ namespace Introspection {
 		THROWS
 	}
 
-	[CCode (cprefix = "G_INVOKE_ERROR_")]
+	[CCode (cname = "GInvokeError", cprefix = "G_INVOKE_ERROR_")]
 	errordomain InvokeError {
 		FAILED,
 		SYMBOL_NOT_FOUND,
@@ -133,25 +133,44 @@ namespace Introspection {
 
 	[CCode (cname="GArgument", cprefix = "v_")]
 	public struct Argument {
-		bool @boolean;
-		int8 @int8;
-		uint8 @uint8;
-		int16 @int16;
-		uint16 @uint16;
-		int32 @int32;
-		uint32 @uint32;
-		int64 @int64;
-		uint64 @uint64;
-		float @float;
-		double @double;
-		int @int;
-		uint @uint;
-		long @long;
-		ulong @ulong;
-		ssize_t @ssize;
-		size_t @size;
-		weak string @string;
-		void* @pointer;
+		[CCode(cname = "v_boolean")]
+		public bool @boolean;
+		[CCode(cname = "v_int8")]
+		public int8 @int8;
+		[CCode(cname = "v_uint8")]
+		public uint8 @uint8;
+		[CCode(cname = "v_int16")]
+		public int16 @int16;
+		[CCode(cname = "v_uint16")]
+		public uint16 @uint16;
+		[CCode(cname = "v_int32")]
+		public int32 @int32;
+		[CCode(cname = "v_uint32")]
+		public uint32 @uint32;
+		[CCode(cname = "v_int64")]
+		public int64 @int64;
+		[CCode(cname = "v_uint64")]
+		public uint64 @uint64;
+		[CCode(cname = "v_float")]
+		public float @float;
+		[CCode(cname = "v_double")]
+		public double @double;
+		[CCode(cname = "v_int")]
+		public int @int;
+		[CCode(cname = "v_uint")]
+		public uint @uint;
+		[CCode(cname = "v_long")]
+		public long @long;
+		[CCode(cname = "v_ulong")]
+		public ulong @ulong;
+		[CCode(cname = "v_ssize")]
+		public ssize_t @ssize;
+		[CCode(cname = "v_size")]
+		public size_t @size;
+		[CCode(cname = "v_string")]
+		public weak string @string;
+		[CCode(cname = "v_pointer")]
+		public void* @pointer;
 	}
 
 	[CCode (cprefix = "GI_TRANSFER_")]
