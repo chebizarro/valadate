@@ -1,0 +1,4 @@
+#!/bin/sh
+dir=`dirname $0`/build/default
+export LD_LIBRARY_PATH=$dir/lib:$dir/test:$LD_LIBRARY_PATH
+$dir/runner/valadate "$@" -l test $dir/test/Test-0.gir
