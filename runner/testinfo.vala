@@ -2,7 +2,7 @@ using GLib;
 using Introspection;
 
 struct FixturePointer {
-	public Object fixture;
+	public Valadate.Fixture fixture;
 }
 
 class TestInfo {
@@ -12,11 +12,14 @@ class TestInfo {
 
 	private void set_up(void * data) {
 		FixturePointer *fp = data;
-		fp->fixture = Object.new(fx_type, null); // FIMXE: The params will have to be here, but binding for g_object_newv is needed first...
+		// FIMXE: The params will have to be here, but binding for g_object_newv is needed first...
+		fp->fixture = Object.new(fx_type, null) as Valadate.Fixture;
+		fp->fixture.set_up();
 	}
 
 	private void tear_down(void * data) {
 		FixturePointer *fp = data;
+		fp->fixture.tear_down();
 		fp->fixture = null; // Should delete the object.
 	}
 
