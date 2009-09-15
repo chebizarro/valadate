@@ -17,6 +17,11 @@ def configure(conf):
             atleast_version='2.20.0',
             args='--cflags --libs')
     conf.check_cfg(
+            package='gee-1.0',
+            uselib_store='GEE',
+            atleast_version='0.3.0',
+            args='--cflags --libs')
+    conf.check_cfg(
             package='gobject-introspection-1.0',
             uselib_store='GIR',
             atleast_version='0.6.3',

@@ -131,7 +131,7 @@ namespace Introspection {
 		public bool invoke(Argument[] in_args, Argument[] out_args, out Argument return_value) throws InvokeError;
 	}
 
-	[CCode (cname="GArgument", cprefix = "v_")]
+	[CCode (cname="GArgument")]
 	public struct Argument {
 		[CCode(cname = "v_boolean")]
 		public bool @boolean;
@@ -171,6 +171,13 @@ namespace Introspection {
 		public weak string @string;
 		[CCode(cname = "v_pointer")]
 		public void* @pointer;
+
+		/* XXX: Workaround. There should be some way of doing this
+		 * (perhaps with ownership transfer request of a cast
+		 * expression) or gobject-introspection should get some
+		 * support for it (well, it should really have a GValue
+		 * variant of invoke). */
+		public ValueArray steal_value_array();
 	}
 
 	[CCode (cprefix = "GI_TRANSFER_")]

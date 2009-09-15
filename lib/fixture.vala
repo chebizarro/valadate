@@ -33,6 +33,13 @@ namespace Valadate {
 	 *     }
 	 * }
 	 * }}}
+	 *
+	 * If you define some public constructible properties and for each
+	 * property define a static method named
+	 * "generate_"//property-name// returning a ValueArray, each test
+	 * will be called once for each value in the returned array. If you
+	 * define multiple property-generator pairs, the tests will be run
+	 * for each combination.
 	 */
 	public interface Fixture : Object {
 		/**

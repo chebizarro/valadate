@@ -24,7 +24,7 @@ string[] typelib_path = null;
 bool verbose = false;
 
 SList<Typelib> typelibs = null; // If we dropped them, gobject-introspection would unload them.
-SList<TestInfo> tests = null; // Stash away the TestInfo objects, because TestCase does not hold them
+SList<SuiteInfo> suites = null; // Stash away the SuiteInfo objects, because the test system does not hold them
 
 const OptionEntry[] options = {
 // long-name, short-name, flags, argtype, ref var, description, metavar
@@ -124,31 +124,23 @@ bool is_fixture(ObjectInfo oi)
 }
 
 void gather_test_cases(TestSuite ns_suite, ObjectInfo type_info)
-	throws GirError
+	throws GirError, InvokeError
 {
-	var n_methods = type_info.get_n_methods();
+	if(verbose)
+		stdout.printf("    searching for tests in %s\n",
+				type_info.get_name());
 	var suite = new TestSuite(type_info.get_name());
 	ns_suite.add_suite(suite);
-
-	for(int i = 0; i < n_methods; ++i) {
-		var method = type_info.get_method(i);
-		if(verbose)
-			stdout.printf("    Method %s: flags=%i\n",
-					method.get_name(),
-					method.get_flags());
-		if((method.get_flags() & FunctionInfoFlags.IS_METHOD) != 0 &&
-				method.get_name().has_prefix("test_")) {
-			if(verbose)
-				stdout.printf("        is test\n");
-			TestInfo test = new TestInfo(type_info, method);
-			suite.add(test.make_case());
-			tests.prepend((owned)test);
-		}
-	}
+	var sinfo = new SuiteInfo(type_info);
+	sinfo.create_tests(suite);
+	suites.prepend((owned)sinfo);
+	if(verbose)
+		stdout.printf("    search complete in %s\n",
+				type_info.get_name());
 }
 
 void gather_tests()
-	throws GirError
+	throws GirError, InvokeError
 {
 	var r = Repository.get_default();
 	var namespaces = r.get_loaded_namespaces();
