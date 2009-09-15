@@ -163,9 +163,9 @@ void gather_tests()
 				stdout.printf("Found info %s of type %i\n",
 						info.get_name(), info.get_type());
 			if(info.get_type() != InfoType.OBJECT)
-				break;
+				continue;
 			if(!is_fixture((ObjectInfo)info))
-				break;
+				continue;
 			if(ns_suite == null)
 				ns_suite = new TestSuite(ns);
 			gather_test_cases(ns_suite, (ObjectInfo)info);
