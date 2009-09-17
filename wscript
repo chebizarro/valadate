@@ -13,18 +13,18 @@ def configure(conf):
     conf.check_tool('gcc vala')
     conf.check_cfg(
             package='glib-2.0',
-            uselib_store='GLIB',
+            uselib_store='glib-2.0',
             atleast_version='2.20.0',
             args='--cflags --libs')
     conf.check_cfg(
             package='gee-1.0',
-            uselib_store='GEE',
+            uselib_store='gee-1.0',
             atleast_version='0.3.0',
             args='--cflags --libs')
     conf.check_cfg(
             package='gobject-introspection-1.0',
-            uselib_store='GIR',
-            atleast_version='0.6.3',
+            uselib_store='gobject-introspection-1.0',
+            atleast_version='0.6.5',
             args='--cflags --libs')
 
 def build(bld):
