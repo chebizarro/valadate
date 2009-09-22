@@ -4,7 +4,7 @@ using Introspection;
 namespace ValadateRunner {
     class GirReader: Object, Reader {
         private SList<Typelib> typelibs = null; // If we dropped them, gobject-introspection would unload them.
-        private SList<SuiteInfo> suites = null; // Stash away the SuiteInfo objects, because the test system does not hold them
+        private SList<GirSuiteInfo> suites = null; // Stash away the GirSuiteInfo objects, because the test system does not hold them
 
         public GirReader() {
             for(int i = path.length - 1; i >= 0; --i) {
@@ -131,7 +131,7 @@ namespace ValadateRunner {
                         type_info.get_name());
             var suite = new TestSuite(type_info.get_name());
             ns_suite.add_suite(suite);
-            var sinfo = new SuiteInfo(type_info);
+            var sinfo = new GirSuiteInfo(type_info);
             sinfo.create_tests(suite);
             suites.prepend((owned)sinfo);
             if(verbose)

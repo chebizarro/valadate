@@ -30,12 +30,12 @@ namespace ValadateRunner {
         }
     }
 
-    class SuiteInfo {
+    class GirSuiteInfo {
         ObjectInfo fx_info;
         SList<ParamInfo>? parameters = null;
         SList<TestInfo>? tests = null; // Stash away the TestInfo objects, because TestCase does not hold them
 
-        public SuiteInfo(ObjectInfo fx_info)
+        public GirSuiteInfo(ObjectInfo fx_info)
             throws RunnerError, InvokeError
         {
             this.fx_info = fx_info;
