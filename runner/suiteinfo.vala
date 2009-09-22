@@ -35,7 +35,7 @@ class SuiteInfo {
 	SList<TestInfo>? tests = null; // Stash away the TestInfo objects, because TestCase does not hold them
 
 	public SuiteInfo(ObjectInfo fx_info)
-		throws GirError, InvokeError
+		throws RunnerError, InvokeError
 	{
 		this.fx_info = fx_info;
 

@@ -5,4 +5,4 @@ if [ "$1" = "--gdb" ]; then
 	shift
 	prefix="gdb --args" 
 fi
-$prefix "$dir/runner/valadate" "$@" -L test -g "$dir/test/Test-0.gir"
+$prefix "$dir/runner/valadate" "$@" -L test -f "$dir/test/Test-0.gir"

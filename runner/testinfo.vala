@@ -46,9 +46,9 @@ class TestInfo {
 		this.parameters = parameters;
 	}
 
-	public TestCase make_case(string name) throws GirError {
+	public TestCase make_case(string name) throws RunnerError {
 		if(fx_type == typeof(void))
-			throw new GirError.TYPE_NOT_LOADED(
+			throw new RunnerError.TYPE_NOT_LOADED(
 					"GType initialization function didn't load for %s.%s",
 					fx_info.get_namespace(),
 					fx_info.get_name());
