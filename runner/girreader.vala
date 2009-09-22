@@ -6,6 +6,12 @@ namespace ValadateRunner {
         private SList<Typelib> typelibs = null; // If we dropped them, gobject-introspection would unload them.
         private SList<SuiteInfo> suites = null; // Stash away the SuiteInfo objects, because the test system does not hold them
 
+        public GirReader() {
+            for(int i = path.length - 1; i >= 0; --i) {
+                Introspection.Repository.prepend_search_path(path[i]);
+            }
+        }
+
         public bool process_file(string file) throws Error
         {
             string tlfile;

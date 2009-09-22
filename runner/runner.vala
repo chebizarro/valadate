@@ -24,7 +24,7 @@ namespace ValadateRunner {
 
     [NoArrayLength]
     [CCode(array_length=false, array_null_terminated=true)]
-    string[] typelib_path = null;
+    string[] path = null;
 
     bool verbose = false;
 
@@ -34,8 +34,8 @@ namespace ValadateRunner {
     // long-name, short-name, flags, argtype, ref var, description, metavar
         {"library", 'L', 0, OptionArg.FILENAME_ARRAY, ref libs,
             "Shared library corresponding to the test file", "LIB"},
-        {"typelib-dir", 'd', 0, OptionArg.FILENAME_ARRAY, ref typelib_path,
-            "Additional search directory for typelib files", "DIR"},
+        {"dir", 'd', 0, OptionArg.FILENAME_ARRAY, ref path,
+            "Additional search directory for vapi and/or typelib files", "DIR"},
         {"verbose-search", 'V', 0, OptionArg.NONE, ref verbose,
             "Report classes and methods found", ""},
         {"file", 'f', 0, OptionArg.FILENAME_ARRAY, ref files,
@@ -59,14 +59,12 @@ namespace ValadateRunner {
     {
         weak SList<Reader> reader;
         for(reader = readers; reader != null; reader = reader.next) {
-        reader.data.gather_tests();
+            reader.data.gather_tests();
         }
     }
 
     int main(string[] args)
     {
-        readers.prepend(new GirReader());
-
         var op = new OptionContext("");
         try {
             op.add_main_entries(options, null);
@@ -92,9 +90,7 @@ namespace ValadateRunner {
                 return 1;
             }
 
-            for(int i = typelib_path.length - 1; i >= 0; --i) {
-                Introspection.Repository.prepend_search_path(typelib_path[i]);
-            }
+            readers.prepend(new GirReader());
 
             foreach(weak string file in files) {
                 process_file(file);
