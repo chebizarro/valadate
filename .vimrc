@@ -1,2 +1,2 @@
 set makeprg=waf
-set sw=8 sts=0
+set sw=4 sts=4 et
