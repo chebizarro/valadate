@@ -31,6 +31,11 @@ def configure(conf):
             uselib_store='gio-2.0',
             atleast_version='2.20.0',
             args='--cflags --libs')
+    conf.check_cfg(
+            package='gmodule-2.0',
+            uselib_store='gmodule-2.0',
+            atleast_version='2.20.0',
+            args='--cflags --libs')
 
 def build(bld):
     bld.add_subdirs('lib test runner')
