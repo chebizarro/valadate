@@ -56,6 +56,13 @@ namespace Test {
 	public class TestWait : Object, Fixture {
 		Changer changer = new Changer();
 
+		private void tear_down() {
+			// The timeout is added owned, so the object won't be
+			// destroyed before it's stopped. So we have to do it
+			// manually.
+			changer.stop();
+		}
+
 		public void test_wait_signal_normal() {
 			assert(wait_for_signal(500, changer, "notify::count",
 						() => changer.start()));
