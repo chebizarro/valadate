@@ -1,0 +1,101 @@
+using GLib;
+using Vala;
+
+namespace ValadateRunner {
+    class VapiReader: Object, Reader {
+        private CodeContext context;
+
+        public bool process_file(string file) throws Error {
+            return add_file(file, false);
+        }
+
+        public bool add_file(string file, bool is_pkg) throws Error {
+            if(!file.has_suffix(".vapi"))
+                return false;
+            if(verbose)
+                stdout.printf("Reading %s\n", file);
+            if(!FileUtils.test(file, FileTest.EXISTS))
+                throw new FileError.NOENT("%s does not exist.", file);
+            // Note: everything must be package, otherwise the analyzer would complain
+            context.add_source_file(new SourceFile(context, file, is_pkg)); // FIXME: Do we need realpath?
+            var deps = file.substring(0, file.length - 4) + "deps";
+            if(FileUtils.test(deps, FileTest.EXISTS)) {
+                string deps_content;
+                FileUtils.get_contents(deps, out deps_content, null);
+                foreach(string dep in deps_content.split("\n")) {
+                    dep = dep.strip();
+                    if(dep != "")
+                        add_package(dep);
+                }
+            }
+            return true;
+        }
+
+        public void gather_tests() throws Error {
+            check();
+            // parse everything
+            if(verbose)
+                stdout.printf("Parsing...\n");
+            var parser = new Parser();
+            parser.parse(context);
+            check();
+            // Resolve symbols
+            if(verbose)
+                stdout.printf("Resolving...\n");
+            var resolver = new SymbolResolver();
+            resolver.resolve(context);
+            check();
+            /*// Analyze code (XXX: do we have to?)
+            if(verbose)
+                stdout.printf("Analyzing...\n");
+            var analyzer = new SemanticAnalyzer();
+            analyzer.analyze(context);
+            check();*/
+            // Now we should have all data gathered, so run our visitor
+            if(verbose)
+                stdout.printf("Gathering tests...\n");
+            var gatherer = new VapiTestGatherer();
+            gatherer.gather(context);
+        }
+
+        public VapiReader() throws Error {
+            // Create a CodeContext for the parsing.
+            context = new CodeContext();
+            CodeContext.push(context);
+            // setup the context
+            context.ccode_only = true;
+            // only gobject profile is supported (XXX: and why the heck do
+            // I have to define the symbols myself).
+            context.profile = Profile.GOBJECT;
+            context.add_define ("GOBJECT");
+#if VALA_0_7_6_NEW_METHODS
+            context.add_define ("VALA_0_7_6_NEW_METHODS");
+#endif
+            // add default packages
+            add_package("glib-2.0");
+            add_package("gobject-2.0");
+            add_package("valadate-0.0");
+        }
+
+        ~VapiReader() {
+            CodeContext.pop();
+        }
+
+        private void add_package(string pkg) throws Error {
+            if(verbose)
+                stdout.printf("Adding package %s\n", pkg);
+            if(context.has_package(pkg))
+                return;
+            var pkg_path = context.get_package_path(pkg, path);
+            if(pkg_path == null)
+                throw new RunnerError.NOT_FOUND("Dependent package %s was not found. Need to add search dir?", pkg);
+            context.add_package(pkg);
+            add_file(pkg_path, true);
+        }
+
+        private void check() throws Error {
+            if(context.report.get_errors() > 0)
+                throw new RunnerError.VAPI_ERROR("Found %i errors parsing specified vapi files.", context.report.get_errors());
+        }
+    }
+}

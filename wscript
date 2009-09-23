@@ -17,11 +17,6 @@ def configure(conf):
             atleast_version='2.20.0',
             args='--cflags --libs')
     conf.check_cfg(
-            package='gee-1.0',
-            uselib_store='gee-1.0',
-            atleast_version='0.3.0',
-            args='--cflags --libs')
-    conf.check_cfg(
             package='gobject-introspection-1.0',
             uselib_store='gobject-introspection-1.0',
             atleast_version='0.6.5',
@@ -35,6 +30,11 @@ def configure(conf):
             package='gmodule-2.0',
             uselib_store='gmodule-2.0',
             atleast_version='2.20.0',
+            args='--cflags --libs')
+    conf.check_cfg(
+            package='vala-1.0',
+            uselib_store='vala-1.0',
+            atleast_version='0.7.6',
             args='--cflags --libs')
 
 def build(bld):

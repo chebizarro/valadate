@@ -11,6 +11,8 @@ namespace ValadateRunner {
         CANNOT_READ,
         COMPILATION_FAILED,
         TYPE_NOT_LOADED,
+        NOT_FOUND,
+        VAPI_ERROR,
     }
 
     [NoArrayLength]
@@ -91,6 +93,7 @@ namespace ValadateRunner {
             }
 
             readers.prepend(new GirReader());
+            readers.prepend(new VapiReader());
 
             foreach(weak string file in files) {
                 process_file(file);
