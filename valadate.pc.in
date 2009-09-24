@@ -1,0 +1,13 @@
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+bindir=@BINDIR@
+includedir=@INCLUDEDIR@
+datarootdir=@DATAROOTDIR@
+
+Name: Valadate
+Description: Unit testing library for GObject-based code
+Version: @VERSION@
+Requires: glib-2.0 gobject-2.0 gio-2.0
+Libs: -L${libdir} -lvaladate
+Cflags: -I${includedir}/valadate-0.0

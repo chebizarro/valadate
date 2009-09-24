@@ -24,7 +24,7 @@ def set_options(opt):
     pass
 
 def configure(conf):
-    conf.check_tool('gcc vala')
+    conf.check_tool('gcc vala misc')
     conf.check_cfg(
             package='glib-2.0',
             uselib_store='glib-2.0',
@@ -50,9 +50,15 @@ def configure(conf):
             uselib_store='vala-1.0',
             atleast_version='0.7.6',
             args='--cflags --libs')
+    conf.env['VERSION'] = VERSION
 
 def build(bld):
     bld.add_subdirs('lib test runner')
+    pc = bld.new_task_gen(
+            features='subst',
+            source='valadate.pc.in',
+            target='valadate-0.0.pc',
+            install_path='${LIBDIR}/pkgconfig')
 
 def dist(appname='', version=''):
     import shutil
