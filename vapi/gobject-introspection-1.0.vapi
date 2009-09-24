@@ -185,13 +185,6 @@ namespace Introspection {
 		public weak string @string;
 		[CCode(cname = "v_pointer")]
 		public void* @pointer;
-
-		/* XXX: Workaround. There should be some way of doing this
-		 * (perhaps with ownership transfer request of a cast
-		 * expression) or gobject-introspection should get some
-		 * support for it (well, it should really have a GValue
-		 * variant of invoke). */
-		public ValueArray steal_value_array();
 	}
 
 	[CCode (cprefix = "GI_TRANSFER_")]
