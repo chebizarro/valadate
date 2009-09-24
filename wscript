@@ -1,3 +1,5 @@
+import Scripting
+
 NAME = "valadate"
 APPNAME = 'valadate'
 VERSION = '0.0'
@@ -51,5 +53,53 @@ def configure(conf):
 
 def build(bld):
     bld.add_subdirs('lib test runner')
+
+def dist(appname='', version=''):
+    import shutil
+    import os
+
+    # Enforce gzip, because python-git does not support bzip (yet)
+    Scripting.g_gz = 'gz'
+
+    # It's important to distribute the *committed* state
+    if not appname: appname = APPNAME
+    if not version: version = VERSION
+
+    prefix = appname + '-' + version
+    arch_name = prefix+'.tar.gz'
+
+    # remove the previous dir
+    try:
+        shutil.rmtree(prefix)
+    except (OSError, IOError):
+        pass
+
+    # remove the previous archive
+    try:
+        os.remove(arch_name)
+    except (OSError, IOError):
+        pass
+
+    # create archive of HEAD via git and write it out
+    arch_data = repo.archive_tar_gz('HEAD', prefix + '/')
+    arch_file = file(arch_name, 'wb')
+    arch_file.write(arch_data)
+    arch_file.close()
+
+    try: from hashlib import sha1 as sha
+    except ImportError: from sha import sha
+    try:
+        digest = " (sha=%r)" % sha(arch_data).hexdigest()
+    except:
+        digest = ''
+
+    Scripting.info('New archive created from %s: %s%s'
+            % (repo.active_branch, arch_name, digest))
+
+    return arch_name
+
+# HACK: Scripting.distcheck is calling Scripting.dist directly, but
+# I need it to call MY dist. Just monkey-patch Scripting:
+Scripting.dist = dist
 
 # vim: set ft=python sw=4 sts=4 et:
