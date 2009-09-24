@@ -1,7 +1,19 @@
 NAME = "valadate"
 APPNAME = 'valadate'
-VERSION = '0.1'
+VERSION = '0.0'
 API_VERSION = '0.0'
+
+try:
+    import git
+    import os.path
+    if not os.path.isdir('.git'):
+        raise Exception("Not in git working directory")
+    repo = git.Repo('.')
+    VERSION = repo.git.describe(always=True)
+    if not "." in VERSION:
+        VERSION = '0.0-' + VERSION
+except:
+    pass
 
 srcdir = '.'
 blddir = 'build'
