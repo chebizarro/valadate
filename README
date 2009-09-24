@@ -11,7 +11,7 @@ Features
   * Automatic test discovery like JUnit or .NET testing framework.
     
     Tests can be automatically found in a shared library using either
-    [.vapi][vapi] or [.gir][gir] file.
+    .vapi ([Vala][vala] API description) or [.gir][gir] file.
 
   * Running tests for all parameters from specific set.
 
@@ -53,17 +53,22 @@ Dependencies
 Copyright
 ---------
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or (at
-    your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program in the file COPYING.  You should have received
-    a copy of the GNU General Public License refered therein along with this
-    program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License
+along with this program in the file COPYING.  You should have received
+a copy of the GNU General Public License refered therein along with this
+program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
+
+[vala]: http://live.gnome.org/Vala
+[gir]: http://live.gnome.org/GObjectIntrospection
+[glib]: http://www.gtk.org/ (The GTK+ Project)
+[python]: http://www.python.org
