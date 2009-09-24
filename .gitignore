@@ -2,3 +2,4 @@
 /.lock-wscript
 /build
 /valadate-*
+/pax_global_header
