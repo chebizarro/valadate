@@ -1,0 +1,69 @@
+Valadate
+========
+
+Valadate is a unit testing framework based on GLib Testing. It is primarily
+intended for testing code written in [Vala][vala], but can be used with any
+GObject-based code.
+
+Features
+--------
+
+  * Automatic test discovery like JUnit or .NET testing framework.
+    
+    Tests can be automatically found in a shared library using either
+    [.vapi][vapi] or [.gir][gir] file.
+
+  * Running tests for all parameters from specific set.
+
+    A test fixture can define properties and sets of values for them and the
+    discovered test methods will automatically be run for all of them.
+
+  * Utility functions for waiting in a main loop until specified event or
+    timeout occurs.
+
+Planned features
+----------------
+
+  * Support for asynchronous tests. Method declared async in vala will be
+    automatically run under main loop until completion or configurable
+    timeout.
+
+  * Utility functions providing temporary directory to tests.
+
+    With support for initializing the temporary directory by storing data
+    defined by simple declaration, copying specified files there, extracting
+    an archive and running a shell snippet.
+
+  * Automatically running all or selected tests in child processes via
+    g_test_trap_fork.
+
+  * Generic tests.
+
+    Support for providing a list of types a generic test fixture should be
+    instantiated for. 
+
+Dependencies
+------------
+
+  * [GLib][glib]
+  * [Vala][vala]
+  * [GOjbect-introspection][gir]
+  * [Python][python] (for compilation only)
+
+Copyright
+---------
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or (at
+    your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program in the file COPYING.  You should have received
+    a copy of the GNU General Public License refered therein along with this
+    program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
