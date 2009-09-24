@@ -1,3 +1,17 @@
+/*
+ * Valadate - Unit testing library for GObject-based libraries.
+ * Copyright (C) 2009  Didier 'Ptitjes' <ptitjes@free.fr>
+ * Copyright (C) 2009  Jan Hudec <bulb@ucw.cz>
+ *
+ * This file is derived from GOjbect Introspecton
+ * <http://live.gnome.org/GObjectIntrospection> library code, which is
+ * licensed under GNU Lesser General Public License version 3. The license
+ * terms apply to this file.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 using GLib;
 
 [CCode (cprefix = "GI", lower_case_cprefix = "g_i", cheader_filename = "girepository-fixes.h")]
