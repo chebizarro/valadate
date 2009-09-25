@@ -26,7 +26,6 @@ namespace ValadateRunner {
         static bool modules_loaded = false;
 
         private Class cl;
-        private HashSet<string> properties = new HashSet<string>(GLib.str_hash, GLib.str_equal);
 
         public VapiSuiteInfo(Class cl) throws RunnerError {
             base(get_g_type(cl));
@@ -198,26 +197,5 @@ namespace ValadateRunner {
             throw new RunnerError.TYPE_NOT_LOADED("Symbol %s not found.\n",
                     name);
         }
-
-        /*
-        public override void visit_class(Class cl) {
-            // We are only interested in method, properties and base classes
-            foreach(var p in cl.get_properties())
-                p.accept(this);
-            foreach(var m in cl.get_methods())
-                m.accept(this);
-            foreach(var base_type in cl.get_base_types()) {
-                var obj_type = (ObjectType)base_type;
-                obj_type.type_symbol.accept(this);
-            }
-        }
-
-        public override void visit_interface(Interface iface) {
-            foreach(var p in iface.get_properties())
-                p.accept(this);
-            foreach(var m in iface.get_methods())
-                m.accept(this);
-        }
-        */
     }
 }
