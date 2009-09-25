@@ -46,7 +46,7 @@ Dependencies
 ------------
 
   * [GLib][glib] 2.20.0 or later
-  * [Vala][vala] 0.7.7 or later (master newer than 2009-09-23 before 0.7.7 is
+  * [Vala][vala] 0.7.7 or later (master newer than 2009-09-24 before 0.7.7 is
     released)
   * [GOjbect-introspection][gir] 0.6.5 or later
   * [Python][python] (for compilation only) 2.3 or later

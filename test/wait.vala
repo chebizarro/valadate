@@ -39,7 +39,6 @@ namespace Test {
 
 		delegate void CancelledHandler(Object emitter);
 
-		/* FIXME: Does not work until closures in async are fixed.
 		public async void cancellable_inc_async(Cancellable cancel) {
 			SourceFunc acb = cancellable_inc_async.callback;
 			cancel.cancelled.connect((o) => { acb(); });
@@ -52,7 +51,6 @@ namespace Test {
 			stop();
 			count++;
 		}
-		*/
 
 		public void stop() {
 			if(timer != 0)
@@ -132,19 +130,18 @@ namespace Test {
 			assert(changer.count == 0);
 		}
 
-		/*
 		public void test_wait_cancellable_async_normal() {
 			assert(wait_for_cancellable_async(200,
-						changer.cancellable_inc_async,
+						(c, cb) => changer.cancellable_inc_async(c, cb),
 						res => changer.cancellable_inc_async.end(res)));
 			assert(changer.count == 1);
 		}
 
 		public void test_wait_cancellable_async_fail() {
-			assert(wait_for_cancellable_async(20,
-						changer.cancellable_inc_async,
+			assert(!wait_for_cancellable_async(20,
+						(c, cb) => changer.cancellable_inc_async(c, cb),
 						res => changer.cancellable_inc_async.end(res)));
 			assert(changer.count == 1); // The increment is done on cancel anyway!
-		}*/
+		}
 	}
 }
