@@ -1,0 +1,9 @@
+valadate for Debian
+-------------------
+
+Upstream packaging.
+
+The .gir and .vapi files are in the library package rather than -dev, because
+they are also used by the runner.
+
+ -- Jan Hudec <bulb@ucw.cz>  Fri, 25 Sep 2009 11:19:10 +0200

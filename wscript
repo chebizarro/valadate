@@ -127,11 +127,27 @@ def dist(appname='', version=''):
         digest = " (sha=%r)" % sha(arch_data).hexdigest()
     except:
         digest = ''
-
     Scripting.info('New archive created from %s: %s%s'
             % (repo.active_branch, arch_name, digest))
 
     return arch_name
+
+def deb(ctx):
+    '''Build a debian package.'''
+    import datetime, Utils
+    cargs = {
+            'now': Utils.cmd_output('date --rfc-2822'),
+            'version': VERSION
+            }
+    clog = file('debian/changelog', 'w')
+    clog.write("""valadate (%(version)s) none; urgency=low
+
+  * Upstream-provided package.
+
+ -- Jan Hudec <bulb@ucw.cz>  %(now)s
+""" % cargs)
+    clog.close()
+    Utils.exec_command('dpkg-buildpackage -b -rfakeroot -uc')
 
 # HACK: Scripting.distcheck is calling Scripting.dist directly, but
 # I need it to call MY dist. Just monkey-patch Scripting:
