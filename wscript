@@ -86,7 +86,8 @@ def test(ctx):
     else:
         cmd += '-f', wd+'/test/test.vapi'
     Scripting.info('Executing ' + ' '.join(cmd))
-    Utils.exec_command(cmd, env=env)
+    if Utils.exec_command(cmd, env=env) != 0:
+        raise Utils.WafError('Tests failed')
 
 def dist(appname='', version=''):
     '''makes a tarball for redistributing the sources (requires git checkout)'''
