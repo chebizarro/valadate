@@ -21,7 +21,13 @@ srcdir = '.'
 blddir = 'build'
 
 def set_options(opt):
-    pass
+    import optparse
+    grp = optparse.OptionGroup(opt.parser, 'test options')
+    opt.add_option_group(grp)
+    grp.add_option('--gdb', action='store_true', default=False,
+            help='Run the tests under gdb')
+    grp.add_option('--gir', action='store_true', default=False,
+            help='Run the gir tests')
 
 def configure(conf):
     conf.check_tool('gcc vala misc')
@@ -60,7 +66,30 @@ def build(bld):
             target='valadate-0.0.pc',
             install_path='${LIBDIR}/pkgconfig')
 
+def test(ctx):
+    "run selftest"
+    import os, Options, Utils
+    wd = os.getcwd() + '/build/default'
+    env = dict(os.environ)
+    env['LD_LIBRARY_PATH'] = "%(DIR)s/lib:%(DIR)s/test:%(LD_LIBRARY_PATH)s" % {
+            'DIR': wd,
+            'LD_LIBRARY_PATH': env.get('LD_LIBRARY_PATH', '')}
+    cmd = []
+    if Options.options.gdb:
+        cmd += 'gdb', '--args'
+    cmd += wd+'/runner/valadate',
+    if Options.options.verbose:
+        cmd += '-V',
+    cmd += '-L', 'test', '-d', wd+'/lib'
+    if Options.options.gir:
+        cmd += '-f', wd+'/test/Test-0.gir'
+    else:
+        cmd += '-f', wd+'/test/test.vapi'
+    Scripting.info('Executing ' + ' '.join(cmd))
+    Utils.exec_command(cmd, env=env)
+
 def dist(appname='', version=''):
+    '''makes a tarball for redistributing the sources (requires git checkout)'''
     import shutil
     import os
 
