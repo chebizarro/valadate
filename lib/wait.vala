@@ -228,7 +228,7 @@ namespace Valadate {
 		Source.remove(t1);
 		Source.remove(t2);
 		// Check the outcome
-		if(result != null)
+		if(result == null)
 			return false; // The async wasn't called at all.
 		if(cancel.is_cancelled()) // Only succeed if not cancelled
 			return false;
