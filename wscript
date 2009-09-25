@@ -22,15 +22,15 @@ blddir = 'build'
 
 def set_options(opt):
     import optparse
-    grp = optparse.OptionGroup(opt.parser, 'test options')
-    opt.add_option_group(grp)
+    grp = opt.add_option_group('test options')
     grp.add_option('--gdb', action='store_true', default=False,
             help='Run the tests under gdb')
     grp.add_option('--gir', action='store_true', default=False,
             help='Run the gir tests')
+    opt.tool_options('gnu_dirs gcc vala misc')
 
 def configure(conf):
-    conf.check_tool('gcc vala misc')
+    conf.check_tool('gnu_dirs gcc vala misc')
     conf.check_cfg(
             package='glib-2.0',
             uselib_store='glib-2.0',
