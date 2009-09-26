@@ -50,9 +50,8 @@ namespace ValadateRunner {
                         fx_info.get_namespace(),
                         fx_info.get_name());
                         */
-            return new TestCase(name,
-                    sizeof(FixturePointer), this.set_up,
-                    this.run, this.tear_down);
+            return new TestCase(name, this.set_up,
+                    this.run, this.tear_down, sizeof(FixturePointer));
         }
 
         // Interface for the GTestCase.
