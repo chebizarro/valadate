@@ -46,12 +46,47 @@ namespace ValadateRunner {
             foreach(var fn_info in fn_infos) {
                 if(!is_test(fn_info))
                     continue;
-                if(verbose)
-                    stdout.printf("        found test %s\n",
-                            fn_info.get_name());
-                add_test(suite, fn_info.get_name().substring(5),
-                        test_marshal_synchronous, get_fn_pointer(fn_info),
-                        null);
+                switch(test_type(fn_info)) {
+                    case TestType.SYNC:
+                        if(verbose)
+                            stdout.printf("        found test %s\n",
+                                    fn_info.get_name());
+                        add_test(suite, fn_info.get_name().substring(5),
+                                test_marshal_synchronous, get_fn_pointer(fn_info),
+                                null);
+                        break;
+                    case TestType.ASYNC:
+                        var finish_info = get_finish(fn_info);
+                        if(finish_info != null) {
+                            add_test(suite, fn_info.get_name().substring(5),
+                                    test_marshal_asynchronous,
+                                    get_fn_pointer(fn_info),
+                                    get_fn_pointer(finish_info));
+                        } else {
+                            warning("%s.%s.%s looks like an async test, but matching finish method was not found.",
+                                    fx_info.get_namespace(), fx_info.get_name(),
+                                    fn_info.get_name());
+                        }
+                        break;
+                    case TestType.CANCELLABLE:
+                        var finish_info = get_finish(fn_info);
+                        if(finish_info != null) {
+                            add_test(suite, fn_info.get_name().substring(5),
+                                    test_marshal_cancellable,
+                                    get_fn_pointer(fn_info),
+                                    get_fn_pointer(finish_info));
+                        } else {
+                            warning("%s.%s.%s looks like a cancellable async test, but matching finish method was not found.",
+                                    fx_info.get_namespace(), fx_info.get_name(),
+                                    fn_info.get_name());
+                        }
+                        break;
+                    default:
+                        warning("%s.%s.%s is named like a test, but it's signature is not of any supported type",
+                                fx_info.get_namespace(), fx_info.get_name(),
+                                fn_info.get_name());
+                        break;
+                }
             }
         }
 
@@ -105,9 +140,64 @@ namespace ValadateRunner {
                 return false; // Tests are methods starting with "test_".
             if(method.get_return_type().get_tag() != TypeTag.VOID)
                 return false; // Tests must return void.
-            if(method.get_n_args() != 0)
-                return false; // Test methods must take no additional arguments.
+            // FIXME: Generic methods?
+            // if(method.get_n_args() != 0)
+            //    return false; // Test methods must take no additional arguments.
             return true;
+        }
+
+        private enum TestType {
+            NONE,
+            SYNC,
+            ASYNC,
+            CANCELLABLE,
+        }
+
+        private TestType test_type(FunctionInfo method) {
+            if(method.get_n_args() == 0)
+                return TestType.SYNC;
+            if(method.get_n_args() == 2) {
+                var arg0 = method.get_arg(0).get_type();
+                var arg1 = method.get_arg(1).get_type();
+                if(arg0.get_tag() != TypeTag.INTERFACE ||
+                        arg0.get_interface().get_name() != "AsyncReadyCallback" ||
+                        arg1.get_tag() != TypeTag.VOID ||
+                        !arg1.is_pointer())
+                    return TestType.NONE;
+                return TestType.ASYNC;
+            }
+            if(method.get_n_args() == 3) {
+                var arg0 = method.get_arg(0).get_type();
+                var arg1 = method.get_arg(1).get_type();
+                var arg2 = method.get_arg(2).get_type();
+                if(arg0.get_tag() != TypeTag.INTERFACE ||
+                        arg0.get_interface().get_name() != "Cancellable" ||
+                        arg1.get_tag() != TypeTag.INTERFACE ||
+                        arg1.get_interface().get_name() != "AsyncReadyCallback" ||
+                        arg2.get_tag() != TypeTag.VOID ||
+                        !arg2.is_pointer())
+                    return TestType.NONE;
+                return TestType.CANCELLABLE;
+            }
+            return TestType.NONE;
+        }
+
+        private FunctionInfo? get_finish(FunctionInfo begin_info) {
+            string name = begin_info.get_name();
+            if(name.has_suffix("_async"))
+                name = name.substring(0, name.length - 5);
+            name += "_finish";
+            var finish_info = fx_info.find_method(name);
+            if(finish_info == null)
+                return null;
+            if(finish_info.get_n_args() != 1)
+                return null;
+            var arg = finish_info.get_arg(0).get_type();
+            if(arg.get_tag() != TypeTag.INTERFACE)
+                return null;
+            if(arg.get_interface().get_name() != "AsyncResult")
+                return null;
+            return finish_info;
         }
 
         private void *get_fn_pointer(FunctionInfo fn_info) throws InvokeError {
