@@ -79,7 +79,29 @@ namespace ValadateRunner {
 
     // Marshallers
     static delegate void TestMethodSync(Valadate.Fixture fx);
+    static delegate void TestMethodAsync(Valadate.Fixture fx,
+            AsyncReadyCallback callback);
+    static delegate void TestMethodCancellable(Valadate.Fixture fx,
+            Cancellable cancel, AsyncReadyCallback callback);
+    static delegate void TestMethodFinish(Valadate.Fixture fx,
+            AsyncResult result);
+
     void test_marshal_synchronous(Valadate.Fixture it, void *arg1, void *arg2) {
         ((TestMethodSync)arg1)(it);
+    }
+
+
+    void test_marshal_asynchronous(Valadate.Fixture it, void *arg1, void *arg2) {
+        // FIXME: Configurable timeout
+        assert(Valadate.wait_for_async(5000,
+                    (cb) => ((TestMethodAsync)arg1)(it, cb),
+                    (r) => ((TestMethodFinish)arg2)(it, r)));
+    }
+
+    void test_marshal_cancellable(Valadate.Fixture it, void *arg1, void *arg2) {
+        // FIXME: Configurable timeout
+        assert(Valadate.wait_for_cancellable_async(5000,
+                    (c, cb) => ((TestMethodCancellable)arg1)(it, c, cb),
+                    (r) => ((TestMethodFinish)arg2)(it, r)));
     }
 }

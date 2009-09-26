@@ -48,14 +48,34 @@ namespace ValadateRunner {
             foreach(var method in methods) {
                 if(!is_test(method))
                     continue;
-                if(is_sync_test(method)) {
-                    if(verbose)
-                        stdout.printf("        found sync test %s\n",
-                                method.name);
-                    add_test(suite, method.name.substring(5),
-                            test_marshal_synchronous,
-                            load_symbol(method.get_cname()), null);
-                } // FIXME: Async tests
+                switch(test_type(method)) {
+                    case TestType.SYNC:
+                        if(verbose)
+                            stdout.printf("        found sync test %s\n",
+                                    method.name);
+                        add_test(suite, method.name.substring(5),
+                                test_marshal_synchronous,
+                                load_symbol(method.get_cname()), null);
+                        break;
+                    case TestType.ASYNC:
+                        if(verbose)
+                            stdout.printf("        found async test %s\n",
+                                    method.name);
+                        add_test(suite, method.name.substring(5),
+                                test_marshal_asynchronous,
+                                load_symbol(method.get_cname()),
+                                load_symbol(method.get_finish_cname()));
+                        break;
+                    case TestType.CANCELLABLE:
+                        if(verbose)
+                            stdout.printf("        found cancellable test %s\n",
+                                    method.name);
+                        add_test(suite, method.name.substring(5),
+                                test_marshal_cancellable,
+                                load_symbol(method.get_cname()),
+                                load_symbol(method.get_finish_cname()));
+                        break;
+                }
             }
         }
 
@@ -123,29 +143,41 @@ namespace ValadateRunner {
                         method.name);
                 return false;
             }
+            if(method.get_type_parameters().size != 0){
+                warning("%s is named like a test, but is generic with %i type params",
+                        method.name, method.get_type_parameters().size);
+                return false; // Must not be generic
+            }
             return true;
         }
 
-        // FIXME: We need to print warnings what we didn't like on a method
-        // when it is none of supported kinds. Maybe the chain will be
-        // different (first decide what it might be and than warn that it is
-        // not that).
-        private bool is_sync_test(Method method) {
-            if(method.coroutine) {
-                //stdout.printf("            ... is async\n");
-                return false;
+        private enum TestType {
+            NONE,
+            SYNC,
+            ASYNC,
+            CANCELLABLE,
+        }
+
+        private TestType test_type(Method method) {
+            if(method.coroutine) { // async
+                if(method.get_parameters().size == 0) {
+                    return TestType.ASYNC;
+                }
+                if(method.get_parameters().size == 1 &&
+                        method.get_parameters().get(0).parameter_type.data_type.get_full_name() ==
+                        "GLib.Cancellable") {
+                    return TestType.CANCELLABLE;
+                }
+                warning("%s is named like a test, but async test must have either no parameters or one parameter of type GLib.Cancellable",
+                        method.name);
+            } else { // sync
+                if(method.get_parameters().size == 0) {
+                    return TestType.SYNC;
+                }
+                warning("%s is named like a test, but has %i parameters",
+                        method.name, method.get_parameters().size);
             }
-            if(method.get_type_parameters().size != 0){
-                //stdout.printf("            ... has %i type params\n",
-                //        method.get_type_parameters().size);
-                return false; // Must not be generic
-            }
-            if(method.get_parameters().size != 0){
-                //stdout.printf("            ... has %i params\n",
-                //        method.get_parameters().size);
-                return false; // Must have no arguments
-            }
-            return true;
+            return TestType.NONE;
         }
 
         private static delegate Type GetType();
