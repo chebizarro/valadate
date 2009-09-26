@@ -3,6 +3,8 @@ using Valadate;
 
 namespace Test {
     public class AsyncTest : Object, Fixture {
+        public void set_up() { timeout = 1000; }
+
         public async void test_noncancellable() {
             Timeout.add(100, test_noncancellable.callback);
             yield;

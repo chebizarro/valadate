@@ -52,6 +52,12 @@ namespace Valadate {
      * }
      * }}}
      *
+     * Test method declared async are also recognized and they are run under
+     * main-loop until completion or timeout, which is taken from the
+     * //timeout// property. Async test method can optionally have
+     * a GLib.Cancellable argument, which will be cancelled when timeout
+     * occurs.
+     *
      * If you define some public constructible properties and for each
      * property define a static method named
      * "generate_"//property-name// returning a ValueArray, each test
@@ -74,5 +80,21 @@ namespace Valadate {
          * You can use destructor to the same effect.
          */
         public virtual void tear_down() {}
+
+        /**
+         * Timeout for async tests.
+         *
+         * You can change this in constructor or set_up to define the timeout
+         * for async tests in this class. Value is in milliseconds and
+         * default to 5000ms.
+         */
+        public int timeout {
+            // FIXME: GPOINTER_TO_INT does not seem to be bound
+            get {
+                int v = (int)(long)get_data("Valadate.Fixture.timeout");
+                return v == 0 ? 5000 : v;
+            }
+            set { set_data("Valadate.Fixture.timeout", value.to_pointer()); }
+        }
     }
 }
