@@ -15,8 +15,7 @@ REQUIREMENTS
 ============
 
   * [GLib](http://www.gtk.org/) at least 2.20.0
-  * [Vala](http://live.gnome.org/Vala) at least 0.7.7 (master newer than
-    2009-09-23 before 0.7.7 is released)
+  * [Vala](http://live.gnome.org/Vala) at least 0.7.7
   * [GOjbect-introspection](http://live.gnome.org/GObjectIntrospection) at
     least 0.6.5
   * [Python](http://www.python.org) (for compilation only) at least 2.3

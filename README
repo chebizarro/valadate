@@ -21,12 +21,12 @@ Features
   * Utility functions for waiting in a main loop until specified event or
     timeout occurs.
 
-Planned features
-----------------
-
   * Support for asynchronous tests. Method declared async in vala will be
     automatically run under main loop until completion or configurable
     timeout.
+
+Planned features
+----------------
 
   * Utility functions providing temporary directory to tests.
 
@@ -46,8 +46,7 @@ Dependencies
 ------------
 
   * [GLib][glib] 2.20.0 or later
-  * [Vala][vala] 0.7.7 or later (master newer than 2009-09-24 before 0.7.7 is
-    released)
+  * [Vala][vala] 0.7.7 or later
   * [GOjbect-introspection][gir] 0.6.5 or later
   * [Python][python] (for compilation only) 2.3 or later
 
