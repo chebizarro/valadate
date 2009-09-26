@@ -19,10 +19,10 @@
 using GLib;
 
 namespace ValadateRunner {
-        interface Reader {
-            public abstract bool process_file(string file) throws Error;
-            public abstract void gather_tests() throws Error;
-        }
+    interface Reader {
+        public abstract bool process_file(string file) throws Error;
+        public abstract void gather_tests() throws Error;
+    }
 
     errordomain RunnerError {
         UNRECOGNIZED_FILE,
