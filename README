@@ -25,17 +25,24 @@ Features
     automatically run under main loop until completion or configurable
     timeout.
 
+  * Utility functions providing temporary directory to tests.
+
+    With support for initializing the temporary directory by storing data,
+    copying specified files there, and running a shell snippet.
+
 Planned features
 ----------------
 
-  * Utility functions providing temporary directory to tests.
+  * Automatically running each test in a separate child process.
 
-    With support for initializing the temporary directory by storing data
-    defined by simple declaration, copying specified files there, extracting
-    an archive and running a shell snippet.
+  * Running next tests even after failure.
 
-  * Automatically running all or selected tests in child processes via
-    g_test_trap_fork.
+    It requires chaning the runner for that.
+
+  * Skipped tests and expected failures.
+
+  * Initializing test directories by extracting zip and/or tar.gz
+    archives.
 
   * Generic tests.
 
