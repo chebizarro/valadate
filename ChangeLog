@@ -1,0 +1,11 @@
+Valadate 0.1
+
+  * Initial release
+  * Runner can execute synchronous, asynchronous and cancellable
+    asynchronous tests using both gir and vapi metadata.
+  * Runner executes tests with all values of a property provided by
+    corresponding generator.
+  * Utility functions to wait for async function completion and to wait for
+    signal are provided.
+  * Utility class for creating a temporary test directory and simple creation
+    of files in it is provided.
