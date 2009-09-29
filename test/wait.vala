@@ -33,7 +33,7 @@ namespace Test {
         public async void inc_async() {
             timer = Timeout.add(100, inc_async.callback);
             yield;
-            stop();
+            timer = 0; // callback returns false so it will be removed automagically
             count++;
         }
 
@@ -41,14 +41,17 @@ namespace Test {
 
         public async void cancellable_inc_async(Cancellable cancel) {
             SourceFunc acb = cancellable_inc_async.callback;
-            cancel.cancelled.connect((o) => { acb(); });
+            // XXX: Since GLib 2.22 the g_simple_async_result_finish checks
+            // the source, so we are only allowed to destroy it after that.
+            // However, it is called at very end of the callback, so we have
+            // to connect closures to stop it after the callback completes.
+            cancel.cancelled.connect((o) => { acb(); stop(); });
             timer = Timeout.add(100,
-                    cancellable_inc_async.callback);
+                    () => { acb(); stop(); return false; });
             yield;
             // FIXME FIXME FIXME: I need to disconnect, but
             // I don't know how!
             //cancel.cancelled.disconnect((o) => { acb(); });
-            stop();
             count++;
         }
 
