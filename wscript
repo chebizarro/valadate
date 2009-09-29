@@ -37,6 +37,11 @@ def configure(conf):
             atleast_version='2.20.0',
             args='--cflags --libs')
     conf.check_cfg(
+            package='gobject-2.0',
+            uselib_store='gobject-2.0',
+            atleast_version='2.20.0',
+            args='--cflags --libs')
+    conf.check_cfg(
             package='gobject-introspection-1.0',
             uselib_store='gobject-introspection-1.0',
             atleast_version='0.6.5',
