@@ -5,7 +5,7 @@ def build(bld):
             gir='Test-0',
             packages='glib-2.0 gobject-2.0',
             uselib='glib-2.0 gobject-2.0',
-            uselib_local='valadate-0.0',
+            uselib_local='valadate-%(API_VER)s' % bld.env,
             ccflags=['-ggdb'],
             install_path=None)
     lib.find_sources_in_dirs('.')

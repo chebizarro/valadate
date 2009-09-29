@@ -2,8 +2,9 @@ import Scripting
 
 NAME = "valadate"
 APPNAME = 'valadate'
-VERSION = '0.0'
-API_VERSION = '0.0'
+VERSION = '0.1'
+API_VERSION = '1.0'
+SO_VERSION = '0.0'
 
 try:
     import git
@@ -62,13 +63,15 @@ def configure(conf):
             atleast_version='0.7.6',
             args='--cflags --libs')
     conf.env['VERSION'] = VERSION
+    conf.env['API_VER'] = API_VERSION
+    conf.env['SO_VER'] = SO_VERSION
 
 def build(bld):
     bld.add_subdirs('lib test runner')
     pc = bld.new_task_gen(
             features='subst',
             source='valadate.pc.in',
-            target='valadate-0.0.pc',
+            target='valadate-${API_VER}.pc',
             install_path='${LIBDIR}/pkgconfig')
 
 def test(ctx):
