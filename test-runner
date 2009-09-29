@@ -1,6 +1,6 @@
 #!/bin/sh
 dir=`dirname $0`/build/default
-export LD_LIBRARY_PATH=$dir/lib:$dir/test:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$dir/lib:$dir/test:/usr/lib/debug/usr/lib:$LD_LIBRARY_PATH
 if [ "$1" = "--gdb" ]; then
 	shift
 	prefix="gdb --args" 

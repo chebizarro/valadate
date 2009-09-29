@@ -76,7 +76,7 @@ def test(ctx):
     import os, Options, Utils
     wd = os.getcwd() + '/build/default'
     env = dict(os.environ)
-    env['LD_LIBRARY_PATH'] = "%(DIR)s/lib:%(DIR)s/test:%(LD_LIBRARY_PATH)s" % {
+    env['LD_LIBRARY_PATH'] = "%(DIR)s/lib:%(DIR)s/test:/usr/lib/debug/usr/lib:%(LD_LIBRARY_PATH)s" % {
             'DIR': wd,
             'LD_LIBRARY_PATH': env.get('LD_LIBRARY_PATH', '')}
     cmd = []
