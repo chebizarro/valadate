@@ -11,6 +11,8 @@ configure.
 
 You can change destdir by adding --destdir=... option to install.
 
+See ./waf --help for complete list of options.
+
 REQUIREMENTS
 ============
 
