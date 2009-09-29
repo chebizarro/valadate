@@ -18,29 +18,82 @@
 using GLib;
 
 namespace Valadate {
+    /**
+     * Class to provide a temporary test directory to unit tests.
+     *
+     * To use, instantiate this class either inside your test method or as
+     * a member of your test fixture. I will automatically create a test
+     * directory upon instantiation and remove it again upon destruction.
+     *
+     * With the current GLib.Test-based runner, the destruction will not run
+     * if the test fails, so the directory is not deleted if the test fails.
+     * (it is not currently printed anywhere though).
+     */
     public class TempDir : Object {
         // SECTION: static data
         private static string orig_dir = Environment.get_current_dir();
         private static string tmp_dir = Environment.get_tmp_dir();
 
+        /**
+         * Returns name of the original working directory of the test
+         * process.
+         *
+         * Or rather, name of working directory at time the type was
+         * initialized.
+         */
         public class string get_orig_dir_name() {
             return orig_dir;
         }
 
+        /**
+         * Get name of system-wide temporary directory.
+         *
+         * This is just a cached value of Environment.get_tmp_dir.
+         */
         public class string get_tmp_dir_name() {
             return tmp_dir;
         }
 
         // SECTION: Members and properties
         private File _dir = make_tmp_dir();
+
+        /**
+         * The test directory.
+         *
+         * A GLib.File object representing the test directory.
+         */
         public File dir { get { return _dir; } }
+
+        /**
+         * The original working directory.
+         *
+         * The working directory in which the tests were started (again,
+         * obtained when the type is initialized, so it might get changed
+         * before that).
+         */
         public File src_dir { owned get { return File.new_for_path(orig_dir); } }
 
         // SECTION: Utility methods
+        /**
+         * File object for file or directory inside the test directory.
+         */
         public File file(string path) {
             return dir.resolve_relative_path(path);
         }
 
+        /**
+         * Read whole content of specified file in test directory.
+         *
+         * Note, that it's a string, so it's nul-terminated. If the file
+         * contains nul bytes, the content will be truncated there as far as
+         * any string operations are concerned.
+         *
+         * If the file does not exist or cannot be read, aborts with fatal
+         * error, failing the test it is in.
+         *
+         * @param path Path to be read, relative to dir.
+         * @return Content of the file at path.
+         */
         public string contents(string path) {
             string r;
             try {
@@ -53,6 +106,15 @@ namespace Valadate {
         }
 
         // SECTION: Initialization
+        /**
+         * Write content to a specified file in test directory.
+         *
+         * Replaces the file if it already exists. If the file cannot be
+         * written, aborts with fatal error, failing the test it is in.
+         *
+         * @param path Path to be written, relative to dir.
+         * @param content Data to write to path.
+         */
         public TempDir store(string path, string content) {
             File f = file(path);
             try {
@@ -67,6 +129,18 @@ namespace Valadate {
             return this;
         }
 
+        /**
+         * Copy file or directory from original working dir to test dir.
+         *
+         * Copies recursively the tree at src_path to path. The content of
+         * src_path is placed directly into path (i.e. no subdirectory is
+         * created if path exists unlike cp command). If the file or tree
+         * cannot be copied, aborts with fatal error, failing the test it is
+         * in.
+         *
+         * @param path Destination path, relative to dir.
+         * @param src_path Source path, relative to src_dir (or absolute).
+         */
         public TempDir copy(string path, string src_path) {
             File dst = file(path);
             try {
@@ -82,6 +156,19 @@ namespace Valadate {
             return this;
         }
 
+        /**
+         * Execute shell code in context of the test dir.
+         *
+         * Executes code, via {{{/bin/sh}}}, in a specified subdirectory of
+         * the test directory. If shell cannot be executed or the script
+         * exits with nonzero status, aborts with fatal error, failing the
+         * test.
+         *
+         * @param path Working directory for the script, relative to dir. It
+         *        is created if it did not exist.
+         * @param code Shell code that will be piped to standard input of
+         *        {{{/bin/sh}}}.
+         */
         public TempDir shell(string path, string code) {
             File test_dir = file(path);
             try {
@@ -120,6 +207,12 @@ namespace Valadate {
         }
 
         // SECTION: Shutdown and internal
+        /**
+         * Deletes a file or directory, recursively.
+         *
+         * This is used to clean up the test directory after the test
+         * completes.
+         */
         public static void delete_recursive(File file) throws Error {
             try {
                 FileEnumerator i = file.enumerate_children(
