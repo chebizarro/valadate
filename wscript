@@ -71,7 +71,7 @@ def build(bld):
     pc = bld.new_task_gen(
             features='subst',
             source='valadate.pc.in',
-            target='valadate-${API_VER}.pc',
+            target='valadate-%s.pc' % API_VERSION,
             install_path='${LIBDIR}/pkgconfig')
 
 def test(ctx):
