@@ -89,6 +89,11 @@ namespace ValadateRunner {
 #if VALA_0_7_6_NEW_METHODS
             context.add_define ("VALA_0_7_6_NEW_METHODS");
 #endif
+            // add default packages
+            add_package("glib-2.0");
+            add_package("gobject-2.0");
+            add_package("gio-2.0");
+            add_package("valadate-1.0");
         }
 
         ~VapiReader() {
