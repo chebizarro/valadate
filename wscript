@@ -2,7 +2,7 @@ import Scripting
 
 NAME = "valadate"
 APPNAME = 'valadate'
-VERSION = '0.1'
+VERSION = '0.1.1'
 API_VERSION = '1.0'
 SO_VERSION = '0.0'
 
