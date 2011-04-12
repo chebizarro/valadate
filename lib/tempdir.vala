@@ -121,7 +121,7 @@ namespace Valadate {
                 try {
                     f.get_parent().make_directory_with_parents(null);
                 } catch(IOError.EXISTS e) {}
-                f.replace_contents(content, content.size(), null, false,
+                f.replace_contents(content, content.length, null, false,
                         FileCreateFlags.REPLACE_DESTINATION, null, null);
             } catch(Error e) {
                 error("Failed to write to \"%s\": %s", path, e.message);
@@ -173,7 +173,7 @@ namespace Valadate {
             File test_dir = file(path);
             try {
                 test_dir.make_directory_with_parents(null);
-            } catch(IOError.EXISTS e) { /* that's ok */ }
+            } catch(Error e) { /* that's ok */ }
             try {
                 Environment.set_variable("testdir", test_dir.get_path(), true);
                 Environment.set_variable("srcdir", get_orig_dir_name(), true);

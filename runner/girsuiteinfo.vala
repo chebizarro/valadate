@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using Gee;
+
 using GLib;
 using Introspection;
+using Vala;
 
 namespace ValadateRunner {
     class GirSuiteInfo : SuiteInfo {

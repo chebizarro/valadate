@@ -19,7 +19,7 @@
 using GLib;
 
 namespace ValadateRunner {
-    static delegate ValueArray Generator();
+    delegate ValueArray Generator();
 
     class ParamInfo {
         public string name;

@@ -19,6 +19,7 @@
 using GLib;
 using Vala;
 
+
 namespace ValadateRunner {
     class VapiTestGatherer : CodeVisitor {
         private static SList<VapiSuiteInfo> suites = null;
@@ -30,7 +31,7 @@ namespace ValadateRunner {
         }
 
         // Visitation methods
-        private override void visit_namespace (Vala.Namespace ns) {
+        public override void visit_namespace (Vala.Namespace ns) {
             if(ns.external_package)
                 return;
             if(verbose)
@@ -47,7 +48,7 @@ namespace ValadateRunner {
             current_suite = prev_suite;
         }
 
-        private override void visit_class (Vala.Class cl) {
+        public override void visit_class (Vala.Class cl) {
             if(cl.external_package)
                 return;
             if(!is_fixture(cl))

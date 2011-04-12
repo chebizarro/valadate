@@ -3,8 +3,8 @@ def build(bld):
             features='cc cshlib',
             target='test',
             gir='Test-0',
-            packages='glib-2.0 gobject-2.0',
-            uselib='glib-2.0 gobject-2.0',
+            packages='glib-2.0 gobject-2.0 libvala-0.12 ',
+            uselib='glib-2.0 gobject-2.0 libvala-0.12 ',
             uselib_local='valadate-%(API_VER)s' % bld.env,
             ccflags=['-ggdb'],
             install_path=None)

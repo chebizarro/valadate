@@ -35,7 +35,9 @@ namespace ValadateRunner {
             if(!FileUtils.test(file, FileTest.EXISTS))
                 throw new FileError.NOENT("%s does not exist.", file);
             // Note: everything must be package, otherwise the analyzer would complain
-            context.add_source_file(new SourceFile(context, file, is_pkg)); // FIXME: Do we need realpath?
+			if(is_pkg) {
+	            context.add_source_file(new SourceFile(context, SourceFileType.PACKAGE, file)); // FIXME: Do we need realpath?
+			}
             var deps = file.substring(0, file.length - 4) + "deps";
             if(FileUtils.test(deps, FileTest.EXISTS)) {
                 string deps_content;
@@ -105,7 +107,14 @@ namespace ValadateRunner {
                 stdout.printf("Adding package %s\n", pkg);
             if(context.has_package(pkg))
                 return;
-            var pkg_path = context.get_package_path(pkg, path);
+            
+            // This is suboptimal, but required: if we do this the tidy way, valac will complain
+            // with "Array concatenation not supported for public array variables and parameters"
+            int old_len = context.vapi_directories.length; 
+            context.vapi_directories.resize(old_len + 1);
+            context.vapi_directories[old_len - 1] = (string)path; 
+
+            var pkg_path = context.get_vapi_path(pkg);
             if(pkg_path == null)
                 throw new RunnerError.NOT_FOUND("Dependent package %s was not found. Need to add search dir?", pkg);
             context.add_package(pkg);

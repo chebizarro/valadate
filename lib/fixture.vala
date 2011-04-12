@@ -91,7 +91,7 @@ namespace Valadate {
         public int timeout {
             // FIXME: GPOINTER_TO_INT does not seem to be bound
             get {
-                int v = (int)(long)get_data("Valadate.Fixture.timeout");
+                int v = (int)(long)get_data<long>("Valadate.Fixture.timeout");
                 return v == 0 ? 5000 : v;
             }
             set { set_data("Valadate.Fixture.timeout", value.to_pointer()); }

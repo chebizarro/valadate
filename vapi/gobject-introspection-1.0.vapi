@@ -18,7 +18,7 @@ using GLib;
 namespace Introspection {
 
 	[CCode (cprefix = "G_IREPOSITORY_ERROR_")]
-	errordomain RepositoryError {
+	public errordomain RepositoryError {
 		TYPELIB_NOT_FOUND,
 		NAMESPACE_MISMATCH,
 		NAMESPACE_VERSION_CONFLICT,
@@ -40,10 +40,8 @@ namespace Introspection {
 		public bool is_registered (string namespace_, string version);
 		public BaseInfo? find_by_name (string namespace_, string name);
 		public Typelib require (string namespace_, string? version = null, RepositoryLoadFlags flags = 0) throws RepositoryError;
-		[NoArrayLength]
 		[CCode(array_length = false, array_null_terminated = true)]
 		public string[] get_dependencies (string namespace_);
-		[NoArrayLength]
 		[CCode(array_length = false, array_null_terminated = true)]
 		public string[] get_loaded_namespaces ();
 		public BaseInfo? find_by_gtype (Type type);
@@ -59,11 +57,11 @@ namespace Introspection {
 	}
 
 	[Compact]
-	[CCode (cname = "GTypelib", cprefix = "g_typelib_", free_function = "g_typelib_free")]
+	[CCode (cname = "GITypelib", cprefix = "g_typelib_", free_function = "g_typelib_free")]
 	public class Typelib {
 		public static Typelib new_from_memory (owned uchar[] memory);
 		public static Typelib new_from_const_memory (uchar[] memory);
-		public static Typelib new_from_mapped_file (owned MappedFile mfile);
+		public static Typelib new_from_mapped_file (owned MappedFile mfile) throws Error;
 
 		public bool symbol (string name, out void* symbol);
 		public unowned string get_namespace ();
@@ -128,7 +126,7 @@ namespace Introspection {
 	}
 
 	[CCode (cname = "GInvokeError", cprefix = "G_INVOKE_ERROR_")]
-	errordomain InvokeError {
+	public errordomain InvokeError {
 		FAILED,
 		SYMBOL_NOT_FOUND,
 		ARGUMENT_MISMATCH

@@ -16,11 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using Gee;
+
 using GLib;
 using Vala;
 
+
 namespace ValadateRunner {
+    
+    // Valac wouldn't stop complaining about this being static 
+    // inside a class, so I moved it here.
+    [CCode (has_target = false)]
+    delegate Type GetType();
+            
     class VapiSuiteInfo : SuiteInfo {
         static Module[] modules = null;
         static bool modules_loaded = false;
@@ -164,8 +171,7 @@ namespace ValadateRunner {
                     return TestType.ASYNC;
                 }
                 if(method.get_parameters().size == 1 &&
-                        method.get_parameters().get(0).parameter_type.data_type.get_full_name() ==
-                        "GLib.Cancellable") {
+                        method.get_parameters().get(0).variable_type.to_string() == "GLib.Cancellable") {
                     return TestType.CANCELLABLE;
                 }
                 warning("%s is named like a test, but async test must have either no parameters or one parameter of type GLib.Cancellable",
@@ -179,8 +185,9 @@ namespace ValadateRunner {
             }
             return TestType.NONE;
         }
+        
 
-        private static delegate Type GetType();
+        
         private static Type get_g_type(Class cl) throws RunnerError {
             load_modules();
 

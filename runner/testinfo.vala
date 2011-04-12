@@ -20,7 +20,7 @@ using GLib;
 using Introspection;
 
 namespace ValadateRunner {
-    static delegate void TestMarshaller(Valadate.Fixture fixture, void *arg1, void *arg2);
+    delegate void TestMarshaller(Valadate.Fixture fixture, void *arg1, void *arg2);
 
     struct FixturePointer {
         public Valadate.Fixture fixture;
@@ -77,12 +77,12 @@ namespace ValadateRunner {
     }
 
     // Marshallers
-    static delegate void TestMethodSync(Valadate.Fixture fx);
-    static delegate void TestMethodAsync(Valadate.Fixture fx,
+    delegate void TestMethodSync(Valadate.Fixture fx);
+    delegate void TestMethodAsync(Valadate.Fixture fx,
             AsyncReadyCallback callback);
-    static delegate void TestMethodCancellable(Valadate.Fixture fx,
+    delegate void TestMethodCancellable(Valadate.Fixture fx,
             Cancellable cancel, AsyncReadyCallback callback);
-    static delegate void TestMethodFinish(Valadate.Fixture fx,
+    delegate void TestMethodFinish(Valadate.Fixture fx,
             AsyncResult result);
 
     void test_marshal_synchronous(Valadate.Fixture it, void *arg1, void *arg2) {
