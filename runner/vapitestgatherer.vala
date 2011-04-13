@@ -19,7 +19,6 @@
 using GLib;
 using Vala;
 
-
 namespace ValadateRunner {
     class VapiTestGatherer : CodeVisitor {
         private static SList<VapiSuiteInfo> suites = null;

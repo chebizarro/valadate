@@ -16,15 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 using GLib;
 using Vala;
 
-
 namespace ValadateRunner {
     
-    // Valac wouldn't stop complaining about this being static 
-    // inside a class, so I moved it here.
     [CCode (has_target = false)]
     delegate Type GetType();
             
@@ -185,9 +181,7 @@ namespace ValadateRunner {
             }
             return TestType.NONE;
         }
-        
 
-        
         private static Type get_g_type(Class cl) throws RunnerError {
             load_modules();
 

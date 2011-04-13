@@ -36,7 +36,10 @@ namespace ValadateRunner {
                 throw new FileError.NOENT("%s does not exist.", file);
 
             // Note: everything must be package, otherwise the analyzer would complain
-			context.add_source_file(new SourceFile(context, is_pkg ?  SourceFileType.PACKAGE : SourceFileType.SOURCE, file)); // FIXME: Do we need realpath?
+			context.add_source_file(
+			    new SourceFile(context,
+			                   is_pkg ? SourceFileType.PACKAGE : SourceFileType.SOURCE,
+			                   file)); // FIXME: Do we need realpath?
 			
             var deps = file.substring(0, file.length - 4) + "deps";
             if(FileUtils.test(deps, FileTest.EXISTS)) {
@@ -114,7 +117,6 @@ namespace ValadateRunner {
                 throw new RunnerError.NOT_FOUND("Dependent package %s was not found. Need to add search dir?", pkg);
             context.add_package(pkg);
             add_file(pkg_path, true);
-
         }
 
         private void check() throws Error {
