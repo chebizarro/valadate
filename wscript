@@ -18,20 +18,20 @@ try:
 except:
     pass
 
-srcdir = '.'
-blddir = 'build'
+top = '.'
+out = 'build'
 
-def set_options(opt):
+def soptions(opt):
     import optparse
     grp = opt.add_option_group('test options')
     grp.add_option('--gdb', action='store_true', default=False,
             help='Run the tests under gdb')
     grp.add_option('--gir', action='store_true', default=False,
             help='Run the gir tests')
-    opt.tool_options('gnu_dirs gcc vala misc')
+    opt.tool_options('gnu_dirs gcc vala')
 
 def configure(conf):
-    conf.check_tool('gnu_dirs gcc vala misc')
+    conf.check_tool('gnu_dirs gcc vala')
     conf.check_cfg(
             package='glib-2.0',
             uselib_store='glib-2.0',

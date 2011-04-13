@@ -1,13 +1,10 @@
 def build(bld):
-    prg = bld.new_task_gen(
-            features='cc cprogram',
-            target='valadate',
-            vapi_dirs='../vapi',
-            includes='../vapi',
-            packages='glib-2.0 gobject-2.0 libvala-0.12 gmodule-2.0 gobject-introspection-1.0 posix',
-            uselib='glib-2.0 gobject-2.0 libvala-0.12 gmodule-2.0 gobject-introspection-1.0',
-            uselib_local='valadate-%(API_VER)s' % bld.env,
-            ccflags=['-ggdb'])
-    prg.find_sources_in_dirs('.')
+    bld.shlib(source=bld.path.ant_glob('*.vala'),
+              target='valadate',
+              vapi_dirs='../vapi',
+              includes='../vapi',
+              packages='glib-2.0 gobject-2.0 libvala-0.12 gmodule-2.0 gobject-introspection-1.0 posix',
+              uselib='glib-2.0 gobject-2.0 libvala-0.12 gmodule-2.0 gobject-introspection-1.0',
+              use='valadate-%(API_VER)s' % bld.env,
+              cflags=['-ggdb'])
 
-# vim: set ft=python:
