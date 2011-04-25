@@ -87,14 +87,18 @@ namespace Valadate {
          * You can change this in constructor or set_up to define the timeout
          * for async tests in this class. Value is in milliseconds and
          * default to 5000ms.
+         *
+         * This is a getter/setter pair rather than a property in order to work around this bug:
+         * https://bugzilla.gnome.org/show_bug.cgi?id=624101
          */
-        public int timeout {
+        public int get_timeout() {
             // FIXME: GPOINTER_TO_INT does not seem to be bound
-            get {
-                int v = (int)(long)get_data<long>("Valadate.Fixture.timeout");
-                return v == 0 ? 5000 : v;
-            }
-            set { set_data("Valadate.Fixture.timeout", value.to_pointer()); }
+            int v = (int)(long)get_data<long>("Valadate.Fixture.timeout");
+            return v == 0 ? 5000 : v;
+        }
+            
+        public void set_timeout(int timeout) {
+            set_data("Valadate.Fixture.timeout", timeout.to_pointer());
         }
     }
 }

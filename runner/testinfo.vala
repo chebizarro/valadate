@@ -91,13 +91,13 @@ namespace ValadateRunner {
 
 
     void test_marshal_asynchronous(Valadate.Fixture it, void *arg1, void *arg2) {
-        assert(Valadate.wait_for_async(it.timeout,
+        assert(Valadate.wait_for_async(it.get_timeout(),
                     (cb) => ((TestMethodAsync)arg1)(it, cb),
                     (r) => ((TestMethodFinish)arg2)(it, r)));
     }
 
     void test_marshal_cancellable(Valadate.Fixture it, void *arg1, void *arg2) {
-        assert(Valadate.wait_for_cancellable_async(it.timeout,
+        assert(Valadate.wait_for_cancellable_async(it.get_timeout(),
                     (c, cb) => ((TestMethodCancellable)arg1)(it, c, cb),
                     (r) => ((TestMethodFinish)arg2)(it, r)));
     }
