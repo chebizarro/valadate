@@ -10,4 +10,4 @@ Description: Unit testing library for GObject-based code
 Version: @VERSION@
 Requires: glib-2.0 gobject-2.0 gio-2.0
 Libs: -L${libdir} -lvaladate-@API_VER@
-Cflags: -I${includedir}/valadate-@API_VER@/lib
+Cflags: -I${includedir}/valadate-@API_VER@
