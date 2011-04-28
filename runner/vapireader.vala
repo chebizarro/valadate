@@ -24,10 +24,10 @@ namespace ValadateRunner {
         private CodeContext context;
 
         public bool process_file(string file) throws Error {
-            return add_file(file, false);
+            return add_file(file);
         }
 
-        public bool add_file(string file, bool is_pkg) throws Error {
+        public bool add_file(string file) throws Error {
             if(!file.has_suffix(".vapi"))
                 return false;
             if(verbose)
@@ -36,11 +36,9 @@ namespace ValadateRunner {
                 throw new FileError.NOENT("%s does not exist.", file);
 
             // Note: everything must be package, otherwise the analyzer would complain
-			context.add_source_file(
-			    new SourceFile(context,
-			                   is_pkg ? SourceFileType.PACKAGE : SourceFileType.SOURCE,
-			                   file)); // FIXME: Do we need realpath?
-			
+            context.add_source_file(
+                new SourceFile(context, SourceFileType.PACKAGE, file)); // FIXME: Do we need realpath?
+
             var deps = file.substring(0, file.length - 4) + "deps";
             if(FileUtils.test(deps, FileTest.EXISTS)) {
                 string deps_content;
@@ -111,12 +109,12 @@ namespace ValadateRunner {
             if(context.has_package(pkg))
                 return;
 
-			context.vapi_directories = path;
+            context.vapi_directories = path;
             var pkg_path = context.get_vapi_path(pkg);
             if(pkg_path == null)
                 throw new RunnerError.NOT_FOUND("Dependent package %s was not found. Need to add search dir?", pkg);
             context.add_package(pkg);
-            add_file(pkg_path, true);
+            add_file(pkg_path);
         }
 
         private void check() throws Error {

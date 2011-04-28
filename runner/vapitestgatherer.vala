@@ -31,8 +31,6 @@ namespace ValadateRunner {
 
         // Visitation methods
         public override void visit_namespace (Vala.Namespace ns) {
-            if(ns.external_package)
-                return;
             if(verbose)
                 stdout.printf("Scanning namespace %s...\n", ns.name);
 
@@ -48,8 +46,6 @@ namespace ValadateRunner {
         }
 
         public override void visit_class (Vala.Class cl) {
-            if(cl.external_package)
-                return;
             if(!is_fixture(cl))
                 return;
             if(verbose)
