@@ -122,27 +122,27 @@ namespace Test {
         }
 
         public void test_wait_async_normal() {
-            assert(wait_for_async(200, (cb) => changer.inc_async(cb),
+            assert(wait_for_async(200, (cb) => changer.inc_async.begin(cb),
                         res => changer.inc_async.end(res)));
             assert(changer.count == 1);
         }
 
         public void test_wait_async_fail() {
-            assert(!wait_for_async(20, (cb) => changer.inc_async(cb),
+            assert(!wait_for_async(20, (cb) => changer.inc_async.begin(cb),
                         res => changer.inc_async.end(res)));
             assert(changer.count == 0);
         }
 
         public void test_wait_cancellable_async_normal() {
             assert(wait_for_cancellable_async(200,
-                        (c, cb) => changer.cancellable_inc_async(c, cb),
+                        (c, cb) => changer.cancellable_inc_async.begin(c, cb),
                         res => changer.cancellable_inc_async.end(res)));
             assert(changer.count == 1);
         }
 
         public void test_wait_cancellable_async_fail() {
             assert(!wait_for_cancellable_async(20,
-                        (c, cb) => changer.cancellable_inc_async(c, cb),
+                        (c, cb) => changer.cancellable_inc_async.begin(c, cb),
                         res => changer.cancellable_inc_async.end(res)));
             assert(changer.count == 1); // The increment is done on cancel anyway!
         }

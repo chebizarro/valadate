@@ -95,14 +95,26 @@ namespace Valadate {
          * @return Content of the file at path.
          */
         public string contents(string path) {
-            string r;
+            string str;
             try {
-                file(path).load_contents(null, out r, null, null);
+                DataInputStream dins = new DataInputStream(file(path).read());
+                StringBuilder builder = new StringBuilder();
+                for (;;) {
+                    string? line = dins.read_line_utf8(null);
+                    if (line == null)
+                        break;
+                    
+                    builder.append(line);
+                    builder.append("\n");
+                }
+                
+                str = builder.str;
             } catch(Error e) {
                 error("Failed to read content from \"%s\": %s", path,
                         e.message);
             }
-            return r;
+            
+            return str;
         }
 
         // SECTION: Initialization
@@ -121,7 +133,7 @@ namespace Valadate {
                 try {
                     f.get_parent().make_directory_with_parents(null);
                 } catch(IOError.EXISTS e) {}
-                f.replace_contents(content, content.length, null, false,
+                f.replace_contents(content.data, null, false,
                         FileCreateFlags.REPLACE_DESTINATION, null, null);
             } catch(Error e) {
                 error("Failed to write to \"%s\": %s", path, e.message);

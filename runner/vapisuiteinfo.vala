@@ -46,7 +46,7 @@ namespace ValadateRunner {
                             method.name);
                 add_generator(method.name.substring(9).delimit("_",
                             '-'),
-                        (Generator)load_symbol(method.get_cname()));
+                        (Generator)load_symbol(Vala.CCodeBaseModule.get_ccode_name(method)));
             }
             foreach(var method in methods) {
                 if(!is_test(method))
@@ -58,7 +58,7 @@ namespace ValadateRunner {
                                     method.name);
                         add_test(suite, method.name.substring(5),
                                 test_marshal_synchronous,
-                                load_symbol(method.get_cname()), null);
+                                load_symbol(Vala.CCodeBaseModule.get_ccode_name(method)), null);
                         break;
                     case TestType.ASYNC:
                         if(verbose)
@@ -66,8 +66,8 @@ namespace ValadateRunner {
                                     method.name);
                         add_test(suite, method.name.substring(5),
                                 test_marshal_asynchronous,
-                                load_symbol(method.get_cname()),
-                                load_symbol(method.get_finish_cname()));
+                                load_symbol(Vala.CCodeBaseModule.get_ccode_name(method)),
+                                load_symbol(Vala.CCodeBaseModule.get_ccode_finish_name(method)));
                         break;
                     case TestType.CANCELLABLE:
                         if(verbose)
@@ -75,8 +75,8 @@ namespace ValadateRunner {
                                     method.name);
                         add_test(suite, method.name.substring(5),
                                 test_marshal_cancellable,
-                                load_symbol(method.get_cname()),
-                                load_symbol(method.get_finish_cname()));
+                                load_symbol(Vala.CCodeBaseModule.get_ccode_name(method)),
+                                load_symbol(Vala.CCodeBaseModule.get_ccode_finish_name(method)));
                         break;
                 }
             }
@@ -136,7 +136,7 @@ namespace ValadateRunner {
                         method.name);
                 return false;
             }
-            if(method.return_type.get_cname() != "void") {
+            if(Vala.CCodeBaseModule.get_ccode_name(method.return_type) != "void") {
                 warning("%s is named like a test, but it has non-void return type",
                         method.name);
                 return false;
@@ -186,11 +186,11 @@ namespace ValadateRunner {
             load_modules();
 
             GetType get_type = (GetType)load_symbol(
-                    cl.get_lower_case_cprefix() + "get_type");
+                Vala.CCodeBaseModule.get_ccode_lower_case_prefix(cl) + "get_type");
             Type type = get_type();
             if(verbose)
-                stdout.printf("        Loaded type %i (%s) for class %s\n",
-                        type, type.name(), cl.get_full_name());
+                stdout.printf("        Loaded type %s for class %s\n",
+                        type.name(), cl.get_full_name());
             return type;
         }
 

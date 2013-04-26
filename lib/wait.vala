@@ -29,9 +29,9 @@ namespace Valadate {
     private class SignalWaiter {
         public MainLoop loop = new MainLoop(MainContext.default(), true);
         public bool succeeded = false;
-        public Predicate predicate;
+        public unowned Predicate predicate;
 
-        public SignalWaiter(owned Predicate predicate) {
+        public SignalWaiter(Predicate predicate) {
             this.predicate = predicate;
         }
 

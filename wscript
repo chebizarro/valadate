@@ -58,9 +58,9 @@ def configure(conf):
             atleast_version='2.20.0',
             args='--cflags --libs')
     conf.check_cfg(
-            package='libvala-0.12',
-            uselib_store='libvala-0.12',
-            atleast_version='0.11.0',
+            package='libvala-0.20',
+            uselib_store='libvala-0.20',
+            atleast_version='0.20.1',
             args='--cflags --libs')
     conf.env['VERSION'] = VERSION
     conf.env['API_VER'] = API_VERSION

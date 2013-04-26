@@ -49,7 +49,8 @@ namespace ValadateRunner {
             if(!is_fixture(cl))
                 return;
             if(verbose)
-                stdout.printf("    Found fixture %s (%sget_type)\n", cl.get_full_name(), cl.get_lower_case_cprefix());
+                stdout.printf("    Found fixture %s (%sget_type)\n", cl.get_full_name(),
+                    Vala.CCodeBaseModule.get_ccode_lower_case_prefix(cl));
             try {
                 var suite_info = new VapiSuiteInfo(cl);
                 var suite = new TestSuite(cl.name);
