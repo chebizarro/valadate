@@ -1,3 +1,8 @@
+**Valadate is no longer being actively maintained by Yorba.**
+
+The code is preserved here for posterity or in case anyone wants to pick up the
+torch of maintainership.
+
 Valadate
 ========
 
@@ -9,7 +14,7 @@ Features
 --------
 
   * Automatic test discovery like JUnit or .NET testing framework.
-    
+
     Tests can be automatically found in a shared library using either
     .vapi ([Vala][vala] API description) or [.gir][gir] file.
 
