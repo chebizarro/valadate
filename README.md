@@ -1,7 +1,11 @@
-**Valadate is no longer being actively maintained by Yorba.**
+This is a fork of Valadate, updated to Vala 0.30 and Autotools
 
-The code is preserved here for posterity or in case anyone wants to pick up the
-torch of maintainership.
+To build
+
+./autogen.sh
+make
+
+
 
 Valadate
 ========
@@ -58,9 +62,8 @@ Dependencies
 ------------
 
   * [GLib][glib] 2.20.0 or later
-  * [Vala][vala] 0.11.7 or later
-  * [GOjbect-introspection][gir] 0.9.0 or later
-  * [Python][python] (for compilation only) 2.3 or later
+  * [Vala][vala] 0.30.0 or later
+  * [GOjbect-introspection][gir] 1.0.0 or later
 
 Copyright
 ---------
@@ -83,4 +86,3 @@ program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
 [vala]: http://live.gnome.org/Vala
 [gir]: http://live.gnome.org/GObjectIntrospection
 [glib]: http://www.gtk.org/ (The GTK+ Project)
-[python]: http://www.python.org
