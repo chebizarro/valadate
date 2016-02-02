@@ -3,21 +3,19 @@ INSTALL
 
 To install, run
 
-    ./waf configure
-    ./waf install
+    ./configure
+    make
+    make install
 
 You can change installation prefix by adding --prefix=... option to
 configure.
 
 You can change destdir by adding --destdir=... option to install.
 
-See ./waf --help for complete list of options.
-
 REQUIREMENTS
 ============
 
-  * [GLib](http://www.gtk.org/) at least 2.20.0
-  * [Vala](http://live.gnome.org/Vala) at least 0.7.7
+  * [GLib](http://www.gtk.org/) at least 2.44.0
+  * [Vala](http://live.gnome.org/Vala) at least 0.30.0
   * [GOjbect-introspection](http://live.gnome.org/GObjectIntrospection) at
     least 0.6.5
-  * [Python](http://www.python.org) (for compilation only) at least 2.3

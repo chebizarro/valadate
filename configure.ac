@@ -54,7 +54,9 @@ AC_SUBST(VALADATE_CFLAGS)
 AC_CONFIG_FILES([
 	Makefile
 	lib/Makefile
+	lib/libvaladate-0.1.pc
 	runner/Makefile
+	test/Makefile
 ])
 
 AC_OUTPUT

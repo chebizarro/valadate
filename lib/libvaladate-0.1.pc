@@ -1,0 +1,13 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+datarootdir=${prefix}/share
+datadir=${datarootdir}
+includedir=${prefix}/include/libvaladate-0.1
+
+Name: libvaladate
+Description: Unit testing framework for GObject
+Version: 0.1
+Requires: glib-2.0 gobject-2.0 gobject-introspection-1.0 libvala-0.30 gmodule-2.0
+Libs: -L${libdir} -llibvaladate
+Cflags: -I${includedir}

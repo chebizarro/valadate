@@ -159,8 +159,8 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in AUTHORS COPYING ChangeLog \
-	INSTALL ar-lib compile config.guess config.sub install-sh \
-	ltmain.sh missing
+	INSTALL ar-lib compile config.guess config.sub depcomp \
+	install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -329,7 +329,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
-SUBDIRS = lib runner #test
+SUBDIRS = lib runner test
 AM_CFLAGS = $(VALADATE_CFLAGS)
 AM_CPPFLAGS = \
 	$(addprefix -I ,$(VALADATE_LIBS)) \
