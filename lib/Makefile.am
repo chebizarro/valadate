@@ -27,7 +27,7 @@ libvaladate_la_VALAFLAGS = \
 libvaladate_la_LIBADD = $(VALADATE_LIBS) \
 	-lgio-2.0
 
-CLEANFILES = $(libvaladate_SOURCES:.vala=.c) \
+CLEANFILES = $(libvaladate_la_SOURCES:.vala=.c) \
 	libvaladate-0.1.vapi \
 	libvaladate.h \
 	Valadate-1.0.gir \
