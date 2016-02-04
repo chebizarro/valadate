@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 datarootdir=@datarootdir@
 datadir=@datadir@
-includedir=@includedir@/libvaladate-0.1
+includedir=@includedir@/libvaladate-1.0
 
 Name: libvaladate
 Description: Unit testing framework for GObject

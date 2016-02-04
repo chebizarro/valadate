@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 AC_INIT([valadate],
-        [0.1],
+        [1.0.0],
         [https://github.com/chebizarro/valadate/issues],
         [valadate],
         [https://github.com/chebizarro/valadate])
