@@ -1,16 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
-[![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
 [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate)](http://jenkins.valadate.org:8080/job/Valadate/)
-
-This is a fork of Valadate, updated to Vala 0.30 and Autotools
-
-To build
-
-./autogen.sh
-
-make
-
-
 
 Valadate
 ========
@@ -18,6 +7,10 @@ Valadate
 Valadate is a unit testing framework based on GLib Testing. It is primarily
 intended for testing code written in [Vala][vala], but can be used with any
 GObject-based code.
+
+You can follow Valadate's development [here](http://bit.ly/1UDpayV).
+
+The following features pertain to the ```master``` branch, the current development branch is [version-1.0.0](https://github.com/chebizarro/valadate/tree/version-1.0.0). Not all features below are guaranteed to work.
 
 Features
 --------
@@ -69,6 +62,14 @@ Dependencies
   * [GLib][glib] 2.20.0 or later
   * [Vala][vala] 0.30.0 or later
   * [GOjbect-introspection][gir] 1.0.0 or later
+
+Building
+--------
+```
+./autogen.sh
+make
+```
+
 
 Copyright
 ---------
