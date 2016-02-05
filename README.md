@@ -1,6 +1,9 @@
 [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
 [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate)](http://jenkins.valadate.org:8080/job/Valadate/)
 
+This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
+
 This is a fork of Valadate, updated to Vala 0.30 and Autotools
 
 To build
