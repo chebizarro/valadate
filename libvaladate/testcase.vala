@@ -22,7 +22,7 @@
 
 namespace Valadate {
 
-	public abstract class TestCase : GLib.Object {
+	public abstract class TestCase : Object, Test, TestFixture {
 
 		private GLib.TestSuite suite;
 		private Adaptor[] adaptors = new Adaptor[0];
@@ -41,6 +41,10 @@ namespace Valadate {
 											   adaptor.set_up,
 											   adaptor.run,
 											   adaptor.tear_down ));
+		}
+
+		public virtual void run(TestResult result) {
+
 		}
 
 		public virtual void set_up () {

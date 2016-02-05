@@ -90,7 +90,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = lib
+subdir = libvaladate
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -100,13 +100,14 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = libvaladate-0.1.pc
+CONFIG_CLEAN_FILES = libvaladate-1.0.pc
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libvaladate_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libvaladate_la_OBJECTS = libvaladate_la-fixture.lo \
-	libvaladate_la-tempdir.lo libvaladate_la-wait.lo
+am_libvaladate_la_OBJECTS = libvaladate_la-test.lo \
+	libvaladate_la-testcase.lo libvaladate_la-testfixture.lo \
+	libvaladate_la-testsuite.lo libvaladate_la-testresult.lo
 libvaladate_la_OBJECTS = $(am_libvaladate_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -185,9 +186,10 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in \
-	$(srcdir)/libvaladate-0.1.pc.in $(srcdir)/libvaladate-0.1.vapi \
+	$(srcdir)/libvaladate-1.0.pc.in $(srcdir)/libvaladate-1.0.vapi \
 	$(srcdir)/libvaladate.h $(srcdir)/libvaladate_la_vala.stamp \
-	$(top_srcdir)/depcomp fixture.c tempdir.c wait.c
+	$(top_srcdir)/depcomp test.c testcase.c testfixture.c \
+	testresult.c testsuite.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -315,9 +317,11 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LTLIBRARIES = libvaladate.la
 libvaladate_la_SOURCES = \
-	fixture.vala \
-	tempdir.vala \
-	wait.vala
+	test.vala \
+	testcase.vala \
+	testfixture.vala \
+	testsuite.vala \
+	testresult.vala
 
 libvaladate_la_CFLAGS = $(VALADATE_CFLAGS)
 libvaladate_la_CPPLAGS = $(VALADATE_CPPFLAGS) \
@@ -325,8 +329,8 @@ libvaladate_la_CPPLAGS = $(VALADATE_CPPFLAGS) \
 	`pkg-config --cflags --libs gio-2.0`
 
 libvaladate_la_VALAFLAGS = \
-	--library libvaladate-0.1 \
-	--vapi libvaladate-0.1.vapi \
+	--library libvaladate-1.0 \
+	--vapi libvaladate-1.0.vapi \
 	-H libvaladate.h \
 	--gir=Valadate-1.0.gir \
 	--pkg gio-2.0 \
@@ -338,12 +342,13 @@ libvaladate_la_VALAFLAGS = \
 libvaladate_la_LIBADD = $(VALADATE_LIBS) \
 	-lgio-2.0
 
-CLEANFILES = $(libvaladate_SOURCES:.vala=.c) \
-	libvaladate-0.1.vapi \
+CLEANFILES = $(libvaladate_la_SOURCES:.vala=.c) \
+	libvaladate-1.0.vapi \
 	libvaladate.h \
 	Valadate-1.0.gir \
 	*.stamp
 
+DISTCLEANFILES = $(CLEANFILES)
 MAINTAINERCLEANFILES = $(libvaladate_la_SOURCES:.vala=.c)
 all: all-am
 
@@ -358,9 +363,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign libvaladate/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign lib/Makefile
+	  $(AUTOMAKE) --foreign libvaladate/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -378,7 +383,7 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-libvaladate-0.1.pc: $(top_builddir)/config.status $(srcdir)/libvaladate-0.1.pc.in
+libvaladate-1.0.pc: $(top_builddir)/config.status $(srcdir)/libvaladate-1.0.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstLTLIBRARIES:
@@ -401,9 +406,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-fixture.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-tempdir.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-wait.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-test.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-testcase.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-testfixture.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-testresult.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvaladate_la-testsuite.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -429,42 +436,66 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-libvaladate_la-fixture.lo: fixture.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-fixture.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-fixture.Tpo -c -o libvaladate_la-fixture.lo `test -f 'fixture.c' || echo '$(srcdir)/'`fixture.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-fixture.Tpo $(DEPDIR)/libvaladate_la-fixture.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fixture.c' object='libvaladate_la-fixture.lo' libtool=yes @AMDEPBACKSLASH@
+libvaladate_la-test.lo: test.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-test.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-test.Tpo -c -o libvaladate_la-test.lo `test -f 'test.c' || echo '$(srcdir)/'`test.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-test.Tpo $(DEPDIR)/libvaladate_la-test.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test.c' object='libvaladate_la-test.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-fixture.lo `test -f 'fixture.c' || echo '$(srcdir)/'`fixture.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-test.lo `test -f 'test.c' || echo '$(srcdir)/'`test.c
 
-libvaladate_la-tempdir.lo: tempdir.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-tempdir.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-tempdir.Tpo -c -o libvaladate_la-tempdir.lo `test -f 'tempdir.c' || echo '$(srcdir)/'`tempdir.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-tempdir.Tpo $(DEPDIR)/libvaladate_la-tempdir.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tempdir.c' object='libvaladate_la-tempdir.lo' libtool=yes @AMDEPBACKSLASH@
+libvaladate_la-testcase.lo: testcase.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-testcase.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-testcase.Tpo -c -o libvaladate_la-testcase.lo `test -f 'testcase.c' || echo '$(srcdir)/'`testcase.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-testcase.Tpo $(DEPDIR)/libvaladate_la-testcase.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testcase.c' object='libvaladate_la-testcase.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-tempdir.lo `test -f 'tempdir.c' || echo '$(srcdir)/'`tempdir.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-testcase.lo `test -f 'testcase.c' || echo '$(srcdir)/'`testcase.c
 
-libvaladate_la-wait.lo: wait.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-wait.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-wait.Tpo -c -o libvaladate_la-wait.lo `test -f 'wait.c' || echo '$(srcdir)/'`wait.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-wait.Tpo $(DEPDIR)/libvaladate_la-wait.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='wait.c' object='libvaladate_la-wait.lo' libtool=yes @AMDEPBACKSLASH@
+libvaladate_la-testfixture.lo: testfixture.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-testfixture.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-testfixture.Tpo -c -o libvaladate_la-testfixture.lo `test -f 'testfixture.c' || echo '$(srcdir)/'`testfixture.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-testfixture.Tpo $(DEPDIR)/libvaladate_la-testfixture.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testfixture.c' object='libvaladate_la-testfixture.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-wait.lo `test -f 'wait.c' || echo '$(srcdir)/'`wait.c
-$(srcdir)/fixture.c: $(srcdir)/libvaladate_la_vala.stamp
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-testfixture.lo `test -f 'testfixture.c' || echo '$(srcdir)/'`testfixture.c
+
+libvaladate_la-testsuite.lo: testsuite.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-testsuite.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-testsuite.Tpo -c -o libvaladate_la-testsuite.lo `test -f 'testsuite.c' || echo '$(srcdir)/'`testsuite.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-testsuite.Tpo $(DEPDIR)/libvaladate_la-testsuite.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testsuite.c' object='libvaladate_la-testsuite.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-testsuite.lo `test -f 'testsuite.c' || echo '$(srcdir)/'`testsuite.c
+
+libvaladate_la-testresult.lo: testresult.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -MT libvaladate_la-testresult.lo -MD -MP -MF $(DEPDIR)/libvaladate_la-testresult.Tpo -c -o libvaladate_la-testresult.lo `test -f 'testresult.c' || echo '$(srcdir)/'`testresult.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvaladate_la-testresult.Tpo $(DEPDIR)/libvaladate_la-testresult.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testresult.c' object='libvaladate_la-testresult.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvaladate_la_CFLAGS) $(CFLAGS) -c -o libvaladate_la-testresult.lo `test -f 'testresult.c' || echo '$(srcdir)/'`testresult.c
+$(srcdir)/test.c: $(srcdir)/libvaladate_la_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
 	fi
-$(srcdir)/tempdir.c: $(srcdir)/libvaladate_la_vala.stamp
+$(srcdir)/testcase.c: $(srcdir)/libvaladate_la_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
 	fi
-$(srcdir)/wait.c: $(srcdir)/libvaladate_la_vala.stamp
+$(srcdir)/testfixture.c: $(srcdir)/libvaladate_la_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
 	fi
-$(srcdir)/libvaladate-0.1.vapi: $(srcdir)/libvaladate_la_vala.stamp
+$(srcdir)/testsuite.c: $(srcdir)/libvaladate_la_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
+	fi
+$(srcdir)/testresult.c: $(srcdir)/libvaladate_la_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
+	fi
+$(srcdir)/libvaladate-1.0.vapi: $(srcdir)/libvaladate_la_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/libvaladate_la_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
@@ -474,9 +505,9 @@ $(srcdir)/libvaladate.h: $(srcdir)/libvaladate_la_vala.stamp
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libvaladate_la_vala.stamp; \
 	fi
-$(srcdir)/libvaladate_la_vala.stamp: fixture.vala tempdir.vala wait.vala
+$(srcdir)/libvaladate_la_vala.stamp: test.vala testcase.vala testfixture.vala testsuite.vala testresult.vala
 	$(AM_V_at)rm -f $@ && echo stamp > $@-t
-	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(libvaladate_la_VALAFLAGS) $(VALAFLAGS) -C fixture.vala tempdir.vala wait.vala
+	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(libvaladate_la_VALAFLAGS) $(VALAFLAGS) -C test.vala testcase.vala testfixture.vala testsuite.vala testresult.vala
 	$(AM_V_at)mv -f $@-t $@
 
 mostlyclean-libtool:
@@ -598,19 +629,24 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f $(srcdir)/fixture.c
-	-rm -f $(srcdir)/libvaladate-0.1.vapi
+	-rm -f $(srcdir)/libvaladate-1.0.vapi
 	-rm -f $(srcdir)/libvaladate.h
 	-rm -f $(srcdir)/libvaladate_la_vala.stamp
-	-rm -f $(srcdir)/tempdir.c
-	-rm -f $(srcdir)/wait.c
-	-rm -f fixture.c
-	-rm -f tempdir.c
-	-rm -f wait.c
+	-rm -f $(srcdir)/test.c
+	-rm -f $(srcdir)/testcase.c
+	-rm -f $(srcdir)/testfixture.c
+	-rm -f $(srcdir)/testresult.c
+	-rm -f $(srcdir)/testsuite.c
+	-rm -f test.c
+	-rm -f testcase.c
+	-rm -f testfixture.c
+	-rm -f testresult.c
+	-rm -f testsuite.c
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 

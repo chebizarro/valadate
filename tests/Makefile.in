@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# --- test tes application ---
+# --- tests ---
 
 VPATH = @srcdir@
 am__is_gnu_make = { \
@@ -90,7 +90,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = test
+noinst_PROGRAMS = tests_libvaladate$(EXEEXT)
+check_PROGRAMS = tests_libvaladate$(EXEEXT)
+subdir = tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -102,20 +104,22 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-LTLIBRARIES = $(noinst_LTLIBRARIES)
+PROGRAMS = $(noinst_PROGRAMS)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_tests_libvaladate_OBJECTS =  \
+	libvaladate/tests_libvaladate-main.$(OBJEXT)
+tests_libvaladate_OBJECTS = $(am_tests_libvaladate_OBJECTS)
 am__DEPENDENCIES_1 =
-libtest_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__objects_1 = libtest_la-async.lo libtest_la-prime.lo \
-	libtest_la-tempdir.lo libtest_la-wait.lo
-am_libtest_la_OBJECTS = $(am__objects_1)
-libtest_la_OBJECTS = $(am_libtest_la_OBJECTS)
+tests_libvaladate_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(top_builddir)/libvaladate/libvaladate.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libtest_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libtest_la_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+tests_libvaladate_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(tests_libvaladate_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -158,8 +162,8 @@ AM_V_VALAC = $(am__v_VALAC_@AM_V@)
 am__v_VALAC_ = $(am__v_VALAC_@AM_DEFAULT_V@)
 am__v_VALAC_0 = @echo "  VALAC   " $@;
 am__v_VALAC_1 = 
-SOURCES = $(libtest_la_SOURCES)
-DIST_SOURCES = $(libtest_la_SOURCES)
+SOURCES = $(tests_libvaladate_SOURCES)
+DIST_SOURCES = $(tests_libvaladate_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -185,8 +189,8 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in \
-	$(srcdir)/libtest_la_vala.stamp $(top_srcdir)/depcomp async.c \
-	prime.c tempdir.c wait.c
+	$(srcdir)/tests_libvaladate_vala.stamp $(top_srcdir)/depcomp \
+	libvaladate/main.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -312,43 +316,28 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LTLIBRARIES = libtest.la
-libtest_la_sources = \
-	async.vala \
-	prime.vala \
-	tempdir.vala \
-	wait.vala
+TEST_PROGS = tests_libvaladate
+tests_libvaladate_SOURCES = \
+	libvaladate/main.vala
 
-libtest_la_SOURCES = $(libtest_la_sources)
-libtest_la_VALAFLAGS = \
-	--library libtest.0 \
-	--gir=Test-0.gir \
-	--pkg glib-2.0 \
-	--pkg gio-2.0 \
-	--pkg gobject-2.0 \
-	--pkg libvala-0.30 \
-	--pkg libvaladate-0.1 \
-	--target-glib=2.44.0 \
-	--vapidir $(top_builddir)/lib
+tests_libvaladate_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
+	--pkg libvaladate-1.0 \
+	--vapidir $(top_builddir)/libvaladate \
+	-g
 
-libtest_la_CFLAGS = \
-	$(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/lib
+tests_libvaladate_LDADD = \
+	$(VALADATE_LIBS) \
+	$(top_builddir)/libvaladate/libvaladate.la
 
-libtest_la_CPPFLAGS = $(VALADATE_CPPFLAGS) \
-	$(addprefix -I ,$(VALADATE_LIBS)) \
-	`pkg-config --cflags --libs $(pkg_modules)`
+tests_libvaladate_CPPFLAGS = \
+	$(VALADATE_CPPFLAGS)
 
-libtest_la_LIBADD = \
-	$(VALADATE_LIBS) 
+tests_libvaladate_CFLAGS = $(VALADATE_CFLAGS) \
+	-I$(top_srcdir)/libvaladate
 
-CLEANFILES = \
-	$(libtest_la_SOURCES:.vala=.c) \
-	*.stamp
-
-MAINTAINERCLEANFILES = \
-	$(libtest_la_SOURCES:.vala=.c)
-
+CLEANFILES = $(tests_libvaladate_tests_libvaladate_SOURCES:.vala=.c)
+DISTCLEANFILES = $(CLEANFILES)
 all: all-am
 
 .SUFFIXES:
@@ -362,9 +351,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign test/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign test/Makefile
+	  $(AUTOMAKE) --foreign tests/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -383,30 +372,45 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
-clean-noinstLTLIBRARIES:
-	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
-	@list='$(noinst_LTLIBRARIES)'; \
-	locs=`for p in $$list; do echo $$p; done | \
-	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
-	      sort -u`; \
-	test -z "$$locs" || { \
-	  echo rm -f $${locs}; \
-	  rm -f $${locs}; \
-	}
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
 
-libtest.la: $(libtest_la_OBJECTS) $(libtest_la_DEPENDENCIES) $(EXTRA_libtest_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libtest_la_LINK)  $(libtest_la_OBJECTS) $(libtest_la_LIBADD) $(LIBS)
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+libvaladate/$(am__dirstamp):
+	@$(MKDIR_P) libvaladate
+	@: > libvaladate/$(am__dirstamp)
+libvaladate/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) libvaladate/$(DEPDIR)
+	@: > libvaladate/$(DEPDIR)/$(am__dirstamp)
+libvaladate/tests_libvaladate-main.$(OBJEXT):  \
+	libvaladate/$(am__dirstamp) \
+	libvaladate/$(DEPDIR)/$(am__dirstamp)
+
+tests_libvaladate$(EXEEXT): $(tests_libvaladate_OBJECTS) $(tests_libvaladate_DEPENDENCIES) $(EXTRA_tests_libvaladate_DEPENDENCIES) 
+	@rm -f tests_libvaladate$(EXEEXT)
+	$(AM_V_CCLD)$(tests_libvaladate_LINK) $(tests_libvaladate_OBJECTS) $(tests_libvaladate_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f libvaladate/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtest_la-async.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtest_la-prime.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtest_la-tempdir.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtest_la-wait.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libvaladate/$(DEPDIR)/tests_libvaladate-main.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -432,56 +436,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-libtest_la-async.lo: async.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -MT libtest_la-async.lo -MD -MP -MF $(DEPDIR)/libtest_la-async.Tpo -c -o libtest_la-async.lo `test -f 'async.c' || echo '$(srcdir)/'`async.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtest_la-async.Tpo $(DEPDIR)/libtest_la-async.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='async.c' object='libtest_la-async.lo' libtool=yes @AMDEPBACKSLASH@
+libvaladate/tests_libvaladate-main.o: libvaladate/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_libvaladate_CPPFLAGS) $(CPPFLAGS) $(tests_libvaladate_CFLAGS) $(CFLAGS) -MT libvaladate/tests_libvaladate-main.o -MD -MP -MF libvaladate/$(DEPDIR)/tests_libvaladate-main.Tpo -c -o libvaladate/tests_libvaladate-main.o `test -f 'libvaladate/main.c' || echo '$(srcdir)/'`libvaladate/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libvaladate/$(DEPDIR)/tests_libvaladate-main.Tpo libvaladate/$(DEPDIR)/tests_libvaladate-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libvaladate/main.c' object='libvaladate/tests_libvaladate-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -c -o libtest_la-async.lo `test -f 'async.c' || echo '$(srcdir)/'`async.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_libvaladate_CPPFLAGS) $(CPPFLAGS) $(tests_libvaladate_CFLAGS) $(CFLAGS) -c -o libvaladate/tests_libvaladate-main.o `test -f 'libvaladate/main.c' || echo '$(srcdir)/'`libvaladate/main.c
 
-libtest_la-prime.lo: prime.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -MT libtest_la-prime.lo -MD -MP -MF $(DEPDIR)/libtest_la-prime.Tpo -c -o libtest_la-prime.lo `test -f 'prime.c' || echo '$(srcdir)/'`prime.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtest_la-prime.Tpo $(DEPDIR)/libtest_la-prime.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='prime.c' object='libtest_la-prime.lo' libtool=yes @AMDEPBACKSLASH@
+libvaladate/tests_libvaladate-main.obj: libvaladate/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_libvaladate_CPPFLAGS) $(CPPFLAGS) $(tests_libvaladate_CFLAGS) $(CFLAGS) -MT libvaladate/tests_libvaladate-main.obj -MD -MP -MF libvaladate/$(DEPDIR)/tests_libvaladate-main.Tpo -c -o libvaladate/tests_libvaladate-main.obj `if test -f 'libvaladate/main.c'; then $(CYGPATH_W) 'libvaladate/main.c'; else $(CYGPATH_W) '$(srcdir)/libvaladate/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libvaladate/$(DEPDIR)/tests_libvaladate-main.Tpo libvaladate/$(DEPDIR)/tests_libvaladate-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libvaladate/main.c' object='libvaladate/tests_libvaladate-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -c -o libtest_la-prime.lo `test -f 'prime.c' || echo '$(srcdir)/'`prime.c
-
-libtest_la-tempdir.lo: tempdir.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -MT libtest_la-tempdir.lo -MD -MP -MF $(DEPDIR)/libtest_la-tempdir.Tpo -c -o libtest_la-tempdir.lo `test -f 'tempdir.c' || echo '$(srcdir)/'`tempdir.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtest_la-tempdir.Tpo $(DEPDIR)/libtest_la-tempdir.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tempdir.c' object='libtest_la-tempdir.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -c -o libtest_la-tempdir.lo `test -f 'tempdir.c' || echo '$(srcdir)/'`tempdir.c
-
-libtest_la-wait.lo: wait.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -MT libtest_la-wait.lo -MD -MP -MF $(DEPDIR)/libtest_la-wait.Tpo -c -o libtest_la-wait.lo `test -f 'wait.c' || echo '$(srcdir)/'`wait.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtest_la-wait.Tpo $(DEPDIR)/libtest_la-wait.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='wait.c' object='libtest_la-wait.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtest_la_CPPFLAGS) $(CPPFLAGS) $(libtest_la_CFLAGS) $(CFLAGS) -c -o libtest_la-wait.lo `test -f 'wait.c' || echo '$(srcdir)/'`wait.c
-$(srcdir)/async.c: $(srcdir)/libtest_la_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/libtest_la_vala.stamp; fi
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_libvaladate_CPPFLAGS) $(CPPFLAGS) $(tests_libvaladate_CFLAGS) $(CFLAGS) -c -o libvaladate/tests_libvaladate-main.obj `if test -f 'libvaladate/main.c'; then $(CYGPATH_W) 'libvaladate/main.c'; else $(CYGPATH_W) '$(srcdir)/libvaladate/main.c'; fi`
+$(srcdir)/libvaladate/main.c: $(srcdir)/tests_libvaladate_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/tests_libvaladate_vala.stamp; fi
 	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libtest_la_vala.stamp; \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_libvaladate_vala.stamp; \
 	fi
-$(srcdir)/prime.c: $(srcdir)/libtest_la_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/libtest_la_vala.stamp; fi
-	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libtest_la_vala.stamp; \
-	fi
-$(srcdir)/tempdir.c: $(srcdir)/libtest_la_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/libtest_la_vala.stamp; fi
-	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libtest_la_vala.stamp; \
-	fi
-$(srcdir)/wait.c: $(srcdir)/libtest_la_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/libtest_la_vala.stamp; fi
-	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/libtest_la_vala.stamp; \
-	fi
-$(srcdir)/libtest_la_vala.stamp: async.vala prime.vala tempdir.vala wait.vala
+$(srcdir)/tests_libvaladate_vala.stamp: libvaladate/main.vala
 	$(AM_V_at)rm -f $@ && echo stamp > $@-t
-	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(libtest_la_VALAFLAGS) $(VALAFLAGS) -C async.vala prime.vala tempdir.vala wait.vala
+	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(tests_libvaladate_VALAFLAGS) $(VALAFLAGS) -C libvaladate/main.vala
 	$(AM_V_at)mv -f $@-t $@
 
 mostlyclean-libtool:
@@ -573,8 +548,9 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(PROGRAMS)
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -603,27 +579,23 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f libvaladate/$(DEPDIR)/$(am__dirstamp)
+	-rm -f libvaladate/$(am__dirstamp)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f $(srcdir)/async.c
-	-rm -f $(srcdir)/libtest_la_vala.stamp
-	-rm -f $(srcdir)/prime.c
-	-rm -f $(srcdir)/tempdir.c
-	-rm -f $(srcdir)/wait.c
-	-rm -f async.c
-	-rm -f prime.c
-	-rm -f tempdir.c
-	-rm -f wait.c
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	-rm -f $(srcdir)/libvaladate/main.c
+	-rm -f $(srcdir)/tests_libvaladate_vala.stamp
+	-rm -f libvaladate/main.c
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
-	mostlyclean-am
+clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
+	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf libvaladate/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -669,7 +641,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf libvaladate/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -688,21 +660,21 @@ ps-am:
 
 uninstall-am:
 
-.MAKE: install-am install-strip
+.MAKE: check-am install-am install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
-	clean-libtool clean-noinstLTLIBRARIES cscopelist-am ctags \
-	ctags-am distclean distclean-compile distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am
+.PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
+	clean-checkPROGRAMS clean-generic clean-libtool \
+	clean-noinstPROGRAMS cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags tags-am uninstall uninstall-am
 
 .PRECIOUS: Makefile
 

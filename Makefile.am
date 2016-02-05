@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS  = -I m4 ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
-SUBDIRS = lib runner test
+SUBDIRS = libvaladate tests
 
 AM_CFLAGS =	$(VALADATE_CFLAGS)
 

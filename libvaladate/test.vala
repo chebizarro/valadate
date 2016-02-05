@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 2009  Jan Hudec <bulb@ucw.cz>
+ * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using GLib;
-using Valadate;
+namespace Valadate {
 
-namespace Test {
-    public class Test1 : Object, Fixture {
-        public void test_1() {
-            assert(1 == 1);
-        }
+    public interface Test : Object {
+
+		public abstract void run (TestResult result);
+
     }
+
 }

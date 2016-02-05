@@ -1,40 +1,30 @@
-# --- test tes application ---
+# --- tests ---
 
-noinst_LTLIBRARIES = libtest.la
+noinst_PROGRAMS = tests_libvaladate
+
+TEST_PROGS = tests_libvaladate
+check_PROGRAMS = tests_libvaladate
+
+tests_libvaladate_SOURCES =  \
+	libvaladate/main.vala
 	
-libtest_la_sources = \
-	async.vala \
-	prime.vala \
-	tempdir.vala \
-	wait.vala
+tests_libvaladate_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
+	--pkg libvaladate-1.0 \
+	--vapidir $(top_builddir)/libvaladate \
+	-g
 
-libtest_la_SOURCES = $(libtest_la_sources)
+tests_libvaladate_LDADD = \
+	$(VALADATE_LIBS) \
+	$(top_builddir)/libvaladate/libvaladate.la
 
-libtest_la_VALAFLAGS = \
-	--library libtest.0 \
-	--gir=Test-0.gir \
-	--pkg glib-2.0 \
-	--pkg gio-2.0 \
-	--pkg gobject-2.0 \
-	--pkg libvala-0.30 \
-	--pkg libvaladate-0.1 \
-	--target-glib=2.44.0 \
-	--vapidir $(top_builddir)/lib
+tests_libvaladate_CPPFLAGS = \
+	$(VALADATE_CPPFLAGS)
+	
+tests_libvaladate_CFLAGS = $(VALADATE_CFLAGS) \
+	-I$(top_srcdir)/libvaladate
 
-libtest_la_CFLAGS = \
-	$(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/lib
+CLEANFILES = $(tests_libvaladate_tests_libvaladate_SOURCES:.vala=.c)
 
-libtest_la_CPPFLAGS = $(VALADATE_CPPFLAGS) \
-	$(addprefix -I ,$(VALADATE_LIBS)) \
-	`pkg-config --cflags --libs $(pkg_modules)`
+DISTCLEANFILES = $(CLEANFILES)
 
-libtest_la_LIBADD = \
-	$(VALADATE_LIBS) 
-
-CLEANFILES = \
-	$(libtest_la_SOURCES:.vala=.c) \
-	*.stamp
-
-MAINTAINERCLEANFILES = \
-	$(libtest_la_SOURCES:.vala=.c)
