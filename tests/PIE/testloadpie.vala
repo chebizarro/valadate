@@ -17,78 +17,34 @@
  */
  
 namespace Valadate {
-	
-	
-	public class TestPIE : TestCase {
-		
-		public TestPIE() {
-			base("PIE Tests");
-		}
-		
-		
-		[Test (name="/valadate/tests/testpie")]
-		public void test_pie () {
-			
-			
-			
-		}
+
+	static int main (string[] args) {
+		load_pie();
+		return 0;
 		
 	}
 
-	public void load_pie (string dirname) {
-		Dir dir;
-		try {
-			dir = Dir.open (dirname, 0);
-		} catch (Error e) {
-			return;
-		}
+	
+	public void load_pie () {
 		
-		string? name = null;
+		var modname = Config.VALADATE_TESTS_DIR + "/PIE/tests_PIE";
+		var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 
-		while ((name = dir.read_name ()) != null) {
-			string path = Path.build_filename (dirname, name);
-			if (FileUtils.test (path, FileTest.IS_DIR)) {
-				continue;
-			}
-			if (!name.has_prefix ("valaplugin")) {
-				continue;
-			}
-
-			var mod = Module.open (path, ModuleFlags.BIND_LOCAL);
-
-			if (mod == null) {
-				if (verbose_mode) {
-					stdout.printf ("Could not load module: %s\n", path);
-				}
-				continue;
-			} else {
-				if (verbose_mode) {
-					stdout.printf ("Loaded module: %s\n", path);
-				}
-			}
-
-			void* function;
-			if (!mod.symbol ("vala_plugin_register", out function) || function == null) {
-				if (verbose_mode) {
-					stdout.printf ("Could not load entry point for module %s\n", path);
-				}
-				continue;
-			}
-
-			unowned RegisterPluginFunction register_plugin = (RegisterPluginFunction) function;
-			register_plugin (this);
-
+		if (mod == null) {
+			stdout.printf ("Could not load module: %s\n", modname);
+		} else {
+			stdout.printf ("Loaded module: %s\n", modname);
 			mod.make_resident ();
 		}
+
+		/*
+		void* function;
+		if (!mod.symbol ("vala_plugin_register", out function) || function == null) {
+			stdout.printf ("Could not load entry point for module %s\n", path);
+			continue;
+		}*/
+
 	}
-	
-	
-	static int main (string[] args) {
-		message ("Test");
-		return 1;
-		
-	}
-	
 	
 	
 }

@@ -38,7 +38,7 @@ namespace Valadate {
 	
 	static int main (string[] args) {
 		message ("Test");
-		return 1;
+		return 0;
 		
 	}
 	

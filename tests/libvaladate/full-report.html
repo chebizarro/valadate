@@ -1,0 +1,43 @@
+<html><head>
+<title>GTester Unit Test Report</title>
+
+  <style type="text/css" media="screen">
+    .VisibleSection { }
+    .HiddenSection  { display: none; }
+  </style>
+  <script language="javascript" type="text/javascript"><!--
+  function toggle_display (parentid, tagtype, idmatch, keymatch) {
+    ptag = document.getElementById (parentid);
+    tags = ptag.getElementsByTagName (tagtype);
+    for (var i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var key = tag.getAttribute ("keywords");
+      if (tag.id.indexOf (idmatch) == 0 && key && key.match (keymatch)) {
+        if (tag.className.indexOf ("HiddenSection") >= 0)
+          tag.className = "VisibleSection";
+        else
+          tag.className = "HiddenSection";
+      }
+    }
+  }
+  message_array = Array();
+  function view_testlog (wname, file, random_seed, tcase, msgtitle, msgid) {
+      txt = message_array[msgid];
+      var w = window.open ("", // URI
+                           wname,
+                           "resizable,scrollbars,status,width=790,height=400");
+      var doc = w.document;
+      doc.write ("<h2>File: " + file + "</h2>\n");
+      doc.write ("<h3>Case: " + tcase + "</h3>\n");
+      doc.write ("<strong>Random Seed:</strong> <code>" + random_seed + "</code> <br /><br />\n");
+      doc.write ("<strong>" + msgtitle + "</strong><br />\n");
+      doc.write ("<pre>");
+      doc.write (txt);
+      doc.write ("</pre>\n");
+      doc.write ("<a href=\'javascript:window.close()\'>Close Window</a>\n");
+      doc.close();
+  }
+  --></script>
+  </head>
+<body>
+<h2>GTester Unit Test Report</h2>

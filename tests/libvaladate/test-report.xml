@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<gtester>
+  <testbinary path="tests_libvaladate">
+    <binary file="tests_libvaladate"/>
+    <random-seed>R02S1dedb59c7093c15d45c47615cdf29d43</random-seed>
+    <testcase path="/libvaladate/testcase/new">
+      <duration>0.000063</duration>
+      <status exit-status="0" n-forks="0" result="success"/>
+    </testcase>
+    <testcase path="/libvaladate/testcase/add_test">
+      <duration>0.000010</duration>
+      <status exit-status="0" n-forks="0" result="success"/>
+    </testcase>
+    <duration>0.002399</duration>
+  </testbinary>
+</gtester>

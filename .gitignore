@@ -3,6 +3,7 @@
 /*.o
 /*.orig
 /*.rej
+/*.stamp
 /*.tab.c
 /*~
 /.*.sw[nop]

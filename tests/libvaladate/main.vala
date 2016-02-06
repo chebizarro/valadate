@@ -1,9 +1,23 @@
 namespace Valadate {
 
+	public class TestTestCase : TestCase {
+		
+		public TestTestCase(string name) {
+			base(name);
+		}
+		
+	}
+
+
 	void add_tests () {
 		GLib.Test.add_func ("/libvaladate/testcase/new", () => {
-			//TestCase test = new TestCase("TestTestCase");
-			//assert(test is GLib.TestCase);
+			TestCase test = new TestTestCase("TestTestCase");
+			assert(test is TestCase);
+		});
+
+		GLib.Test.add_func ("/libvaladate/testcase/add_test", () => {
+			TestCase test = new TestTestCase("TestTestCase");
+			assert(test is TestCase);
 		});
 	}
 

@@ -1,20 +1,13 @@
 ACLOCAL_AMFLAGS  = -I m4 ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
-SUBDIRS = libvaladate tests
+EXTRA_DIST = \
+	$(noinst_DATA) \
+	$(INTLTOOL_FILES) \
+	autogen.sh
 
-AM_CFLAGS =	$(VALADATE_CFLAGS)
+CLEANFILES = *.stamp
 
-AM_CPPFLAGS = \
-	$(addprefix -I ,$(VALADATE_LIBS)) \
-	`pkg-config --cflags --libs $(pkg_modules)` \
-	-w \
-	-g \
-	$(VALADATE_CPPFLAGS)
-
-
-AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
-	--pkg config \
-	-g
+SUBDIRS = libvaladate tests vapi
 
 -include $(top_srcdir)/git.mk

@@ -7,7 +7,7 @@ AC_INIT([valadate],
 
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
-dnl AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
@@ -43,6 +43,9 @@ LT_INIT([disable-static])
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
+VALADATE_TESTS_DIR=[${PWD}/tests]
+AC_SUBST(VALADATE_TESTS_DIR)
+
 pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0"
 AC_SUBST(pkg_modules)
 
@@ -57,6 +60,7 @@ AC_CONFIG_FILES([
 	tests/Makefile
 	tests/libvaladate/Makefile
 	tests/PIE/Makefile
+	vapi/Makefile
 ])
 
 AC_OUTPUT

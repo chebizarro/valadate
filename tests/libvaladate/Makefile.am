@@ -1,4 +1,4 @@
-# --- tests ---
+include $(top_srcdir)/base.am
 
 noinst_PROGRAMS = tests_libvaladate
 

@@ -1,9 +1,11 @@
+include $(top_srcdir)/base.am
+
 # --- PIE tests ---
 
-noinst_PROGRAMS = tests_PIE
+noinst_PROGRAMS = tests_PIE testload_PIE
 
-TEST_PROGS = tests_PIE
-check_PROGRAMS = tests_PIE
+TEST_PROGS = tests_PIE testload_PIE
+check_PROGRAMS = tests_PIE testload_PIE
 
 tests_PIE_SOURCES =  \
 	testpie.vala
@@ -27,6 +29,7 @@ tests_PIE_LDADD = \
 
 tests_PIE_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
 	-fPIE
 	
 tests_PIE_CFLAGS = $(VALADATE_CFLAGS) \
@@ -35,8 +38,34 @@ tests_PIE_CFLAGS = $(VALADATE_CFLAGS) \
 	-fPIE \
 	-shared
 
+testload_PIE_SOURCES =  \
+	testloadpie.vala
+	
+testload_PIE_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
+	--pkg libvaladate-1.0 \
+	--pkg gmodule-2.0 \
+	--pkg config \
+	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
+	--target-glib=2.40.0 \
+	-g
+
+testload_PIE_LDADD = \
+	$(VALADATE_LIBS) \
+	$(top_builddir)/libvaladate/libvaladate.la
+
+testload_PIE_CPPFLAGS = \
+	$(VALADATE_CPPFLAGS) \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\"
+	
+testload_PIE_CFLAGS = $(VALADATE_CFLAGS) \
+	-I$(top_srcdir)/libvaladate \
+	-I$(top_srcdir)
+
 CLEANFILES = \
 	$(tests_PIE_SOURCES:.vala=.c) \
+	$(testload_PIE_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o
