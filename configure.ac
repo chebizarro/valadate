@@ -43,7 +43,7 @@ LT_INIT([disable-static])
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
-pkg_modules="glib-2.0 gobject-2.0 gobject-introspection-1.0 libvala-0.30 gmodule-2.0"
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0"
 AC_SUBST(pkg_modules)
 
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])

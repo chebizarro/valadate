@@ -12276,7 +12276,7 @@ fi
 
 
 
-pkg_modules="glib-2.0 gobject-2.0 gobject-introspection-1.0 libvala-0.30 gmodule-2.0"
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0"
 
 
 
