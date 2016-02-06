@@ -38,3 +38,5 @@ CLEANFILES = $(libvaladate_la_SOURCES:.vala=.c) \
 DISTCLEANFILES = $(CLEANFILES)
 
 MAINTAINERCLEANFILES = $(libvaladate_la_SOURCES:.vala=.c)
+
+-include $(top_srcdir)/git.mk

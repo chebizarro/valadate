@@ -16,3 +16,5 @@ AM_CPPFLAGS = \
 AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
 	--pkg config \
 	-g
+
+-include $(top_srcdir)/git.mk

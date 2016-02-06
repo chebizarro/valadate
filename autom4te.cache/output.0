@@ -12493,8 +12493,7 @@ fi
 
 
 
-
-ac_config_files="$ac_config_files Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile"
+ac_config_files="$ac_config_files Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile tests/libvaladate/Makefile tests/PIE/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -13540,6 +13539,8 @@ do
     "libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/Makefile" ;;
     "libvaladate/libvaladate-1.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/libvaladate-1.0.pc" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
+    "tests/libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libvaladate/Makefile" ;;
+    "tests/PIE/Makefile") CONFIG_FILES="$CONFIG_FILES tests/PIE/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

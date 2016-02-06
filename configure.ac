@@ -48,7 +48,6 @@ AC_SUBST(pkg_modules)
 
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
-
 AC_SUBST(VALADATE_CFLAGS)
 
 AC_CONFIG_FILES([
@@ -56,6 +55,8 @@ AC_CONFIG_FILES([
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
+	tests/libvaladate/Makefile
+	tests/PIE/Makefile
 ])
 
 AC_OUTPUT

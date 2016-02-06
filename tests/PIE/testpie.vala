@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 2009  Jan Hudec <bulb@ucw.cz>
+ * Copyright (C) 20016  Chris Daley <chebizarro@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -15,15 +15,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include <girepository.h>
-#include <glib-object.h>
-
-/* This define is here because I couldn't persuade vala to generate correct
- * name. */
-#define G_IINVOKE_ERROR G_INVOKE_ERROR
-
-/* Two wrappers because the g_base_info_ref/unref take a typed pointer, but
- * the subclass pointers obviously won't cast. */
-#define g_base_info_ref(x) (g_base_info_ref((GIBaseInfo *)(x)), (x))
-#define g_base_info_unref(x) g_base_info_unref((GIBaseInfo *)(x))
+ 
+namespace Valadate {
+	
+	
+	public class TestPIE : TestCase {
+		
+		public TestPIE() {
+			base("PIE Tests");
+		}
+		
+		
+		[Test (name="/valadate/tests/testpie")]
+		public void test_pie () {
+			
+			
+			
+		}
+		
+	}
+	
+	
+	static int main (string[] args) {
+		message ("Test");
+		return 1;
+		
+	}
+	
+	
+	
+}
