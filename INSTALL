@@ -15,7 +15,5 @@ You can change destdir by adding --destdir=... option to install.
 REQUIREMENTS
 ============
 
-  * [GLib](http://www.gtk.org/) at least 2.44.0
+  * [GLib](http://www.gtk.org/) at least 2.40.0
   * [Vala](http://live.gnome.org/Vala) at least 0.30.0
-  * [GOjbect-introspection](http://live.gnome.org/GObjectIntrospection) at
-    least 0.6.5

@@ -22,24 +22,22 @@ namespace Valadate {
 	public class TestPIE : TestCase {
 		
 		public TestPIE() {
-			base("PIE Tests");
+			base("PIE");
+			add_test("test_pie", test_pie);
 		}
 		
-		
-		[Test (name="/valadate/tests/testpie")]
-		public void test_pie () {
-			
-			
-			
+		[Test (name="test_pie")]
+		public static void test_pie () {
+			assert(true);
 		}
 		
 	}
 	
 	
-	static int main (string[] args) {
-		message ("Test");
-		return 0;
-		
+	static void main (string[] args) {
+		GLib.Test.init (ref args);
+		GLib.TestSuite.get_root ().add_suite (new TestPIE().suite);
+		GLib.Test.run ();
 	}
 	
 	

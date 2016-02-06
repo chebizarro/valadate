@@ -8,7 +8,9 @@ namespace Valadate {
 		
 	}
 
-	void add_tests () {
+	void main (string[] args) {
+		GLib.Test.init (ref args);
+
 		GLib.Test.add_func ("/libvaladate/testcase/new", () => {
 			TestCase test = new TestTestCase("TestTestCase");
 			assert(test is TestCase);
@@ -20,12 +22,7 @@ namespace Valadate {
 			test.add_test("add_test", ()=> { assert(true); });
 			assert(test is TestCase);
 		});
-	}
 
-	void main (string[] args) {
-		GLib.Test.init (ref args);
-		add_tests ();
 		GLib.Test.run ();
 	}
-
 }

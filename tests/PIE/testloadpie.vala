@@ -18,32 +18,36 @@
  
 namespace Valadate {
 
-	static int main (string[] args) {
-		load_pie();
-		return 0;
+	public class TestLoadPIE : TestCase {
 		
+		public delegate void test_method();
+		
+		public TestLoadPIE() {
+			base("Load PIE Tests");
+			add_test("Load PIE", load_pie);
+			add_test("Has Test Method", has_test_method);
+		}
+	
+		public void load_pie () {
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/tests_PIE";
+			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
+			assert (mod != null);
+		}
+		
+		public void has_test_method() {
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/tests_PIE";
+			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
+			void* function;
+			assert(mod.symbol ("valadate_test_pie_test_pie", out function));
+			assert(function != null);
+			((test_method)function)();
+		}
 	}
 
-	
-	public void load_pie () {
-		
-		var modname = Config.VALADATE_TESTS_DIR + "/PIE/tests_PIE";
-		var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
-
-		if (mod == null) {
-			stdout.printf ("Could not load module: %s\n", modname);
-		} else {
-			stdout.printf ("Loaded module: %s\n", modname);
-			mod.make_resident ();
-		}
-
-		/*
-		void* function;
-		if (!mod.symbol ("vala_plugin_register", out function) || function == null) {
-			stdout.printf ("Could not load entry point for module %s\n", path);
-			continue;
-		}*/
-
+	static void main (string[] args) {
+		GLib.Test.init (ref args);
+		GLib.TestSuite.get_root ().add_suite (new TestLoadPIE().suite);
+		GLib.Test.run ();
 	}
 	
 	

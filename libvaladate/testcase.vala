@@ -30,12 +30,14 @@ namespace Valadate {
 
 		public delegate void TestMethod ();
 
-		public TestCase (string name) {
+		public TestCase (string name)
+			requires (name.contains("/") != true)
+		{
 			this.suite = new GLib.TestSuite (name);
 		}
 
 		public void add_test (string name, owned TestMethod test)
-			requires (name.index_of("/") < 0)
+			requires (name.contains("/") != true)
 		{
 			var adaptor = new Adaptor (name, (owned)test, this);
 			this.adaptors += adaptor;
@@ -46,15 +48,11 @@ namespace Valadate {
 											   adaptor.tear_down ));
 		}
 
-		public virtual void run(TestResult result) {
+		public virtual void run(TestResult result) {}
 
-		}
+		public virtual void set_up () {}
 
-		public virtual void set_up () {
-		}
-
-		public virtual void tear_down () {
-		}
+		public virtual void tear_down () {}
 
 		private class Adaptor {
 			[CCode (notify = false)]
