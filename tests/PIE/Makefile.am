@@ -9,6 +9,7 @@ tests_PIE_SOURCES =  \
 	testpie.vala
 	
 tests_PIE_VALAFLAGS = \
+	-C \
 	$(VALADATE_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
@@ -25,10 +26,14 @@ tests_PIE_LDADD = \
 	$(top_builddir)/libvaladate/libvaladate.la
 
 tests_PIE_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS)
+	$(VALADATE_CPPFLAGS) \
+	-fPIE
 	
 tests_PIE_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate
+	-I$(top_srcdir)/libvaladate \
+	-pie \
+	-fPIE \
+	-shared
 
 CLEANFILES = \
 	$(tests_PIE_SOURCES:.vala=.c) \
