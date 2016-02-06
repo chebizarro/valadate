@@ -24,7 +24,8 @@ namespace Valadate {
 
 	public abstract class TestCase : Object, Test, TestFixture {
 
-		private GLib.TestSuite suite;
+		public GLib.TestSuite suite {get; private set;}
+
 		private Adaptor[] adaptors = new Adaptor[0];
 
 		public delegate void TestMethod ();
@@ -33,7 +34,9 @@ namespace Valadate {
 			this.suite = new GLib.TestSuite (name);
 		}
 
-		public void add_test (string name, owned TestMethod test) {
+		public void add_test (string name, owned TestMethod test)
+			requires (name.index_of("/") < 0)
+		{
 			var adaptor = new Adaptor (name, (owned)test, this);
 			this.adaptors += adaptor;
 
@@ -51,10 +54,6 @@ namespace Valadate {
 		}
 
 		public virtual void tear_down () {
-		}
-
-		public GLib.TestSuite get_suite () {
-			return this.suite;
 		}
 
 		private class Adaptor {

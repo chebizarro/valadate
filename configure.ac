@@ -11,7 +11,7 @@ AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
-dnl AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 AC_PROG_CC
 AM_PROG_AR

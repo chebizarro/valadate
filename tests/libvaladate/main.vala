@@ -8,15 +8,16 @@ namespace Valadate {
 		
 	}
 
-
 	void add_tests () {
 		GLib.Test.add_func ("/libvaladate/testcase/new", () => {
 			TestCase test = new TestTestCase("TestTestCase");
 			assert(test is TestCase);
+			assert(test.suite != null);
 		});
 
 		GLib.Test.add_func ("/libvaladate/testcase/add_test", () => {
 			TestCase test = new TestTestCase("TestTestCase");
+			test.add_test("add_test", ()=> { assert(true); });
 			assert(test is TestCase);
 		});
 	}
