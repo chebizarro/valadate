@@ -1,11 +1,13 @@
+include $(top_srcdir)/build/autotools/glib-tap.mk
 include $(top_srcdir)/base.am
 
 # --- PIE tests ---
 
-noinst_PROGRAMS = tests_PIE testload_PIE
+test_programs = tests_PIE testload_PIE
 
-TEST_PROGS = tests_PIE testload_PIE
-check_PROGRAMS = tests_PIE testload_PIE
+#noinst_PROGRAMS = $(test_programs)
+TEST_PROGS = $(test_programs)
+#check_PROGRAMS = $(test_programs)
 
 tests_PIE_SOURCES =  \
 	testpie.vala
@@ -63,13 +65,13 @@ testload_PIE_CFLAGS = $(VALADATE_CFLAGS) \
 	-I$(top_srcdir)/libvaladate \
 	-I$(top_srcdir)
 
-CLEANFILES = \
+CLEANFILES += \
 	$(tests_PIE_SOURCES:.vala=.c) \
 	$(testload_PIE_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o
 
-DISTCLEANFILES = $(CLEANFILES)
+DISTCLEANFILES += $(CLEANFILES)
 
 -include $(top_srcdir)/git.mk

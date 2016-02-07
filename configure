@@ -696,14 +696,23 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+ENABLE_GCOV_FALSE
+ENABLE_GCOV_TRUE
+VALADATE_GCOV_LDADD
+VALADATE_GCOV_CFLAGS
+LTP_GENHTML
+LTP
+SHTOOL
+installed_testdir
+installed_test_metadir
+ENABLE_ALWAYS_BUILD_TESTS_FALSE
+ENABLE_ALWAYS_BUILD_TESTS_TRUE
+ENABLE_INSTALLED_TESTS_FALSE
+ENABLE_INSTALLED_TESTS_TRUE
 VALADATE_LIBS
 VALADATE_CFLAGS
-PKG_CONFIG_LIBDIR
-PKG_CONFIG_PATH
-PKG_CONFIG
 pkg_modules
 VALADATE_TESTS_DIR
-GLIB_COMPILE_RESOURCES
 CPP
 LT_SYS_LIBRARY_PATH
 OTOOL64
@@ -713,6 +722,8 @@ NMEDIT
 DSYMUTIL
 MANIFEST_TOOL
 RANLIB
+ac_ct_AR
+AR
 DLLTOOL
 OBJDUMP
 LN_S
@@ -738,8 +749,12 @@ build_vendor
 build_cpu
 build
 VALAC
-ac_ct_AR
-AR
+GLIB_COMPILE_RESOURCES
+GLIB_MKENUMS
+GOBJECT_QUERY
+GLIB_GENMARSHAL
+GLIB_LIBS
+GLIB_CFLAGS
 am__fastdepCC_FALSE
 am__fastdepCC_TRUE
 CCDEPMODE
@@ -757,6 +772,9 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH
+PKG_CONFIG
 MAINT
 MAINTAINER_MODE_FALSE
 MAINTAINER_MODE_TRUE
@@ -830,6 +848,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_maintainer_mode
+enable_glibtest
 enable_dependency_tracking
 enable_static
 enable_shared
@@ -839,10 +858,16 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+enable_installed_tests
+enable_always_build_tests
+enable_gcov
 '
       ac_precious_vars='build_alias
 host_alias
 target_alias
+PKG_CONFIG
+PKG_CONFIG_PATH
+PKG_CONFIG_LIBDIR
 CC
 CFLAGS
 LDFLAGS
@@ -850,9 +875,6 @@ LIBS
 CPPFLAGS
 LT_SYS_LIBRARY_PATH
 CPP
-PKG_CONFIG
-PKG_CONFIG_PATH
-PKG_CONFIG_LIBDIR
 VALADATE_CFLAGS
 VALADATE_LIBS'
 
@@ -1478,6 +1500,7 @@ Optional Features:
   --disable-maintainer-mode
                           disable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
+  --disable-glibtest      do not try to compile and run a test GLIB program
   --enable-dependency-tracking
                           do not reject slow dependency extractors
   --disable-dependency-tracking
@@ -1487,6 +1510,11 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-installed-tests
+                          Enable installation of some test cases
+  --enable-always-build-tests
+                          Enable always building tests during 'make all'
+  --enable-gcov           Enable gcov
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1501,6 +1529,11 @@ Optional Packages:
                           compiler's sysroot if not specified).
 
 Some influential environment variables:
+  PKG_CONFIG  path to pkg-config utility
+  PKG_CONFIG_PATH
+              directories to add to pkg-config's search path
+  PKG_CONFIG_LIBDIR
+              path overriding pkg-config's built-in search path
   CC          C compiler command
   CFLAGS      C compiler flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
@@ -1511,11 +1544,6 @@ Some influential environment variables:
   LT_SYS_LIBRARY_PATH
               User-defined run-time library search path.
   CPP         C preprocessor
-  PKG_CONFIG  path to pkg-config utility
-  PKG_CONFIG_PATH
-              directories to add to pkg-config's search path
-  PKG_CONFIG_LIBDIR
-              path overriding pkg-config's built-in search path
   VALADATE_CFLAGS
               C compiler flags for VALADATE, overriding pkg-config
   VALADATE_LIBS
@@ -1640,6 +1668,48 @@ fi
 
 } # ac_fn_c_try_compile
 
+# ac_fn_c_try_run LINENO
+# ----------------------
+# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
+# that executables *can* be run.
+ac_fn_c_try_run ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; } && { ac_try='./conftest$ac_exeext'
+  { { case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  ac_retval=0
+else
+  $as_echo "$as_me: program exited with status $ac_status" >&5
+       $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+       ac_retval=$ac_status
+fi
+  rm -rf conftest.dSYM conftest_ipa8_conftest.oo
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+} # ac_fn_c_try_run
+
 # ac_fn_c_try_link LINENO
 # -----------------------
 # Try to link conftest.$ac_ext, and return whether this succeeded.
@@ -1753,48 +1823,6 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_cpp
-
-# ac_fn_c_try_run LINENO
-# ----------------------
-# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
-# that executables *can* be run.
-ac_fn_c_try_run ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  if { { ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_link") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; } && { ac_try='./conftest$ac_exeext'
-  { { case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_try") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then :
-  ac_retval=0
-else
-  $as_echo "$as_me: program exited with status $ac_status" >&5
-       $as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-       ac_retval=$ac_status
-fi
-  rm -rf conftest.dSYM conftest_ipa8_conftest.oo
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-  as_fn_set_status $ac_retval
-
-} # ac_fn_c_try_run
 
 # ac_fn_c_check_func LINENO FUNC VAR
 # ----------------------------------
@@ -2216,13 +2244,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-
-ac_config_headers="$ac_config_headers config.h"
-
-am__api_version='1.15'
-
 ac_aux_dir=
-for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
+for ac_dir in build "$srcdir"/build; do
   if test -f "$ac_dir/install-sh"; then
     ac_aux_dir=$ac_dir
     ac_install_sh="$ac_aux_dir/install-sh -c"
@@ -2238,7 +2261,7 @@ for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
   fi
 done
 if test -z "$ac_aux_dir"; then
-  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
+  as_fn_error $? "cannot find install-sh, install.sh, or shtool in build \"$srcdir\"/build" "$LINENO" 5
 fi
 
 # These three variables are undocumented and unsupported,
@@ -2249,6 +2272,11 @@ ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
+
+
+ac_config_headers="$ac_config_headers config.h"
+
+am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
 # so one script is as good as another.  But avoid the broken or
@@ -2889,6 +2917,68 @@ else
   AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
 fi
 AM_BACKSLASH='\'
+
+DEPDIR="${am__leading_dot}deps"
+
+ac_config_commands="$ac_config_commands depfiles"
+
+
+am_make=${MAKE-make}
+cat > confinc << 'END'
+am__doit:
+	@echo this is the am__doit target
+.PHONY: am__doit
+END
+# If we don't find an include directive, just comment out the code.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for style of include used by $am_make" >&5
+$as_echo_n "checking for style of include used by $am_make... " >&6; }
+am__include="#"
+am__quote=
+_am_result=none
+# First try GNU make style include.
+echo "include confinc" > confmf
+# Ignore all kinds of additional output from 'make'.
+case `$am_make -s -f confmf 2> /dev/null` in #(
+*the\ am__doit\ target*)
+  am__include=include
+  am__quote=
+  _am_result=GNU
+  ;;
+esac
+# Now try BSD make style include.
+if test "$am__include" = "#"; then
+   echo '.include "confinc"' > confmf
+   case `$am_make -s -f confmf 2> /dev/null` in #(
+   *the\ am__doit\ target*)
+     am__include=.include
+     am__quote="\""
+     _am_result=BSD
+     ;;
+   esac
+fi
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $_am_result" >&5
+$as_echo "$_am_result" >&6; }
+rm -f confinc confmf
+
+# Check whether --enable-dependency-tracking was given.
+if test "${enable_dependency_tracking+set}" = set; then :
+  enableval=$enable_dependency_tracking;
+fi
+
+if test "x$enable_dependency_tracking" != xno; then
+  am_depcomp="$ac_aux_dir/depcomp"
+  AMDEPBACKSLASH='\'
+  am__nodep='_no'
+fi
+ if test "x$enable_dependency_tracking" != xno; then
+  AMDEP_TRUE=
+  AMDEP_FALSE='#'
+else
+  AMDEP_TRUE='#'
+  AMDEP_FALSE=
+fi
 
 
 ac_ext=c
@@ -3738,69 +3828,6 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-DEPDIR="${am__leading_dot}deps"
-
-ac_config_commands="$ac_config_commands depfiles"
-
-
-am_make=${MAKE-make}
-cat > confinc << 'END'
-am__doit:
-	@echo this is the am__doit target
-.PHONY: am__doit
-END
-# If we don't find an include directive, just comment out the code.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for style of include used by $am_make" >&5
-$as_echo_n "checking for style of include used by $am_make... " >&6; }
-am__include="#"
-am__quote=
-_am_result=none
-# First try GNU make style include.
-echo "include confinc" > confmf
-# Ignore all kinds of additional output from 'make'.
-case `$am_make -s -f confmf 2> /dev/null` in #(
-*the\ am__doit\ target*)
-  am__include=include
-  am__quote=
-  _am_result=GNU
-  ;;
-esac
-# Now try BSD make style include.
-if test "$am__include" = "#"; then
-   echo '.include "confinc"' > confmf
-   case `$am_make -s -f confmf 2> /dev/null` in #(
-   *the\ am__doit\ target*)
-     am__include=.include
-     am__quote="\""
-     _am_result=BSD
-     ;;
-   esac
-fi
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $_am_result" >&5
-$as_echo "$_am_result" >&6; }
-rm -f confinc confmf
-
-# Check whether --enable-dependency-tracking was given.
-if test "${enable_dependency_tracking+set}" = set; then :
-  enableval=$enable_dependency_tracking;
-fi
-
-if test "x$enable_dependency_tracking" != xno; then
-  am_depcomp="$ac_aux_dir/depcomp"
-  AMDEPBACKSLASH='\'
-  am__nodep='_no'
-fi
- if test "x$enable_dependency_tracking" != xno; then
-  AMDEP_TRUE=
-  AMDEP_FALSE='#'
-else
-  AMDEP_TRUE='#'
-  AMDEP_FALSE=
-fi
-
-
 
 depcc="$CC"   am_compiler_list=
 
@@ -3931,27 +3958,65 @@ fi
 
 
 
-if test -n "$ac_tool_prefix"; then
-  for ac_prog in ar lib "link -lib"
+# Check whether --enable-glibtest was given.
+if test "${enable_glibtest+set}" = set; then :
+  enableval=$enable_glibtest;
+else
+  enable_glibtest=yes
+fi
+
+
+  pkg_config_args=glib-2.0
+  for module in .
   do
-    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
-set dummy $ac_tool_prefix$ac_prog; ac_word=$2
+      case "$module" in
+         gmodule)
+             pkg_config_args="$pkg_config_args gmodule-2.0"
+         ;;
+         gmodule-no-export)
+             pkg_config_args="$pkg_config_args gmodule-no-export-2.0"
+         ;;
+         gobject)
+             pkg_config_args="$pkg_config_args gobject-2.0"
+         ;;
+         gthread)
+             pkg_config_args="$pkg_config_args gthread-2.0"
+         ;;
+         gio*)
+             pkg_config_args="$pkg_config_args $module-2.0"
+         ;;
+      esac
+  done
+
+
+
+
+
+
+
+
+if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+	if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}pkg-config; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_AR+:} false; then :
+if ${ac_cv_path_PKG_CONFIG+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$AR"; then
-  ac_cv_prog_AR="$AR" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_AR="$ac_tool_prefix$ac_prog"
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -3959,43 +4024,42 @@ done
   done
 IFS=$as_save_IFS
 
+  ;;
+esac
 fi
-fi
-AR=$ac_cv_prog_AR
-if test -n "$AR"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AR" >&5
-$as_echo "$AR" >&6; }
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+if test -n "$PKG_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PKG_CONFIG" >&5
+$as_echo "$PKG_CONFIG" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
-    test -n "$AR" && break
-  done
 fi
-if test -z "$AR"; then
-  ac_ct_AR=$AR
-  for ac_prog in ar lib "link -lib"
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+if test -z "$ac_cv_path_PKG_CONFIG"; then
+  ac_pt_PKG_CONFIG=$PKG_CONFIG
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_AR+:} false; then :
+if ${ac_cv_path_ac_pt_PKG_CONFIG+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$ac_ct_AR"; then
-  ac_cv_prog_ac_ct_AR="$ac_ct_AR" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $ac_pt_PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_PKG_CONFIG="$ac_pt_PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_AR="$ac_prog"
+    ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4003,23 +4067,20 @@ done
   done
 IFS=$as_save_IFS
 
+  ;;
+esac
 fi
-fi
-ac_ct_AR=$ac_cv_prog_ac_ct_AR
-if test -n "$ac_ct_AR"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_AR" >&5
-$as_echo "$ac_ct_AR" >&6; }
+ac_pt_PKG_CONFIG=$ac_cv_path_ac_pt_PKG_CONFIG
+if test -n "$ac_pt_PKG_CONFIG"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_pt_PKG_CONFIG" >&5
+$as_echo "$ac_pt_PKG_CONFIG" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
-
-  test -n "$ac_ct_AR" && break
-done
-
-  if test "x$ac_ct_AR" = x; then
-    AR="false"
+  if test "x$ac_pt_PKG_CONFIG" = x; then
+    PKG_CONFIG=""
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -4027,80 +4088,954 @@ yes:)
 $as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
 ac_tool_warned=yes ;;
 esac
-    AR=$ac_ct_AR
+    PKG_CONFIG=$ac_pt_PKG_CONFIG
+  fi
+else
+  PKG_CONFIG="$ac_cv_path_PKG_CONFIG"
+fi
+
+fi
+if test -n "$PKG_CONFIG"; then
+	_pkg_min_version=0.16
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config is at least version $_pkg_min_version" >&5
+$as_echo_n "checking pkg-config is at least version $_pkg_min_version... " >&6; }
+	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	else
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+		PKG_CONFIG=""
+	fi
+fi
+
+  no_glib=""
+
+  if test "x$PKG_CONFIG" = x ; then
+    no_glib=yes
+    PKG_CONFIG=no
+  fi
+
+  min_glib_version=2.0.0
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLIB - version >= $min_glib_version" >&5
+$as_echo_n "checking for GLIB - version >= $min_glib_version... " >&6; }
+
+  if test x$PKG_CONFIG != xno ; then
+    ## don't try to run the test against uninstalled libtool libs
+    if $PKG_CONFIG --uninstalled $pkg_config_args; then
+	  echo "Will use uninstalled version of GLib found in PKG_CONFIG_PATH"
+	  enable_glibtest=no
+    fi
+
+    if $PKG_CONFIG --atleast-version $min_glib_version $pkg_config_args; then
+	  :
+    else
+	  no_glib=yes
+    fi
+  fi
+
+  if test x"$no_glib" = x ; then
+    GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
+    GOBJECT_QUERY=`$PKG_CONFIG --variable=gobject_query glib-2.0`
+    GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
+    GLIB_COMPILE_RESOURCES=`$PKG_CONFIG --variable=glib_compile_resources gio-2.0`
+
+    GLIB_CFLAGS=`$PKG_CONFIG --cflags $pkg_config_args`
+    GLIB_LIBS=`$PKG_CONFIG --libs $pkg_config_args`
+    glib_config_major_version=`$PKG_CONFIG --modversion glib-2.0 | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+    glib_config_minor_version=`$PKG_CONFIG --modversion glib-2.0 | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
+    glib_config_micro_version=`$PKG_CONFIG --modversion glib-2.0 | \
+           sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+    if test "x$enable_glibtest" = "xyes" ; then
+      ac_save_CFLAGS="$CFLAGS"
+      ac_save_LIBS="$LIBS"
+      CFLAGS="$CFLAGS $GLIB_CFLAGS"
+      LIBS="$GLIB_LIBS $LIBS"
+      rm -f conf.glibtest
+      if test "$cross_compiling" = yes; then :
+  echo $ac_n "cross compiling; assumed OK... $ac_c"
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int
+main ()
+{
+  unsigned int major, minor, micro;
+
+  fclose (fopen ("conf.glibtest", "w"));
+
+  if (sscanf("$min_glib_version", "%u.%u.%u", &major, &minor, &micro) != 3) {
+     printf("%s, bad version string\n", "$min_glib_version");
+     exit(1);
+   }
+
+  if ((glib_major_version != $glib_config_major_version) ||
+      (glib_minor_version != $glib_config_minor_version) ||
+      (glib_micro_version != $glib_config_micro_version))
+    {
+      printf("\n*** 'pkg-config --modversion glib-2.0' returned %d.%d.%d, but GLIB (%d.%d.%d)\n",
+             $glib_config_major_version, $glib_config_minor_version, $glib_config_micro_version,
+             glib_major_version, glib_minor_version, glib_micro_version);
+      printf ("*** was found! If pkg-config was correct, then it is best\n");
+      printf ("*** to remove the old version of GLib. You may also be able to fix the error\n");
+      printf("*** by modifying your LD_LIBRARY_PATH enviroment variable, or by editing\n");
+      printf("*** /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
+      printf("*** required on your system.\n");
+      printf("*** If pkg-config was wrong, set the environment variable PKG_CONFIG_PATH\n");
+      printf("*** to point to the correct configuration files\n");
+    }
+  else if ((glib_major_version != GLIB_MAJOR_VERSION) ||
+	   (glib_minor_version != GLIB_MINOR_VERSION) ||
+           (glib_micro_version != GLIB_MICRO_VERSION))
+    {
+      printf("*** GLIB header files (version %d.%d.%d) do not match\n",
+	     GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
+      printf("*** library (version %d.%d.%d)\n",
+	     glib_major_version, glib_minor_version, glib_micro_version);
+    }
+  else
+    {
+      if ((glib_major_version > major) ||
+        ((glib_major_version == major) && (glib_minor_version > minor)) ||
+        ((glib_major_version == major) && (glib_minor_version == minor) && (glib_micro_version >= micro)))
+      {
+        return 0;
+       }
+     else
+      {
+        printf("\n*** An old version of GLIB (%u.%u.%u) was found.\n",
+               glib_major_version, glib_minor_version, glib_micro_version);
+        printf("*** You need a version of GLIB newer than %u.%u.%u. The latest version of\n",
+	       major, minor, micro);
+        printf("*** GLIB is always available from ftp://ftp.gtk.org.\n");
+        printf("***\n");
+        printf("*** If you have already installed a sufficiently new version, this error\n");
+        printf("*** probably means that the wrong copy of the pkg-config shell script is\n");
+        printf("*** being found. The easiest way to fix this is to remove the old version\n");
+        printf("*** of GLIB, but you can also set the PKG_CONFIG environment to point to the\n");
+        printf("*** correct copy of pkg-config. (In this case, you will have to\n");
+        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** so that the correct libraries are found at run-time))\n");
+      }
+    }
+  return 1;
+}
+
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+
+else
+  no_glib=yes
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+       CFLAGS="$ac_save_CFLAGS"
+       LIBS="$ac_save_LIBS"
+     fi
+  fi
+  if test "x$no_glib" = x ; then
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes (version $glib_config_major_version.$glib_config_minor_version.$glib_config_micro_version)" >&5
+$as_echo "yes (version $glib_config_major_version.$glib_config_minor_version.$glib_config_micro_version)" >&6; }
+     :
+  else
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+     if test "$PKG_CONFIG" = "no" ; then
+       echo "*** A new enough version of pkg-config was not found."
+       echo "*** See http://www.freedesktop.org/software/pkgconfig/"
+     else
+       if test -f conf.glibtest ; then
+        :
+       else
+          echo "*** Could not run GLIB test program, checking why..."
+          ac_save_CFLAGS="$CFLAGS"
+          ac_save_LIBS="$LIBS"
+          CFLAGS="$CFLAGS $GLIB_CFLAGS"
+          LIBS="$LIBS $GLIB_LIBS"
+          cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#include <glib.h>
+#include <stdio.h>
+
+int
+main ()
+{
+ return ((glib_major_version) || (glib_minor_version) || (glib_micro_version));
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+   echo "*** The test program compiled, but did not run. This usually means"
+          echo "*** that the run-time linker is not finding GLIB or finding the wrong"
+          echo "*** version of GLIB. If it is not finding GLIB, you'll need to set your"
+          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
+          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
+          echo "*** is required on your system"
+	  echo "***"
+          echo "*** If you have an old version installed, it is best to remove it, although"
+          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH"
+else
+   echo "*** The test program failed to compile or link. See the file config.log for the"
+          echo "*** exact error that occured. This usually means GLIB is incorrectly installed."
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+          CFLAGS="$ac_save_CFLAGS"
+          LIBS="$ac_save_LIBS"
+       fi
+     fi
+     GLIB_CFLAGS=""
+     GLIB_LIBS=""
+     GLIB_GENMARSHAL=""
+     GOBJECT_QUERY=""
+     GLIB_MKENUMS=""
+     GLIB_COMPILE_RESOURCES=""
+     :
+  fi
+
+
+
+
+
+
+  rm -f conf.glibtest
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}gcc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CC="${ac_tool_prefix}gcc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_CC"; then
+  ac_ct_CC=$CC
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_CC"; then
+  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_CC="gcc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_CC=$ac_cv_prog_ac_ct_CC
+if test -n "$ac_ct_CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
+$as_echo "$ac_ct_CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_ct_CC" = x; then
+    CC=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    CC=$ac_ct_CC
+  fi
+else
+  CC="$ac_cv_prog_CC"
+fi
+
+if test -z "$CC"; then
+          if test -n "$ac_tool_prefix"; then
+    # Extract the first word of "${ac_tool_prefix}cc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}cc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CC="${ac_tool_prefix}cc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  fi
+fi
+if test -z "$CC"; then
+  # Extract the first word of "cc", so it can be a program name with args.
+set dummy cc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+  ac_prog_rejected=no
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    if test "$as_dir/$ac_word$ac_exec_ext" = "/usr/ucb/cc"; then
+       ac_prog_rejected=yes
+       continue
+     fi
+    ac_cv_prog_CC="cc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+if test $ac_prog_rejected = yes; then
+  # We found a bogon in the path, so make sure we never use it.
+  set dummy $ac_cv_prog_CC
+  shift
+  if test $# != 0; then
+    # We chose a different compiler from the bogus one.
+    # However, it has the same basename, so the bogon will be chosen
+    # first if we set CC to just the basename; use the full file name.
+    shift
+    ac_cv_prog_CC="$as_dir/$ac_word${1+' '}$@"
+  fi
+fi
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$CC"; then
+  if test -n "$ac_tool_prefix"; then
+  for ac_prog in cl.exe
+  do
+    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
+set dummy $ac_tool_prefix$ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CC="$ac_tool_prefix$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    test -n "$CC" && break
+  done
+fi
+if test -z "$CC"; then
+  ac_ct_CC=$CC
+  for ac_prog in cl.exe
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_CC"; then
+  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_CC="$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_CC=$ac_cv_prog_ac_ct_CC
+if test -n "$ac_ct_CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
+$as_echo "$ac_ct_CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$ac_ct_CC" && break
+done
+
+  if test "x$ac_ct_CC" = x; then
+    CC=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    CC=$ac_ct_CC
   fi
 fi
 
-: ${AR=ar}
+fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking the archiver ($AR) interface" >&5
-$as_echo_n "checking the archiver ($AR) interface... " >&6; }
-if ${am_cv_ar_interface+:} false; then :
+
+test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "no acceptable C compiler found in \$PATH
+See \`config.log' for more details" "$LINENO" 5; }
+
+# Provide some information about the compiler.
+$as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
+set X $ac_compile
+ac_compiler=$2
+for ac_option in --version -v -V -qversion; do
+  { { ac_try="$ac_compiler $ac_option >&5"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_compiler $ac_option >&5") 2>conftest.err
+  ac_status=$?
+  if test -s conftest.err; then
+    sed '10a\
+... rest of stderr output deleted ...
+         10q' conftest.err >conftest.er1
+    cat conftest.er1 >&5
+  fi
+  rm -f conftest.er1 conftest.err
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }
+done
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C compiler" >&5
+$as_echo_n "checking whether we are using the GNU C compiler... " >&6; }
+if ${ac_cv_c_compiler_gnu+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-   am_cv_ar_interface=ar
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-int some_variable = 0;
+
+int
+main ()
+{
+#ifndef __GNUC__
+       choke me
+#endif
+
+  ;
+  return 0;
+}
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  am_ar_try='$AR cru libconftest.a conftest.$ac_objext >&5'
-      { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$am_ar_try\""; } >&5
-  (eval $am_ar_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }
-      if test "$ac_status" -eq 0; then
-        am_cv_ar_interface=ar
-      else
-        am_ar_try='$AR -NOLOGO -OUT:conftest.lib conftest.$ac_objext >&5'
-        { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$am_ar_try\""; } >&5
-  (eval $am_ar_try) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }
-        if test "$ac_status" -eq 0; then
-          am_cv_ar_interface=lib
-        else
-          am_cv_ar_interface=unknown
-        fi
-      fi
-      rm -f conftest.lib libconftest.a
-
+  ac_compiler_gnu=yes
+else
+  ac_compiler_gnu=no
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-   ac_ext=c
+ac_cv_c_compiler_gnu=$ac_compiler_gnu
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_compiler_gnu" >&5
+$as_echo "$ac_cv_c_compiler_gnu" >&6; }
+if test $ac_compiler_gnu = yes; then
+  GCC=yes
+else
+  GCC=
+fi
+ac_test_CFLAGS=${CFLAGS+set}
+ac_save_CFLAGS=$CFLAGS
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC accepts -g" >&5
+$as_echo_n "checking whether $CC accepts -g... " >&6; }
+if ${ac_cv_prog_cc_g+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_save_c_werror_flag=$ac_c_werror_flag
+   ac_c_werror_flag=yes
+   ac_cv_prog_cc_g=no
+   CFLAGS="-g"
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_g=yes
+else
+  CFLAGS=""
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  ac_c_werror_flag=$ac_save_c_werror_flag
+	 CFLAGS="-g"
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_g=yes
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+   ac_c_werror_flag=$ac_save_c_werror_flag
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_g" >&5
+$as_echo "$ac_cv_prog_cc_g" >&6; }
+if test "$ac_test_CFLAGS" = set; then
+  CFLAGS=$ac_save_CFLAGS
+elif test $ac_cv_prog_cc_g = yes; then
+  if test "$GCC" = yes; then
+    CFLAGS="-g -O2"
+  else
+    CFLAGS="-g"
+  fi
+else
+  if test "$GCC" = yes; then
+    CFLAGS="-O2"
+  else
+    CFLAGS=
+  fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C89" >&5
+$as_echo_n "checking for $CC option to accept ISO C89... " >&6; }
+if ${ac_cv_prog_cc_c89+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_prog_cc_c89=no
+ac_save_CC=$CC
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdarg.h>
+#include <stdio.h>
+struct stat;
+/* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
+struct buf { int x; };
+FILE * (*rcsopen) (struct buf *, struct stat *, int);
+static char *e (p, i)
+     char **p;
+     int i;
+{
+  return p[i];
+}
+static char *f (char * (*g) (char **, int), char **p, ...)
+{
+  char *s;
+  va_list v;
+  va_start (v,p);
+  s = g (p, va_arg (v,int));
+  va_end (v);
+  return s;
+}
+
+/* OSF 4.0 Compaq cc is some sort of almost-ANSI by default.  It has
+   function prototypes and stuff, but not '\xHH' hex character constants.
+   These don't provoke an error unfortunately, instead are silently treated
+   as 'x'.  The following induces an error, until -std is added to get
+   proper ANSI mode.  Curiously '\x00'!='x' always comes out true, for an
+   array size at least.  It's necessary to write '\x00'==0 to get something
+   that's true only with -std.  */
+int osf4_cc_array ['\x00' == 0 ? 1 : -1];
+
+/* IBM C 6 for AIX is almost-ANSI by default, but it replaces macro parameters
+   inside strings and character constants.  */
+#define FOO(x) 'x'
+int xlc6_cc_array[FOO(a) == 'x' ? 1 : -1];
+
+int test (int i, double x);
+struct s1 {int (*f) (int a);};
+struct s2 {int (*f) (double a);};
+int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, int);
+int argc;
+char **argv;
+int
+main ()
+{
+return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
+  ;
+  return 0;
+}
+_ACEOF
+for ac_arg in '' -qlanglvl=extc89 -qlanglvl=ansi -std \
+	-Ae "-Aa -D_HPUX_SOURCE" "-Xc -D__EXTENSIONS__"
+do
+  CC="$ac_save_CC $ac_arg"
+  if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_c89=$ac_arg
+fi
+rm -f core conftest.err conftest.$ac_objext
+  test "x$ac_cv_prog_cc_c89" != "xno" && break
+done
+rm -f conftest.$ac_ext
+CC=$ac_save_CC
+
+fi
+# AC_CACHE_VAL
+case "x$ac_cv_prog_cc_c89" in
+  x)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: none needed" >&5
+$as_echo "none needed" >&6; } ;;
+  xno)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: unsupported" >&5
+$as_echo "unsupported" >&6; } ;;
+  *)
+    CC="$CC $ac_cv_prog_cc_c89"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_c89" >&5
+$as_echo "$ac_cv_prog_cc_c89" >&6; } ;;
+esac
+if test "x$ac_cv_prog_cc_c89" != xno; then :
+
+fi
+
+ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_ar_interface" >&5
-$as_echo "$am_cv_ar_interface" >&6; }
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC understands -c and -o together" >&5
+$as_echo_n "checking whether $CC understands -c and -o together... " >&6; }
+if ${am_cv_prog_cc_c_o+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
 
-case $am_cv_ar_interface in
-ar)
-  ;;
-lib)
-  # Microsoft lib, so override with the ar-lib wrapper script.
-  # FIXME: It is wrong to rewrite AR.
-  # But if we don't then we get into trouble of one sort or another.
-  # A longer-term fix would be to have automake use am__AR in this case,
-  # and then we could set am__AR="$am_aux_dir/ar-lib \$(AR)" or something
-  # similar.
-  AR="$am_aux_dir/ar-lib $AR"
-  ;;
-unknown)
-  as_fn_error $? "could not determine $AR interface" "$LINENO" 5
-  ;;
-esac
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+  # Make sure it works both with $CC and with simple cc.
+  # Following AC_PROG_CC_C_O, we do the test twice because some
+  # compilers refuse to overwrite an existing .o file with -o,
+  # though they will create one.
+  am_cv_prog_cc_c_o=yes
+  for am_i in 1 2; do
+    if { echo "$as_me:$LINENO: $CC -c conftest.$ac_ext -o conftest2.$ac_objext" >&5
+   ($CC -c conftest.$ac_ext -o conftest2.$ac_objext) >&5 2>&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } \
+         && test -f conftest2.$ac_objext; then
+      : OK
+    else
+      am_cv_prog_cc_c_o=no
+      break
+    fi
+  done
+  rm -f core conftest*
+  unset am_i
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_prog_cc_c_o" >&5
+$as_echo "$am_cv_prog_cc_c_o" >&6; }
+if test "$am_cv_prog_cc_c_o" != yes; then
+   # Losing compiler, so override with the script.
+   # FIXME: It is wrong to rewrite CC.
+   # But if we don't then we get into trouble of one sort or another.
+   # A longer-term fix would be to have automake use am__CC in this case,
+   # and then we could set am__CC="\$(top_srcdir)/compile \$(CC)"
+   CC="$am_aux_dir/compile $CC"
+fi
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+depcc="$CC"   am_compiler_list=
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking dependency style of $depcc" >&5
+$as_echo_n "checking dependency style of $depcc... " >&6; }
+if ${am_cv_CC_dependencies_compiler_type+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -z "$AMDEP_TRUE" && test -f "$am_depcomp"; then
+  # We make a subdir and do the tests there.  Otherwise we can end up
+  # making bogus files that we don't know about and never remove.  For
+  # instance it was reported that on HP-UX the gcc test will end up
+  # making a dummy file named 'D' -- because '-MD' means "put the output
+  # in D".
+  rm -rf conftest.dir
+  mkdir conftest.dir
+  # Copy depcomp to subdir because otherwise we won't find it if we're
+  # using a relative directory.
+  cp "$am_depcomp" conftest.dir
+  cd conftest.dir
+  # We will build objects and dependencies in a subdirectory because
+  # it helps to detect inapplicable dependency modes.  For instance
+  # both Tru64's cc and ICC support -MD to output dependencies as a
+  # side effect of compilation, but ICC will put the dependencies in
+  # the current directory while Tru64 will put them in the object
+  # directory.
+  mkdir sub
+
+  am_cv_CC_dependencies_compiler_type=none
+  if test "$am_compiler_list" = ""; then
+     am_compiler_list=`sed -n 's/^#*\([a-zA-Z0-9]*\))$/\1/p' < ./depcomp`
+  fi
+  am__universal=false
+  case " $depcc " in #(
+     *\ -arch\ *\ -arch\ *) am__universal=true ;;
+     esac
+
+  for depmode in $am_compiler_list; do
+    # Setup a source with many dependencies, because some compilers
+    # like to wrap large dependency lists on column 80 (with \), and
+    # we should not choose a depcomp mode which is confused by this.
+    #
+    # We need to recreate these files for each test, as the compiler may
+    # overwrite some of them when testing with obscure command lines.
+    # This happens at least with the AIX C compiler.
+    : > sub/conftest.c
+    for i in 1 2 3 4 5 6; do
+      echo '#include "conftst'$i'.h"' >> sub/conftest.c
+      # Using ": > sub/conftst$i.h" creates only sub/conftst1.h with
+      # Solaris 10 /bin/sh.
+      echo '/* dummy */' > sub/conftst$i.h
+    done
+    echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
+
+    # We check with '-c' and '-o' for the sake of the "dashmstdout"
+    # mode.  It turns out that the SunPro C++ compiler does not properly
+    # handle '-M -o', and we need to detect this.  Also, some Intel
+    # versions had trouble with output in subdirs.
+    am__obj=sub/conftest.${OBJEXT-o}
+    am__minus_obj="-o $am__obj"
+    case $depmode in
+    gcc)
+      # This depmode causes a compiler race in universal mode.
+      test "$am__universal" = false || continue
+      ;;
+    nosideeffect)
+      # After this tag, mechanisms are not by side-effect, so they'll
+      # only be used when explicitly requested.
+      if test "x$enable_dependency_tracking" = xyes; then
+	continue
+      else
+	break
+      fi
+      ;;
+    msvc7 | msvc7msys | msvisualcpp | msvcmsys)
+      # This compiler won't grok '-c -o', but also, the minuso test has
+      # not run yet.  These depmodes are late enough in the game, and
+      # so weak that their functioning should not be impacted.
+      am__obj=conftest.${OBJEXT-o}
+      am__minus_obj=
+      ;;
+    none) break ;;
+    esac
+    if depmode=$depmode \
+       source=sub/conftest.c object=$am__obj \
+       depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+       $SHELL ./depcomp $depcc -c $am__minus_obj sub/conftest.c \
+         >/dev/null 2>conftest.err &&
+       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep $am__obj sub/conftest.Po > /dev/null 2>&1 &&
+       ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
+      # icc doesn't choke on unknown options, it will just issue warnings
+      # or remarks (even with -Werror).  So we grep stderr for any message
+      # that says an option was ignored or not supported.
+      # When given -MP, icc 7.0 and 7.1 complain thusly:
+      #   icc: Command line warning: ignoring option '-M'; no argument required
+      # The diagnosis changed in icc 8.0:
+      #   icc: Command line remark: option '-MP' not supported
+      if (grep 'ignoring option' conftest.err ||
+          grep 'not supported' conftest.err) >/dev/null 2>&1; then :; else
+        am_cv_CC_dependencies_compiler_type=$depmode
+        break
+      fi
+    fi
+  done
+
+  cd ..
+  rm -rf conftest.dir
+else
+  am_cv_CC_dependencies_compiler_type=none
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_CC_dependencies_compiler_type" >&5
+$as_echo "$am_cv_CC_dependencies_compiler_type" >&6; }
+CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
+
+ if
+  test "x$enable_dependency_tracking" != xno \
+  && test "$am_cv_CC_dependencies_compiler_type" = gcc3; then
+  am__fastdepCC_TRUE=
+  am__fastdepCC_FALSE='#'
+else
+  am__fastdepCC_TRUE='#'
+  am__fastdepCC_FALSE=
+fi
+
 
 # Extract the first word of "valac", so it can be a program name with args.
 set dummy valac; ac_word=$2
@@ -4275,6 +5210,7 @@ else
   NATIVE_WIN32_TRUE='#'
   NATIVE_WIN32_FALSE=
 fi
+
 
 
 case `pwd` in
@@ -12325,126 +13261,6 @@ pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0"
 
 
 
-
-
-
-
-
-
-if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
-	if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
-set dummy ${ac_tool_prefix}pkg-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PKG_CONFIG+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PKG_CONFIG in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PKG_CONFIG=$ac_cv_path_PKG_CONFIG
-if test -n "$PKG_CONFIG"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PKG_CONFIG" >&5
-$as_echo "$PKG_CONFIG" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-fi
-if test -z "$ac_cv_path_PKG_CONFIG"; then
-  ac_pt_PKG_CONFIG=$PKG_CONFIG
-  # Extract the first word of "pkg-config", so it can be a program name with args.
-set dummy pkg-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_ac_pt_PKG_CONFIG+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $ac_pt_PKG_CONFIG in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_ac_pt_PKG_CONFIG="$ac_pt_PKG_CONFIG" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-ac_pt_PKG_CONFIG=$ac_cv_path_ac_pt_PKG_CONFIG
-if test -n "$ac_pt_PKG_CONFIG"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_pt_PKG_CONFIG" >&5
-$as_echo "$ac_pt_PKG_CONFIG" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-  if test "x$ac_pt_PKG_CONFIG" = x; then
-    PKG_CONFIG=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    PKG_CONFIG=$ac_pt_PKG_CONFIG
-  fi
-else
-  PKG_CONFIG="$ac_cv_path_PKG_CONFIG"
-fi
-
-fi
-if test -n "$PKG_CONFIG"; then
-	_pkg_min_version=0.9.0
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config is at least version $_pkg_min_version" >&5
-$as_echo_n "checking pkg-config is at least version $_pkg_min_version... " >&6; }
-	if $PKG_CONFIG --atleast-pkgconfig-version $_pkg_min_version; then
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	else
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-		PKG_CONFIG=""
-	fi
-fi
-
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for VALADATE" >&5
 $as_echo_n "checking for VALADATE... " >&6; }
@@ -12538,7 +13354,253 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile tests/libvaladate/Makefile tests/PIE/Makefile vapi/Makefile"
+
+
+
+  # Check whether --enable-installed-tests was given.
+if test "${enable_installed_tests+set}" = set; then :
+  enableval=$enable_installed_tests; case ${enableval} in
+                  yes) ENABLE_INSTALLED_TESTS="1"  ;;
+                  no)  ENABLE_INSTALLED_TESTS="" ;;
+                  *) as_fn_error $? "bad value ${enableval} for --enable-installed-tests" "$LINENO" 5 ;;
+                 esac
+fi
+
+   if test "$ENABLE_INSTALLED_TESTS" = "1"; then
+  ENABLE_INSTALLED_TESTS_TRUE=
+  ENABLE_INSTALLED_TESTS_FALSE='#'
+else
+  ENABLE_INSTALLED_TESTS_TRUE='#'
+  ENABLE_INSTALLED_TESTS_FALSE=
+fi
+
+  # Check whether --enable-always-build-tests was given.
+if test "${enable_always_build_tests+set}" = set; then :
+  enableval=$enable_always_build_tests; case ${enableval} in
+                  yes) ENABLE_ALWAYS_BUILD_TESTS="1"  ;;
+                  no)  ENABLE_ALWAYS_BUILD_TESTS="" ;;
+                  *) as_fn_error $? "bad value ${enableval} for --enable-always-build-tests" "$LINENO" 5 ;;
+                 esac
+fi
+
+   if test "$ENABLE_ALWAYS_BUILD_TESTS" = "1"; then
+  ENABLE_ALWAYS_BUILD_TESTS_TRUE=
+  ENABLE_ALWAYS_BUILD_TESTS_FALSE='#'
+else
+  ENABLE_ALWAYS_BUILD_TESTS_TRUE='#'
+  ENABLE_ALWAYS_BUILD_TESTS_FALSE=
+fi
+
+  if test "$ENABLE_INSTALLED_TESTS" = "1"; then
+    installed_test_metadir=${datadir}/installed-tests/valadate
+
+    installed_testdir=${libexecdir}/installed-tests/valadate
+
+  fi
+
+
+
+# Check whether --enable-gcov was given.
+if test "${enable_gcov+set}" = set; then :
+  enableval=$enable_gcov; use_gcov=$enableval
+else
+  use_gcov=no
+fi
+
+
+if test "x$use_gcov" = "xyes"; then :
+
+                if test "$GCC" != "yes"; then :
+  as_fn_error $? "GCC is required for --enable-gcov" "$LINENO" 5
+fi
+
+                # Extract the first word of "shtool", so it can be a program name with args.
+set dummy shtool; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_SHTOOL+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$SHTOOL"; then
+  ac_cv_prog_SHTOOL="$SHTOOL" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_SHTOOL="shtool"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+SHTOOL=$ac_cv_prog_SHTOOL
+if test -n "$SHTOOL"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $SHTOOL" >&5
+$as_echo "$SHTOOL" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+        case `$SHTOOL path $CC` in #(
+  *ccache*) :
+    gcc_ccache=yes ;; #(
+  *) :
+    gcc_ccache=no ;;
+esac
+
+        if test "$gcc_ccache" = "yes" && (test -z "$CCACHE_DISABLE" || test "$CCACHE_DISABLE" != "1"); then
+          as_fn_error $? "ccache must be disabled when --enable-gcov option is used. You can disable ccache by setting environment variable CCACHE_DISABLE=1." "$LINENO" 5
+        fi
+
+        ltp_version_list="1.6 1.7 1.8 1.9 1.10"
+        # Extract the first word of "lcov", so it can be a program name with args.
+set dummy lcov; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_LTP+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$LTP"; then
+  ac_cv_prog_LTP="$LTP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_LTP="lcov"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+LTP=$ac_cv_prog_LTP
+if test -n "$LTP"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $LTP" >&5
+$as_echo "$LTP" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+        # Extract the first word of "genhtml", so it can be a program name with args.
+set dummy genhtml; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_LTP_GENHTML+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$LTP_GENHTML"; then
+  ac_cv_prog_LTP_GENHTML="$LTP_GENHTML" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_LTP_GENHTML="genhtml"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+LTP_GENHTML=$ac_cv_prog_LTP_GENHTML
+if test -n "$LTP_GENHTML"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $LTP_GENHTML" >&5
+$as_echo "$LTP_GENHTML" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+
+        if test "$LTP"; then
+          { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ltp version" >&5
+$as_echo_n "checking for ltp version... " >&6; }
+if ${valadate_cv_ltp_version+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+                           valadate_cv_ltp_version=invalid
+                           ltp_version=`$LTP -v 2>/dev/null | $SED -e 's/^.* //'`
+                           for ltp_check_version in $ltp_version_list; do
+                             if test "$ltp_version" = "$ltp_check_version"; then
+                               valadate_cv_ltp_version="$ltp_check_version (ok)"
+                             fi
+                           done
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $valadate_cv_ltp_version" >&5
+$as_echo "$valadate_cv_ltp_version" >&6; }
+        else
+          ltp_msg="To enable code coverage reporting you must have one of the following LTP versions installed: $ltp_version_list"
+          as_fn_error $? "$ltp_msg" "$LINENO" 5
+        fi
+
+        case $valadate_cv_ltp_version in
+          ""|invalid)
+          ltp_msg="You must have one of the following versions of LTP: $ltp_version_list (found: $ltp_version)."
+          as_fn_error $? "$ltp_msg" "$LINENO" 5
+          LTP="exit 0;"
+          ;;
+        esac
+
+        if test -z "$LTP_GENHTML"; then
+          as_fn_error $? "Could not find genhtml from the LTP package" "$LINENO" 5
+        fi
+
+
+$as_echo "#define HAVE_GCOV 1" >>confdefs.h
+
+
+
+        CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
+        VALADATE_CFLAGS=`echo "$VALADATE_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
+
+
+                VALADATE_GCOV_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
+        VALADATE_GCOV_LDADD="-lgcov"
+
+
+
+
+
+fi
+
+ if test "x$use_gcov" = "xyes"; then
+  ENABLE_GCOV_TRUE=
+  ENABLE_GCOV_FALSE='#'
+else
+  ENABLE_GCOV_TRUE='#'
+  ENABLE_GCOV_FALSE=
+fi
+
+
+ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile tests/libvaladate/Makefile tests/PIE/Makefile vapi/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -12678,12 +13740,28 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
+  as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${PLATFORM_WIN32_TRUE}" && test -z "${PLATFORM_WIN32_FALSE}"; then
   as_fn_error $? "conditional \"PLATFORM_WIN32\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NATIVE_WIN32_TRUE}" && test -z "${NATIVE_WIN32_FALSE}"; then
   as_fn_error $? "conditional \"NATIVE_WIN32\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_INSTALLED_TESTS_TRUE}" && test -z "${ENABLE_INSTALLED_TESTS_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_INSTALLED_TESTS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_ALWAYS_BUILD_TESTS_TRUE}" && test -z "${ENABLE_ALWAYS_BUILD_TESTS_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_ALWAYS_BUILD_TESTS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_GCOV_TRUE}" && test -z "${ENABLE_GCOV_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_GCOV\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -13566,6 +14644,8 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "build/Makefile") CONFIG_FILES="$CONFIG_FILES build/Makefile" ;;
+    "build/autotools/Makefile") CONFIG_FILES="$CONFIG_FILES build/autotools/Makefile" ;;
     "libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/Makefile" ;;
     "libvaladate/libvaladate-1.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/libvaladate-1.0.pc" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
@@ -14841,3 +15921,19 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
+
+
+echo ""
+echo " Valadate - $VERSION"
+echo ""
+echo " • Prefix: ${prefix}"
+echo ""
+echo " • Debug level: ${enable_debug}"
+echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS}"
+echo ""
+echo " • API reference: ${enable_gtk_doc}"
+echo " • Manual pages: ${enable_man}"
+echo ""
+echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
+echo " • Enable test coverage: ${use_gcov}"
+echo ""

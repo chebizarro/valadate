@@ -1,9 +1,10 @@
 include $(top_srcdir)/base.am
+include $(top_srcdir)/build/autotools/glib-tap.mk
 
-noinst_PROGRAMS = tests_libvaladate
-
-TEST_PROGS = tests_libvaladate
-check_PROGRAMS = tests_libvaladate
+test_programs = tests_libvaladate
+#noinst_PROGRAMS = $(test_programs)
+TEST_PROGS = $(test_programs)
+#check_PROGRAMS = $(test_programs)
 
 tests_libvaladate_SOURCES =  \
 	main.vala
@@ -24,11 +25,11 @@ tests_libvaladate_CPPFLAGS = \
 tests_libvaladate_CFLAGS = $(VALADATE_CFLAGS) \
 	-I$(top_srcdir)/libvaladate
 
-CLEANFILES = \
+CLEANFILES += \
 	$(tests_libvaladate_SOURCES:.vala=.c) \
 	*.stamp
 
-DISTCLEANFILES = $(CLEANFILES)
+DISTCLEANFILES += $(CLEANFILES)
 
 
 -include $(top_srcdir)/git.mk

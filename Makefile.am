@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS  = -I m4 ${ACLOCAL_FLAGS}
+ACLOCAL_AMFLAGS  = -I build/autotools ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
 EXTRA_DIST = \
@@ -8,6 +8,6 @@ EXTRA_DIST = \
 
 CLEANFILES = *.stamp
 
-SUBDIRS = libvaladate tests vapi
+SUBDIRS = build libvaladate tests vapi
 
 -include $(top_srcdir)/git.mk

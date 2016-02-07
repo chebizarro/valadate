@@ -92,9 +92,12 @@ build_triplet = @build@
 host_triplet = @host@
 subdir = libvaladate
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/build/autotools/glibtests.m4 \
+	$(top_srcdir)/build/autotools/libtool.m4 \
+	$(top_srcdir)/build/autotools/ltoptions.m4 \
+	$(top_srcdir)/build/autotools/ltsugar.m4 \
+	$(top_srcdir)/build/autotools/ltversion.m4 \
+	$(top_srcdir)/build/autotools/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -131,7 +134,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/build/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -189,7 +192,7 @@ CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/libvaladate-1.0.pc.in $(srcdir)/libvaladate-1.0.vapi \
 	$(srcdir)/libvaladate.h $(srcdir)/libvaladate_la_vala.stamp \
-	$(top_srcdir)/depcomp test.c testcase.c testfixture.c \
+	$(top_srcdir)/build/depcomp test.c testcase.c testfixture.c \
 	testresult.c testsuite.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
@@ -217,7 +220,12 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_RESOURCES = @GLIB_COMPILE_RESOURCES@
+GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
+GLIB_LIBS = @GLIB_LIBS@
+GLIB_MKENUMS = @GLIB_MKENUMS@
+GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -232,6 +240,8 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+LTP = @LTP@
+LTP_GENHTML = @LTP_GENHTML@
 LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
@@ -258,9 +268,12 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHTOOL = @SHTOOL@
 STRIP = @STRIP@
 VALAC = @VALAC@
 VALADATE_CFLAGS = @VALADATE_CFLAGS@
+VALADATE_GCOV_CFLAGS = @VALADATE_GCOV_CFLAGS@
+VALADATE_GCOV_LDADD = @VALADATE_GCOV_LDADD@
 VALADATE_LIBS = @VALADATE_LIBS@
 VALADATE_TESTS_DIR = @VALADATE_TESTS_DIR@
 VERSION = @VERSION@
@@ -297,6 +310,8 @@ htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
+installed_test_metadir = @installed_test_metadir@
+installed_testdir = @installed_testdir@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
