@@ -5,16 +5,18 @@ AC_INIT([valadate],
         [valadate],
         [https://github.com/chebizarro/valadate])
 
+AC_CONFIG_HEADER([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([build/autotools])
-AC_CONFIG_HEADERS([config.h])
+
 AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
-AM_MAINTAINER_MODE([enable])
+
+dnl AM_MAINTAINER_MODE([enable])
 
 AM_SILENT_RULES([yes])
 AM_PATH_GLIB_2_0
-AC_PROG_CC
+AM_PROG_CC_C_O
 dnl AM_PROG_AR
 AM_PROG_VALAC
 
@@ -42,6 +44,9 @@ AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
 
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
+
+# Honor aclocal flags
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
@@ -129,8 +134,8 @@ AS_IF([test "x$use_gcov" = "xyes"],
         AC_SUBST(VALADATE_GCOV_CFLAGS)
         AC_SUBST(VALADATE_GCOV_LDADD)
 
-        dnl VALADATE_CFLAGS="$VALADATE_CFLAGS"
-        dnl VALADATE_LIBS="$VALADATE_LIBS"
+        VALADATE_CFLAGS="$VALADATE_CFLAGS $VALADATE_GCOV_CFLAGS"
+        VALADATE_LIBS="$VALADATE_LIBS $VALADATE_GCOV_LDADD"
       ])
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")

@@ -1,13 +1,9 @@
-include $(top_srcdir)/build/autotools/glib-tap.mk
 include $(top_srcdir)/base.am
+include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # --- PIE tests ---
 
 test_programs = tests_PIE testload_PIE
-
-#noinst_PROGRAMS = $(test_programs)
-TEST_PROGS = $(test_programs)
-#check_PROGRAMS = $(test_programs)
 
 tests_PIE_SOURCES =  \
 	testpie.vala
@@ -70,7 +66,9 @@ CLEANFILES += \
 	$(testload_PIE_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
-	*.o
+	*.o \
+	*.html \
+	*.xml
 
 DISTCLEANFILES += $(CLEANFILES)
 
