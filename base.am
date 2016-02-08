@@ -25,7 +25,7 @@ lcov:
 genlcov:
 	$(LTP) --directory $(top_builddir) --capture --output-file $(top_builddir)/tests/results/valadate-lcov.info --test-name VALADATE_TEST --no-checksum
 	$(SED) -e 's#.libs/##' < $(top_builddir)/tests/results/valadate-lcov.info > $(top_builddir)/tests/results/valadate-lcov.info.tmp
-	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details tests/results/valadate-lcov.info.tmp
+	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory $(top_builddir)/tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details $(top_builddir)/tests/results/valadate-lcov.info.tmp
 	rm -f $(top_builddir)/tests/results/valadate-lcov.info.tmp
 
 lcov-clean:
