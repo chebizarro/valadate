@@ -23,14 +23,14 @@ lcov:
 # we have to massage the lcov.info file slightly to hide the effect of libtool
 # placing the objects files in the .libs/ directory separate from the *.c
 genlcov:
-	$(LTP) --directory $(top_builddir) --capture --output-file valadate-lcov.info --test-name VALADATE_TEST --no-checksum
-	$(SED) -e 's#.libs/##' < valadate-lcov.info > valadate-lcov.info.tmp
-	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory valadate-lcov --title "Valadate Code Coverage" --show-details valadate-lcov.info.tmp
-	rm -f valadate-lcov.info.tmp
+	$(LTP) --directory $(top_builddir) --capture --output-file $(top_builddir)/tests/results/valadate-lcov.info --test-name VALADATE_TEST --no-checksum
+	$(SED) -e 's#.libs/##' < $(top_builddir)/tests/results/valadate-lcov.info > $(top_builddir)/tests/results/valadate-lcov.info.tmp
+	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details tests/results/valadate-lcov.info.tmp
+	rm -f $(top_builddir)/tests/results/valadate-lcov.info.tmp
 
 lcov-clean:
 	-$(LTP) --directory $(top_builddir) -z
-	-$(RM) -rf valadate-lcov.info valadate-lcov
+	-$(RM) -rf $(top_builddir)/tests/results/valadate-lcov.info $(top_builddir)/tests/results/valadate-lcov
 else
 lcov genlcov lcov-clean:
 	@echo You need to configure Valadate with support for gcov enabled.
