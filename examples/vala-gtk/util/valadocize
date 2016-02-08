@@ -1,0 +1,45 @@
+#!/bin/bash
+
+if [ "$#" != 2 ]; then
+    echo "Need input and output files."
+    exit 1
+fi
+
+input="$1"
+output="$2"
+
+declare -A classes
+classes=( \
+    ['#GAction']='gio-2.0/GLib.Action' \
+    ['#GApplication']='gio-2.0/GLib.Application' \
+    ['#GBinding']='gobject-2.0/GLib.Binding' \
+    ['#GPropertyAction']='gio-2.0/GLib.PropertyAction' \
+    ['#GSettings']='gio-2.0/GLib.Settings' \
+    ['#GtkApplicationWindow']='gtk+-3.0/Gtk.ApplicationWindow' \
+    ['#GtkApplication']='gtk+-3.0/Gtk.Application' \
+    ['#GtkBuilder']='gtk+-3.0/Gtk.Builder' \
+    ['#GtkDialog']='gtk+-3.0/Gtk.Dialog' \
+    ['#GtkHeaderBar']='gtk+-3.0/Gtk.HeaderBar' \
+    ['#GtkListBox']='gtk+-3.0/Gtk.ListBox' \
+    ['#GtkMenuButton']='gtk+-3.0/Gtk.MenuButton' \
+    ['#GtkRevealer']='gtk+-3.0/Gtk.Revealer' \
+    ['#GtkSearchBar']='gtk+-3.0/Gtk.SearchBar' \
+    ['#GtkSearchEntry']='gtk+-3.0/Gtk.SearchEntry' \
+    ['#GtkStack']='gtk+-3.0/Gtk.Stack' \
+    ['#GtkStackSwitcher']='gtk+-3.0/Gtk.StackSwitcher' \
+    ['#GtkTextView']='gtk+-3.0/Gtk.TextView' \
+)
+
+l1="<link href=\"http://www.valadoc.org/#!api="
+l2="\">"
+l3="</link>"
+
+keys=$( (for k in "${!classes[@]}"; do echo ${k}; done) | sort -r)
+
+COMMAND=cat\ ${input}
+for k in $keys; do
+    name=$(echo ${classes[${k}]} | cut -d "/" -f 2)
+    COMMAND=${COMMAND}\ \|\ sed\ \'s@${k}@${l1}${classes[${k}]}${l2}${name}${l3}@g\'
+done
+COMMAND=${COMMAND}\ \>\ ${output}
+bash -c "${COMMAND}"

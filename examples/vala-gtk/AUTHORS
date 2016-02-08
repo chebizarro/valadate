@@ -1,0 +1,8 @@
+Vala code (translated from the original C code[1]):
+     Canek Valdés Peláez <canek@ciencias.unam.mx>
+
+The documentation is basically the same as in the GTK+ 3 library
+documentation[2], just adapting some C terminology to Vala.
+
+[1] https://git.gnome.org/browse/gtk+/tree/examples
+[2] https://developer.gnome.org/gtk3/3.12/ch01s05.html
