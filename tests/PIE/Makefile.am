@@ -16,6 +16,7 @@ tests_PIE_VALAFLAGS = \
 	--library testpie \
 	--shared-library testpie \
 	--target-glib=2.40.0 \
+	--pkg gio-2.0 \
 	-g
 
 tests_PIE_LDFLAGS =  \
@@ -42,9 +43,10 @@ testload_PIE_SOURCES =  \
 testload_PIE_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
-	--pkg gmodule-2.0 \
-	--pkg config \
 	--vapidir $(top_builddir)/libvaladate \
+	--pkg gmodule-2.0 \
+	--pkg gio-2.0 \
+	--pkg config \
 	--vapidir $(top_builddir)/vapi \
 	--target-glib=2.40.0 \
 	-g

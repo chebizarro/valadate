@@ -1,5 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
+ * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
  * Copyright (C) 2009  Jan Hudec <bulb@ucw.cz>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using GLib;
-using Valadate;
+namespace Valadate {
+    public class TempDirTest : TestCase {
 
-namespace Test {
-    public class TempDirTest : Object, Fixture {
+		public TempDirTest() {
+			base("tempdir");
+			add_test("store", test_store);
+			add_test("copy", test_copy_file);
+			//add_test("shell", test_shell);
+			//add_test("copy_dir", test_copy_dir);
+		}
+
+
         TempDir tmp = new TempDir();
 
         public void test_store() {
@@ -29,7 +37,7 @@ namespace Test {
         }
 
         public void test_copy_file() {
-            tmp.copy("readme", "README");
+            tmp.copy("readme", Config.VALADATE_TESTS_DIR + "/../README.md");
             var readme = tmp.contents("readme");
             assert(readme.has_prefix("Valadate"));
         }

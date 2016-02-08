@@ -22,13 +22,14 @@ namespace Valadate {
      * Class to provide a temporary test directory to unit tests.
      *
      * To use, instantiate this class either inside your test method or as
-     * a member of your test fixture. I will automatically create a test
+     * a member of your test fixture. It will automatically create a test
      * directory upon instantiation and remove it again upon destruction.
      *
      * With the current GLib.Test-based runner, the destruction will not run
      * if the test fails, so the directory is not deleted if the test fails.
      * (it is not currently printed anywhere though).
      */
+     
     public class TempDir : Object {
         // SECTION: static data
         private static string orig_dir = Environment.get_current_dir();

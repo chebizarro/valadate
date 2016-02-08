@@ -14,7 +14,7 @@ AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 
 dnl AM_MAINTAINER_MODE([enable])
 
-AM_SILENT_RULES([yes])
+dnl AM_SILENT_RULES([yes])
 AM_PATH_GLIB_2_0
 AM_PROG_CC_C_O
 dnl AM_PROG_AR
@@ -144,6 +144,7 @@ AC_CONFIG_FILES([
 	Makefile
 	build/Makefile
 	build/autotools/Makefile
+	build/debian/Makefile
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
@@ -162,7 +163,7 @@ echo ""
 echo " • Prefix: ${prefix}"
 echo ""
 echo " • Debug level: ${enable_debug}"
-echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS}"
+echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
 echo ""
 echo " • API reference: ${enable_gtk_doc}"
 echo " • Manual pages: ${enable_man}"

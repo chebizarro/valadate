@@ -7,7 +7,8 @@ libvaladate_la_SOURCES = \
 	testcase.vala \
 	testfixture.vala \
 	testsuite.vala \
-	testresult.vala
+	testresult.vala \
+	tempdir.vala
 
 libvaladate_la_CFLAGS = $(VALADATE_CFLAGS)
 

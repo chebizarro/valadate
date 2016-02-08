@@ -1,1 +1,1 @@
-SUBDIRS = autotools
+SUBDIRS = autotools debian

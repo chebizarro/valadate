@@ -2851,45 +2851,6 @@ fi
 
 
 
-# Check whether --enable-silent-rules was given.
-if test "${enable_silent_rules+set}" = set; then :
-  enableval=$enable_silent_rules;
-fi
-
-case $enable_silent_rules in # (((
-  yes) AM_DEFAULT_VERBOSITY=0;;
-   no) AM_DEFAULT_VERBOSITY=1;;
-    *) AM_DEFAULT_VERBOSITY=0;;
-esac
-am_make=${MAKE-make}
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $am_make supports nested variables" >&5
-$as_echo_n "checking whether $am_make supports nested variables... " >&6; }
-if ${am_cv_make_support_nested_variables+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if $as_echo 'TRUE=$(BAR$(V))
-BAR0=false
-BAR1=true
-V=1
-am__doit:
-	@$(TRUE)
-.PHONY: am__doit' | $am_make -f - >/dev/null 2>&1; then
-  am_cv_make_support_nested_variables=yes
-else
-  am_cv_make_support_nested_variables=no
-fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_make_support_nested_variables" >&5
-$as_echo "$am_cv_make_support_nested_variables" >&6; }
-if test $am_cv_make_support_nested_variables = yes; then
-    AM_V='$(V)'
-  AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
-else
-  AM_V=$AM_DEFAULT_VERBOSITY
-  AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
-fi
-AM_BACKSLASH='\'
-
 DEPDIR="${am__leading_dot}deps"
 
 ac_config_commands="$ac_config_commands depfiles"
@@ -12852,7 +12813,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile tests/libvaladate/Makefile tests/PIE/Makefile vapi/Makefile"
+ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile build/debian/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc tests/Makefile tests/libvaladate/Makefile tests/PIE/Makefile vapi/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -13890,6 +13851,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "build/Makefile") CONFIG_FILES="$CONFIG_FILES build/Makefile" ;;
     "build/autotools/Makefile") CONFIG_FILES="$CONFIG_FILES build/autotools/Makefile" ;;
+    "build/debian/Makefile") CONFIG_FILES="$CONFIG_FILES build/debian/Makefile" ;;
     "libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/Makefile" ;;
     "libvaladate/libvaladate-1.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/libvaladate-1.0.pc" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
@@ -15173,7 +15135,7 @@ echo ""
 echo " • Prefix: ${prefix}"
 echo ""
 echo " • Debug level: ${enable_debug}"
-echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS}"
+echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
 echo ""
 echo " • API reference: ${enable_gtk_doc}"
 echo " • Manual pages: ${enable_man}"
