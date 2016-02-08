@@ -1,3 +1,5 @@
+include $(top_srcdir)/base.am
+
 ACLOCAL_AMFLAGS  = -I build/autotools ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 

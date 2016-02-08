@@ -3,12 +3,14 @@
 noinst_LTLIBRARIES = libvaladate.la
 
 libvaladate_la_SOURCES = \
+	assert.vala \
 	test.vala \
 	testcase.vala \
 	testfixture.vala \
 	testsuite.vala \
 	testresult.vala \
-	tempdir.vala
+	tempdir.vala \
+	wait.vala
 
 libvaladate_la_CFLAGS = $(VALADATE_CFLAGS)
 
