@@ -1,3 +1,5 @@
+include $(top_srcdir)/base.am
+
 # --- libvaladate ---
 
 noinst_LTLIBRARIES = libvaladate.la
@@ -9,6 +11,7 @@ libvaladate_la_SOURCES = \
 	testfixture.vala \
 	testsuite.vala \
 	testresult.vala \
+	testrunner.vala \
 	tempdir.vala \
 	wait.vala
 

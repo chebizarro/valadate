@@ -70,7 +70,9 @@ CLEANFILES += \
 	*.vapi \
 	*.o \
 	*.html \
-	*.xml
+	*.xml \
+	*.gcda \
+	*.gcno
 
 DISTCLEANFILES += $(CLEANFILES)
 

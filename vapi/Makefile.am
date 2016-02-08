@@ -1,3 +1,5 @@
+include $(top_srcdir)/base.am
+
 noinst_DATA = \
 	config.vapi
 

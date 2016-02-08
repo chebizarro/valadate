@@ -1,3 +1,5 @@
+include $(top_srcdir)/base.am
+
 NO_DIST = \
 	compat \
 	control \

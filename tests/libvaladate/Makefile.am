@@ -35,7 +35,9 @@ CLEANFILES += \
 	$(tests_libvaladate_SOURCES:.vala=.c) \
 	*.stamp \
 	*.html \
-	*.xml
+	*.xml \
+	*.gcda \
+	*.gcno
 
 DISTCLEANFILES += $(CLEANFILES)
 
