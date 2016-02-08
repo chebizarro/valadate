@@ -159,7 +159,7 @@ ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/base.am compile \
-	config.guess config.sub install-sh ltmain.sh missing
+	config.guess config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 am__relativize = \
   dir0=`pwd`; \
@@ -341,6 +341,10 @@ AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
 GTESTER = gtester 
 GTESTER_REPORT = gtester-report
 SUBDIRS = autotools debian
+NO_DIST = \
+	test-driver \
+	lcov_cobertura.py
+
 all: all-recursive
 
 .SUFFIXES:
