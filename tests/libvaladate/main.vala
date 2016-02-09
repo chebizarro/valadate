@@ -11,6 +11,8 @@ namespace Valadate {
 	void main (string[] args) {
 		GLib.Test.init (ref args);
 
+		message(GLib.Test.perf().to_string());
+
 		GLib.Test.add_func ("/testcase/new", () => {
 			TestCase test = new TestTestCase("TestTestCase");
 			assert(test is TestCase);
@@ -23,7 +25,7 @@ namespace Valadate {
 			assert(test is TestCase);
 		});
 
-		GLib.TestSuite.get_root ().add_suite (new TempDirTest().suite);
+		GLib.TestSuite.get_root().add_suite(new TempDirTest().suite);
 
 		GLib.Test.run ();
 	}

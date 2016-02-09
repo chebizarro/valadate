@@ -26,6 +26,8 @@ namespace Valadate {
 
 		public GLib.TestSuite suite {get; private set;}
 
+		public string name {get;set;} 
+
 		private Adaptor[] adaptors = new Adaptor[0];
 
 		public delegate void TestMethod ();
@@ -33,6 +35,7 @@ namespace Valadate {
 		public TestCase (string name)
 			requires (name.contains("/") != true)
 		{
+			this.name = name;
 			this.suite = new GLib.TestSuite (name);
 		}
 
@@ -48,7 +51,9 @@ namespace Valadate {
 											   adaptor.tear_down ));
 		}
 
-		public virtual void run(TestResult result) {}
+		public virtual void run(ref TestResult? result = null) {}
+
+		public virtual void run_test() {}
 
 		public virtual void set_up () {}
 
