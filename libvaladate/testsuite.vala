@@ -22,7 +22,7 @@ namespace Valadate {
 
 		public abstract void add_test (Test test);
 
-		public virtual void run (ref TestResult? result = null) {
+		public virtual void run (TestResult? result = null) {
 			
 		}
 

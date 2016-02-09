@@ -51,7 +51,7 @@ namespace Valadate {
 											   adaptor.tear_down ));
 		}
 
-		public virtual void run(ref TestResult? result = null) {}
+		public virtual void run(TestResult? result = null) {}
 
 		public virtual void run_test() {}
 

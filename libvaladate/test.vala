@@ -20,7 +20,7 @@ namespace Valadate {
 
     public interface Test : Object {
 
-		public abstract void run (ref TestResult? result = null);
+		public abstract void run (TestResult? result = null);
 
     }
 
