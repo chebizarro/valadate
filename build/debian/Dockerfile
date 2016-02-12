@@ -2,5 +2,4 @@
 FROM jenkins/ubuntu:15.04
 MAINTAINER Chris Daley <chebizarro@gmail.com>
 
-RUN apt-get install -y gobject-introspection libvala-0.30-dev libgirepository1.0-dev shtool lcov #python-pip
-#RUN pip install lcov_cobertura
+RUN apt-get install -y gobject-introspection libvala-0.30-dev libgirepository1.0-dev shtool lcov libxml2-dev
