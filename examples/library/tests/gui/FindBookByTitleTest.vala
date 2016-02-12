@@ -2,7 +2,7 @@ namespace Library.Gui {
 
 	using Library;
 
-	public class FindBookByTitleTest extends TestCase {
+	public class FindBookByTitleTest : TestCase {
 
 		private FindBookByTitle findBook;
 		private Library library;

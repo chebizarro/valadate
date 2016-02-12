@@ -1,0 +1,6 @@
+library_book_test_get_type
+library_book_test_testConstructBook
+library_book_test_testBookTitle
+library_book_test_testBookAuthor
+library_book_test_new
+library_book_test_construct

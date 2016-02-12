@@ -2,7 +2,7 @@ namespace Library.Xml {
 
 	using Library;
 
-	public class LibraryXMLDocTest extends XMLTestCase {
+	public class LibraryXMLDocTest : XMLTestCase {
 
 		private Library library;
 		private LibraryXMLDoc doc;
@@ -27,12 +27,12 @@ namespace Library.Xml {
 		}
 
 		public void testHeader() {
-			String expectedHeader = "<?xml version=\"1.0\"?>\n";
+			string expectedHeader = "<?xml version=\"1.0\"?>\n";
 			assertEquals(expectedHeader, doc.header());
 		}
 
 		public void testDTD() {
-			String expectedDTD = 
+			string expectedDTD = 
 				"<!DOCTYPE library [\n"
 				+ "<!ELEMENT library (book*) >\n"
 				+ "<!ELEMENT book (title,author) >\n"
@@ -43,7 +43,7 @@ namespace Library.Xml {
 		}
 
 		public void testEmptyDocToString() throws Exception {
-			String expected = doc.header() + doc.DTD()
+			string expected = doc.header() + doc.DTD()
 				+ "<library/>";
 			assertXMLEqual(expected, doc.toString());
 		}
@@ -93,7 +93,7 @@ namespace Library.Xml {
 			library.addBook(new Book("On the Road", "Jack Kerouac"));
 			library.addBook(new Book("Dune", "Frank Herbert"));
 			LibraryXMLDoc doc = new LibraryXMLDoc( library );
-			String xmlTest = doc.toString();
+			string xmlTest = doc.toString();
 			assertXpathExists("//book[title='Dune']", xmlTest);
 			assertXpathExists("//book[author='Jack Kerouac']", xmlTest);
 			assertXpathNotExists("//book[author='Nobody']", xmlTest);
@@ -109,18 +109,18 @@ namespace Library.Xml {
 			library.addBook(new Book("title1", "author1"));
 			library.addBook(new Book("title2", "author2"));
 			LibraryXMLDoc doc3 = new LibraryXMLDoc( library );
-			String testDoc = doc3.toString();
+			string testDoc = doc3.toString();
 			NodeTest nodeTest = new NodeTest(testDoc);
 			assertNodeTestPasses(nodeTest, new LibraryNodeTester(),
 				new short[] {Node.TEXT_NODE, Node.ELEMENT_NODE}, true);
 		}
 
-		private class LibraryNodeTester extends AbstractNodeTester {
+		private class LibraryNodeTester : AbstractNodeTester {
 
 			private String currName = "";
 
 			public void testText(Text text) throws NodeTestException {
-				String txt = text.getData();
+				string txt = text.getData();
 				System.out.println("text="+txt);
 				if ((currName.equals("title") 
 						&& txt.substring(0,5).equals("title"))
@@ -132,7 +132,7 @@ namespace Library.Xml {
 
 			public void testElement(Element element)
 					throws NodeTestException {
-				String name = element.getLocalName();
+				string name = element.getLocalName();
 				System.out.println("name="+name);
 				if (!name.equals("library") && !name.equals("book")
 					&& !name.equals("title") && !name.equals("author"))

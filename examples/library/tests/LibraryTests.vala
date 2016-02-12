@@ -3,7 +3,7 @@ namespace Library {
 	using Library.Gui;
 	using Library.Xml;
 
-	public class LibraryTests extends TestSuite {
+	public class LibraryTests : TestSuite {
 
 		public static Test suite() {
 			TestSuite suite = new TestSuite();

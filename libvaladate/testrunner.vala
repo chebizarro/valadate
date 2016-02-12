@@ -22,4 +22,8 @@ namespace Valadate {
 
     }
 
+	public void run (Object test) {
+		assert(test is TestCase);
+	}
+
 }

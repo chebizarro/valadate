@@ -21,7 +21,7 @@ namespace Valadate {
     public class TempDirTest : TestCase {
 
 		public TempDirTest() {
-			base("tempdir");
+			//base("tempdir");
 			add_test("store", test_store);
 			add_test("copy", test_copy_file);
 			//add_test("shell", test_shell);

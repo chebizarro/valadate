@@ -53,7 +53,7 @@ AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)
 
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0"
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
 AC_SUBST(pkg_modules)
 
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
@@ -140,6 +140,20 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
 
+
+AC_ARG_ENABLE([build-examples],
+              [AS_HELP_STRING([--enable-build-examples], [Enable building examples])],
+              [build_examples=$enableval],
+              [build_examples=no])
+
+AS_IF([test "x$build_examples" != "xno"], [
+	AC_CONFIG_SUBDIRS([examples/gtk examples/library])
+	])
+
+AM_CONDITIONAL(ENABLE_EXAMPLES, test x$build_examples = xyes)
+
+dnl GOBJECT_INTROSPECTION_CHECK([1.30.0])
+
 AC_CONFIG_FILES([
 	Makefile
 	build/Makefile
@@ -149,9 +163,15 @@ AC_CONFIG_FILES([
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
 	tests/libvaladate/Makefile
+	tests/libvaladate/data/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 ])
+
+AM_COND_IF([ENABLE_EXAMPLES],
+	[AC_CONFIG_FILES([
+		examples/Makefile
+	])])
 
 AC_OUTPUT
 
@@ -167,4 +187,5 @@ echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
+echo " • Build examples: ${build_examples}"
 echo ""

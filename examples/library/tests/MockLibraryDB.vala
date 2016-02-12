@@ -1,8 +1,6 @@
 namespace Library {
 
-	using Library;
-
-	public class MockLibraryDB implements LibraryDB {
+	public class MockLibraryDB : LibraryDB {
 
 		MockLibraryDB() {
 			books = new Vector();

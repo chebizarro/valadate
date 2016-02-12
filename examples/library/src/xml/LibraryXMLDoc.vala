@@ -1,6 +1,6 @@
-namespace Library.Xml {
+using Library;
 
-	using Library;
+namespace Library.Xml {
 
 	public class LibraryXMLDoc {
 

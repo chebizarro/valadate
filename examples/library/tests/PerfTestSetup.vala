@@ -2,7 +2,7 @@
 
 namespace Library {
 
-	public class PerfTestSetup extends TestSetup {
+	public class PerfTestSetup : TestSetup {
 
 		private static Library library;
 
@@ -13,8 +13,8 @@ namespace Library {
 		public void setUp() throws Exception {
 			library = new Library();
 			for ( int i=0; i < 100000; i++ ) {
-				String title = "book" + i;
-				String author = "author" + i;
+				string title = "book" + i;
+				string author = "author" + i;
 				library.addBook(new Book( title, author ));
 			}
 		}

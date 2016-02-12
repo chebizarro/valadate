@@ -1,6 +1,6 @@
-namespace Library.Gui {
+using Library;
 
-	using Library;
+namespace Library.Gui {
 
 	public class LibraryFrame {
 

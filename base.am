@@ -13,6 +13,7 @@ AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
 	--pkg config \
 	-g
 
+# DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
 if ENABLE_GCOV
 # use recursive makes in order to ignore errors during check/perf

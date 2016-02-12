@@ -1,14 +1,15 @@
 namespace Library {
 
-	using Library.Gui;
+	//using Gui;
 
 	public class LibraryApp {
 
-		public static void main(String[] args) {
+		public static void main(string[] args) {
 			LibraryApp app = new LibraryApp();
 		}
 
 		public LibraryApp() {
+			/*
 			Library library = new Library();
 			LibraryFrame frame = new LibraryFrame(library);
 			LibraryFrameView view = new LibraryFrameView(frame);
@@ -19,6 +20,7 @@ namespace Library {
 				} catch(Exception x) {}
 			}
 			System.exit(0);
+			*/
 		}
 	}
 }

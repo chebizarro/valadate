@@ -20,26 +20,31 @@ namespace Valadate {
 	
 	
 	public class TestPIE : TestCase {
-		
+		/*
 		public TestPIE() {
-			base("PIE");
-			add_test("test_pie", test_pie);
-		}
+			//base("PIE");
+			add_test("test_pie_fail", test_pie_fail);
+			add_test("test_pie_pass", test_pie_pass);
+		}*/
 		
-		[Test (name="test_pie")]
-		public static void test_pie () {
-			assert(true);
+		[Test (name="test_pie_fail")]
+		public void test_pie_fail () {
+			assert_true(true);
+		}
+
+		[Test (name="test_pie_pass")]
+		public void test_pie_pass () {
+			assert_true(true);
 		}
 		
 	}
 	
-	
+	/*
 	static void main (string[] args) {
 		GLib.Test.init (ref args);
 		GLib.TestSuite.get_root ().add_suite (new TestPIE().suite);
 		GLib.Test.run ();
-	}
-	
+	}*/
 	
 	
 }

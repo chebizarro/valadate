@@ -5,7 +5,7 @@ namespace Library.Gui {
 
 	public abstract class BaseView : JFrame, ActionListener {
 
-		BaseView(String title, int width, int height) {
+		BaseView(string title, int width, int height) {
 			super(title);
 			addControls();
 			setSize(width, height);

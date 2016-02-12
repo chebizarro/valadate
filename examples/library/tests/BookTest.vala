@@ -1,29 +1,36 @@
+using Valadate;
+
 namespace Library {
 
-	public class BookTest : TestCase {
+	public class BookTest : Valadate.TestCase {
 
+		[Test (name="construct_bool")]
 		public void testConstructBook() {
 			Book book = new Book("");
-			assertNotNull( book );
+			assert(book != null);
 		}
 
+		[Test (name="book_title")]
 		public void testBookTitle() {
 			Book book = new Book( "Solaris" );
-			assertEquals( "Solaris", book.getTitle() );
+			assert("Solaris" == book.title);
 		}
 
+		[Test (name="book_author")]
 		public void testBookAuthor() {
-			Book book = new Book( "Cosmos", "Carl Sagan" );
-			assertEquals( "wrong author", "Carl Sagan", book.getAuthor() );
+			Book book = new Book("Cosmos", "Carl Sagan");
+			//assertEquals( "wrong author", "Carl Sagan", book.author );
+			assert("Carl Sagan" == book.author);
 		}
 
+		/*
 		public void testGetFields() {
 			Book book = new Book( "test", "test" );
 			Field fields[] = book.getClass().getDeclaredFields();
 			for ( int i = 0; i < fields.length; i++ ) {
 				fields[i].setAccessible( true );
 				try {
-					String value = (String)fields[i].get( book );
+					string value = (string)fields[i].get( book );
 					assertEquals( "test", value );
 				} catch (Exception e) {
 					fail( e.getMessage() );
@@ -38,14 +45,15 @@ namespace Library {
 				if ( methods[i].getName().startsWith("get") ) {
 					methods[i].setAccessible( true );
 					try {
-						String value = (String)methods[i].invoke( book, null );
+						string value = (string)methods[i].invoke( book, null );
 						assertEquals( "test", value );
 					} catch (Exception e) {
 						fail( e.getMessage() );
 					}
 				}
 			}
-		}
+		}*/
+		
 	}
 
 }

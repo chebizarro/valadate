@@ -1,6 +1,8 @@
 include $(top_srcdir)/base.am
 include $(top_srcdir)/build/autotools/glib-tap.mk
 
+SUBDIRS = data
+
 test_programs = tests_libvaladate
 
 log_file = $(VALADATE_TESTS_DIR)/results/ # Where to save the result and output of the test script.

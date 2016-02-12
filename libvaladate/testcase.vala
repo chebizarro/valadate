@@ -21,7 +21,32 @@
  */
 
 namespace Valadate {
-
+	/**
+	 * TestCase is an abstract class that acts as a parent for unit test
+	 * classes. A TestCase may contain a single test method or be a test
+	 * fixture containing multiple tests. A TestCase may be run directly
+	 * by calling run().
+	 * 
+	 * More commonly, a TestRunner runs a TestCase by calling run(TestResult),
+	 * passing in a TestResult object to collect the results. The method run_test()
+	 * can be overridden by subclasses of TestCase to implement a test class
+	 * with a single test method. Alternatively, an instance of TestCase can
+	 * be created with a name corresponding to the name of a test method.
+	 * 
+	 * The default implementation of run_test() uses reflection to invoke the
+	 * named test method. This allows a TestCase to have multiple test methods.
+	 * The following code snippet runs the test method
+	 * BookTest.testBookTitle():
+	 * 
+	 * TestCase test = new BookTest("testBookTitle");
+	 * TestResult result = test.run();
+	 * 
+	 * Whichever way the test methods are run, TestCase ensures test isolation
+	 * by running set_up() prior to the test method and tear_down( ) afterwards.
+	 * 
+	 * Hamill, Paul (2004-11-02). Unit Test Frameworks: Tools for High-Quality
+	 * Software Development (Kindle Locations 2821-2834). O'Reilly Media. Kindle Edition. 
+	 */
 	public abstract class TestCase : Object, Test, TestFixture {
 
 		public GLib.TestSuite suite {get; private set;}
@@ -30,16 +55,20 @@ namespace Valadate {
 
 		private Adaptor[] adaptors = new Adaptor[0];
 
-		public delegate void TestMethod ();
-
-		public TestCase (string name)
-			requires (name.contains("/") != true)
-		{
-			this.name = name;
+		construct {
+			name = this.get_type().name();
 			this.suite = new GLib.TestSuite (name);
 		}
 
-		public void add_test (string name, owned TestMethod test)
+		/*
+		public TestCase (string? name = null)
+			requires (name.contains("/") != true)
+		{
+			this.name = name ?? this.name;
+			this.suite = new GLib.TestSuite (name);
+		}*/
+
+		public void add_test (string name, owned Test.TestMethod test)
 			requires (name.contains("/") != true)
 		{
 			var adaptor = new Adaptor (name, (owned)test, this);
@@ -51,6 +80,11 @@ namespace Valadate {
 											   adaptor.tear_down ));
 		}
 
+		/**
+		 * Runs the Tests and collects the results in a TestResult 
+		 *
+		 * @param result the TestResult object used to store the results of the Test
+		 */
 		public virtual void run(TestResult? result = null) {}
 
 		public virtual void run_test() {}
@@ -62,11 +96,11 @@ namespace Valadate {
 		private class Adaptor {
 			[CCode (notify = false)]
 			public string name { get; private set; }
-			private TestMethod test;
+			private Test.TestMethod test;
 			private TestCase test_case;
 
 			public Adaptor (string name,
-							owned TestMethod test,
+							owned Test.TestMethod test,
 							TestCase test_case) {
 				this.name = name;
 				this.test = (owned)test;

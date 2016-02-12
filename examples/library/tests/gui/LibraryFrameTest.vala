@@ -1,8 +1,8 @@
+using Library;
+
 namespace Library.Gui {
 
-	using Library;
-
-	public class LibraryFrameTest extends TestCase {
+	public class LibraryFrameTest : TestCase {
 
 		private Library library;
 		private LibraryFrame frame;

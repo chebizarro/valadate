@@ -12,4 +12,8 @@ CLEANFILES = *.stamp
 
 SUBDIRS = build libvaladate tests vapi
 
+if ENABLE_EXAMPLES
+SUBDIRS += examples
+endif
+
 -include $(top_srcdir)/git.mk

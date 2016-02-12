@@ -2,7 +2,7 @@ namespace Library.Gui {
 
 	using Library;
 
-	public class AddBookTest extends TestCase {
+	public class AddBookTest : TestCase {
 
 		private AddBook addBook;
 		private Library library;

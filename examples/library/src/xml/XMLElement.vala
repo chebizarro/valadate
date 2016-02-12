@@ -4,18 +4,12 @@ namespace Library.Xml {
 
 		private string name;
 		private string content;
-		private Vector children;
+		private ArrayList<XMLElement> children;
 
-		XMLElement(String n) {
-			name = n;
-			content = "";
-			children = new Vector();
-		}
-
-		XMLElement(String n, string c) {
+		XMLElement(string n, string c = "") {
 			name = n;
 			content = c;
-			children = new Vector();
+			children = new ArrayList<XMLElement>();
 		}
 
 		public void addChild(XMLElement child) {

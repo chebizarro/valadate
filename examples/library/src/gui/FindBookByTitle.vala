@@ -1,6 +1,7 @@
-namespace Library.Gui {
+using Library;
+using Gee;
 
-	using Library;
+namespace Library.Gui {
 
 	public class FindBookByTitle {
 
@@ -16,7 +17,7 @@ namespace Library.Gui {
 		public Book getFoundBook() { return foundBook; }
 
 		protected void find( string title ) {
-			Vector books = library.getBooksByTitle( title );
+			ArrayList<Book> books = library.getBooksByTitle( title );
 			if ( books.size() == 0 ) {
 				foundBook = null;
 			} else {

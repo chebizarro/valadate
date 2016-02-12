@@ -1,3 +1,5 @@
+#include $(top_srcdir)/../../base.am
+
 AUTOMAKE_OPTIONS = subdir-objects
 
 bin_PROGRAMS = src/exampleapp

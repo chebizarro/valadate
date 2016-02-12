@@ -3,7 +3,9 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # --- PIE tests ---
 
-test_programs = tests_PIE testload_PIE
+# tests_PIE is a test binary compiled as a PIE
+
+test_programs = tests_PIE
 
 tests_PIE_SOURCES =  \
 	testpie.vala
@@ -13,8 +15,9 @@ tests_PIE_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
-	--library testpie \
-	--shared-library testpie \
+	--gir tests_PIE-0.gir \
+	--library tests_PIE \
+	--shared-library tests_PIE \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	-g
@@ -24,7 +27,8 @@ tests_PIE_LDFLAGS =  \
 
 tests_PIE_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(top_builddir)/libvaladate/libvaladate.la \
+	$(top_builddir)/libvaladate/librunner.la
 
 tests_PIE_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
@@ -37,6 +41,10 @@ tests_PIE_CFLAGS = $(VALADATE_CFLAGS) \
 	-fPIE \
 	-shared
 
+# testload_PIE is a test binary that attempts to load the tests_PIE binary
+
+test_programs += testload_PIE
+
 testload_PIE_SOURCES =  \
 	testloadpie.vala
 	
@@ -44,6 +52,9 @@ testload_PIE_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
+	--gir testload_PIE-0.gir \
+	--library testload_PIE \
+	--shared-library testload_PIE \
 	--pkg gmodule-2.0 \
 	--pkg gio-2.0 \
 	--pkg config \
@@ -53,7 +64,8 @@ testload_PIE_VALAFLAGS = \
 
 testload_PIE_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(top_builddir)/libvaladate/libvaladate.la \
+	$(top_builddir)/libvaladate/librunner.la
 
 testload_PIE_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
@@ -61,7 +73,13 @@ testload_PIE_CPPFLAGS = \
 	
 testload_PIE_CFLAGS = $(VALADATE_CFLAGS) \
 	-I$(top_srcdir)/libvaladate \
-	-I$(top_srcdir)
+	-I$(top_srcdir) \
+	-pie \
+	-fPIE \
+	-shared
+
+testload_PIE_LDFLAGS =  \
+	-fPIE
 
 CLEANFILES += \
 	$(tests_PIE_SOURCES:.vala=.c) \
@@ -72,7 +90,8 @@ CLEANFILES += \
 	*.html \
 	*.xml \
 	*.gcda \
-	*.gcno
+	*.gcno \
+	*.gir
 
 DISTCLEANFILES += $(CLEANFILES)
 

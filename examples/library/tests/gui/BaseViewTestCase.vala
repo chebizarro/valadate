@@ -1,6 +1,6 @@
 namespace Library.Gui {
 
-	public abstract class BaseViewTestCase extends TestCase {
+	public abstract class BaseViewTestCase : TestCase {
 
 		public abstract BaseView getBaseView();
 

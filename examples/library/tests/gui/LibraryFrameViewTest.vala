@@ -3,7 +3,7 @@ namespace Library.Gui {
 	using Library;
 	//import junit.framework.*;
 
-	public class LibraryFrameViewTest extends BaseViewTestCase {
+	public class LibraryFrameViewTest : BaseViewTestCase {
 
 		private LibraryFrame frame;
 		private LibraryFrameView view;

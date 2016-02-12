@@ -1,6 +1,6 @@
-namespace Library.Gui {
+using Library;
 
-	using Library;
+namespace Library.Gui {
 
 	public class AddBook {
 
@@ -10,7 +10,7 @@ namespace Library.Gui {
 			library = lib;
 		}
 
-		public boolean add(String title, string author) {
+		public bool add(string title, string author) {
 			Book book = new Book( title, author );
 			try {
 				library.addBook( book );

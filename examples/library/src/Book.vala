@@ -1,18 +1,14 @@
 namespace Library {
 
-	public class Book {
+	public class Book : Object {
 
-		Book(String title) { this.title = title; }
-		public Book(String title, string author) {
+		public string title {get; private set;}
+		public string author {get; private set;}
+
+		public Book(string title, string? author = null) {
 			this.title = title;
 			this.author = author;
 		}
-
-		public string getTitle() { return title; }
-		public string getAuthor() { return author; }
-
-		private string title = "";
-		private string author = "";
 
 	}
 }
