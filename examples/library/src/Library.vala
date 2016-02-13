@@ -41,7 +41,7 @@ namespace Library {
 			booksById.set(id, book);
 		}
 
-		public Book? get_book( string title, string author ) {
+		public Book? get_book(string title, string author) {
 			ArrayList<int> titleIds = bookIdsByTitle.get(title);
 			if ( titleIds == null )
 				return null;
@@ -56,25 +56,25 @@ namespace Library {
 
 		public ArrayList<Book> get_books_by_title( string title ) {
 			ArrayList<Book> books = new ArrayList<Book>();
-			ArrayList<Book> titleIds = (ArrayList<Book>)bookIdsByTitle.get( title );
-			if ( titleIds == null ) 
+			ArrayList<int> titleIds = bookIdsByTitle.get( title );
+			if (titleIds == null) 
 				return books;
-			foreach (Book book in titleIds)
-				books.add( book );
+			foreach (int bookid in titleIds)
+				books.add(booksById.get(bookid));
 			return books;
 		}
 
-		public ArrayList<Book> getBooksByAuthor( string author ) {
+		public ArrayList<Book> get_books_by_author( string author ) {
 			ArrayList<Book> books = new ArrayList<Book>();
-			ArrayList<Book> authorIds = (ArrayList<Book>)bookIdsByAuthor.get( author );
-			if ( authorIds == null )
+			ArrayList<int> authorIds = bookIdsByAuthor.get(author);
+			if (authorIds == null) 
 				return books;
-			foreach (Book book in authorIds)
-				books.add( book );
-			return books;   
+			foreach (int bookid in authorIds)
+				books.add(booksById.get(bookid));
+			return books;
 		}
 
-		public void removeBook( string title, string author ) throws Exception {
+		public void remove_book(string title, string author) throws Exception {
 			ArrayList<int> titleIds = bookIdsByTitle.get( title );
 			if (titleIds == null)
 				throw new Exception.NOT_FOUND("Book title: %s not found", title);
@@ -99,11 +99,11 @@ namespace Library {
 				throw new Exception.NOT_FOUND("Book %s not found", title);
 		}
 
-		public Iterator iterator() {
-			return booksById.iterator();
+		public Iterator<Book> iterator() {
+			return booksById.values.iterator();
 		}
 
-		public int getNumBooks() {
+		public int get_num_books() {
 			return booksById.size;
 		}
 

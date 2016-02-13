@@ -4,7 +4,7 @@
 
 include $(top_srcdir)/build/autotools/glib-tap.mk
 
-test_programs = test_library
+test_programs = testlibrary
 
 bad_sources = \
 	LibraryTest.vala \
@@ -24,48 +24,47 @@ bad_sources = \
 	xml/XMLElementTest.vala \
 	xml/LibraryXMLDocTest.vala
 
-test_library_SOURCES =  \
+testlibrary_SOURCES =  \
 	BookTest.vala \
 	LibraryTest.vala
 	
-test_library_VALAFLAGS = \
+testlibrary_VALAFLAGS = \
+	$(LIBRARY_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
-	--pkg liblibrary-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
-	--vapidir $(top_builddir)/src \
-	--gir test_library-0.gir \
-	--library test_library \
-	-h test_library.h \
-	--shared-library test_library \
+	--pkg liblibrary-1.0 \
+	--vapidir $(top_srcdir)/src \
+	--gir testlibrary-0.gir \
+	--library testlibrary \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	-g
 
-test_library_LDFLAGS =  \
+
+testlibrary_LDFLAGS =  \
 	-fPIE \
 	-rdynamic
 
-test_library_LDADD = \
+testlibrary_LDADD = \
 	$(LIBRARY_LIBS) \
 	$(abs_builddir)/../../../libvaladate/libvaladate.la \
-	$(top_builddir)/src/liblibrary.la \
-	-lgio-2.0
+	$(top_builddir)/src/liblibrary.la
 
-test_library_CPPFLAGS = \
+testlibrary_CPPFLAGS = \
 	$(LIBRARY_CPPFLAGS) \
+	-DLIBRARY_TESTS_DIR=\""$(LIBRARY_TESTS_DIR)"\" \
 	-fPIE
 	
-test_library_CFLAGS = $(LIBRARY_CFLAGS) \
+testlibrary_CFLAGS = $(LIBRARY_CFLAGS) \
 	-I$(abs_builddir)/../../../libvaladate \
 	-I$(top_builddir)/src \
-	-pie \
-	-fPIE \
-	-shared
+	-shared \
+	-pie
 
 
 CLEANFILES += \
-	$(test_library_SOURCES:.vala=.c) \
+	$(testlibrary_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o \

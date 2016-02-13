@@ -62,8 +62,9 @@ namespace Valadate.Tests {
 				debug(err.message);
 				assert_not_reached();
 			}
-			assert(runner.tests.length == 1);
+			assert(runner.tests.length == 2);
 			assert(((TestCase)runner.tests[0]).name == "ValadateTestExe");
+			assert(((TestCase)runner.tests[1]).name == "ValadateTestExeTwo");
 		});
 
 		GLib.Test.add_func ("/textrunner/load", () => {
@@ -76,12 +77,29 @@ namespace Valadate.Tests {
 				debug(err.message);
 				assert_not_reached();
 			}
-			assert(runner.tests.length == 1);
+			assert(runner.tests.length == 2);
 			assert(((TestCase)runner.tests[0]).name == "ValadateTestExe");
+			assert(((TestCase)runner.tests[1]).name == "ValadateTestExeTwo");
+		});
+
+		GLib.Test.add_func ("/assert/equals/string", () => {
+			string t1 = "test";
+			string t2 = "test";
+			
+			Assert.equals(t1, t2, "Values must be equal");
+		});
+
+		GLib.Test.add_func ("/assert/equals", () => {
+			GLib.Test.trap_subprocess("/assert/equals/subprocess", 0,0);
+			GLib.Test.trap_assert_failed();
+		});
+
+		GLib.Test.add_func ("/assert/equals/subprocess", () => {
+			Assert.equals(24, 23, "Values must be equal");
 		});
 
 
-		GLib.TestSuite.get_root().add_suite(new TempDirTest().suite);
+		//GLib.TestSuite.get_root().add_suite(new TempDirTest().suite);
 
 		GLib.Test.run ();
 

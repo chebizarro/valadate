@@ -62,12 +62,11 @@ namespace Valadate {
 		public void load_module() throws RunError
 			requires(this.path != null)
 		{
-			var modname = path.replace("lt-","");
+			var modname = path; //.replace(".so","");
 			module = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			if (module == null)
 				throw new RunError.MODULE(Module.error());
-			
-			//module.make_resident();
+			module.make_resident();
 		}
 		
 		public void load_gir() throws RunError

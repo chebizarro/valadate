@@ -48,7 +48,7 @@ LT_INIT([disable-static])
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
+dnl AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)

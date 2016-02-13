@@ -7,20 +7,19 @@ namespace Library {
 		[Test (name="construct_book")]
 		public void testConstructBook() {
 			Book book = new Book("");
-			assert(book != null);
+			Assert.not_null(book);
 		}
 
 		[Test (name="book_title")]
 		public void testBookTitle() {
 			Book book = new Book( "Solaris" );
-			assert("Solaris" == book.title);
+			Assert.equals("Solaris", book.title);
 		}
 
 		[Test (name="book_author")]
 		public void testBookAuthor() {
 			Book book = new Book("Cosmos", "Carl Sagan");
-			//assertEquals( "wrong author", "Carl Sagan", book.author );
-			assert("Carl Sagan" == book.author);
+			Assert.equals("Carl Sagan", book.author, "wrong author");
 		}
 
 		/*

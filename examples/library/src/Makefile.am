@@ -1,6 +1,6 @@
 #include $(top_srcdir)/base.am
 
-lib_LTLIBRARIES = liblibrary.la
+noinst_LTLIBRARIES = liblibrary.la
 
 liblibrary_la_SOURCES = \
 	Book.vala \
@@ -10,9 +10,11 @@ liblibrary_la_SOURCES = \
 liblibrary_la_CFLAGS = $(LIBRARY_CFLAGS)
 
 liblibrary_la_CPPLAGS = $(LIBRARY_CPPFLAGS) \
-	$(addprefix -I ,$(LIBRARY_LIBS))
+	$(addprefix -I ,$(LIBRARY_LIBS)) \
+	`pkg-config --cflags`
 
 liblibrary_la_VALAFLAGS = \
+	--shared-library liblibrary-1.0 \
 	--library liblibrary-1.0 \
 	--vapi liblibrary-1.0.vapi \
 	-H liblibrary.h \

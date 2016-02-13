@@ -18,7 +18,8 @@
  
 namespace Valadate {
 	
-	public class TestExe : TestCase {
+
+	public class TestExeTwo : TestCase {
 		
 		[Test (name="test_one")]
 		public void test_one () {
@@ -31,6 +32,5 @@ namespace Valadate {
 		}
 		
 	}
-
 	
 }

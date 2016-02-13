@@ -5,7 +5,8 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 test_programs = testexe
 
 testexe_SOURCES =  \
-	testexe.vala
+	testexe.vala \
+	testexetwo.vala
 	
 testexe_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \

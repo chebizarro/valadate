@@ -21,12 +21,32 @@ typedef struct _LibraryBookTest LibraryBookTest;
 typedef struct _LibraryBookTestClass LibraryBookTestClass;
 typedef struct _LibraryBookTestPrivate LibraryBookTestPrivate;
 
+#define LIBRARY_TYPE_LIBRARY_TEST (library_library_test_get_type ())
+#define LIBRARY_LIBRARY_TEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), LIBRARY_TYPE_LIBRARY_TEST, LibraryLibraryTest))
+#define LIBRARY_LIBRARY_TEST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), LIBRARY_TYPE_LIBRARY_TEST, LibraryLibraryTestClass))
+#define LIBRARY_IS_LIBRARY_TEST(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), LIBRARY_TYPE_LIBRARY_TEST))
+#define LIBRARY_IS_LIBRARY_TEST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), LIBRARY_TYPE_LIBRARY_TEST))
+#define LIBRARY_LIBRARY_TEST_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), LIBRARY_TYPE_LIBRARY_TEST, LibraryLibraryTestClass))
+
+typedef struct _LibraryLibraryTest LibraryLibraryTest;
+typedef struct _LibraryLibraryTestClass LibraryLibraryTestClass;
+typedef struct _LibraryLibraryTestPrivate LibraryLibraryTestPrivate;
+
 struct _LibraryBookTest {
 	ValadateTestCase parent_instance;
 	LibraryBookTestPrivate * priv;
 };
 
 struct _LibraryBookTestClass {
+	ValadateTestCaseClass parent_class;
+};
+
+struct _LibraryLibraryTest {
+	ValadateTestCase parent_instance;
+	LibraryLibraryTestPrivate * priv;
+};
+
+struct _LibraryLibraryTestClass {
 	ValadateTestCaseClass parent_class;
 };
 
@@ -37,6 +57,11 @@ void library_book_test_testBookTitle (LibraryBookTest* self);
 void library_book_test_testBookAuthor (LibraryBookTest* self);
 LibraryBookTest* library_book_test_new (void);
 LibraryBookTest* library_book_test_construct (GType object_type);
+GType library_library_test_get_type (void) G_GNUC_CONST;
+void library_library_test_testGetBooksByTitle (LibraryLibraryTest* self);
+void library_library_test_testGetBooksByAuthor (LibraryLibraryTest* self);
+LibraryLibraryTest* library_library_test_new (void);
+LibraryLibraryTest* library_library_test_construct (GType object_type);
 
 
 G_END_DECLS
