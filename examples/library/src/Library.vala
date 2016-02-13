@@ -1,65 +1,66 @@
+public errordomain Exception {
+	DUPLICATE,
+	NOT_FOUND
+}
+
 namespace Library {
 
 	using Gee;
 
 	public class Library {
 
-		private HashSet booksById;
-		private HashSet bookIdsByAuthor;
-		private HashSet bookIdsByTitle;
+		private HashMap<int, Book>  booksById;
+		private HashMap<string, ArrayList<int>> bookIdsByAuthor;
+		private HashMap<string, ArrayList<int>> bookIdsByTitle;
 		private static int nextBookId; 
 
 		public Library() {
-			booksById = new HashSet();
-			bookIdsByAuthor = new HashSet();
-			bookIdsByTitle = new HashSet();
+			booksById = new HashMap<int, Book> ();
+			bookIdsByAuthor = new HashMap<string, ArrayList<int>> ();
+			bookIdsByTitle = new HashMap<string, ArrayList<int>> ();
 			nextBookId = 0;
 		}
 
-		public void addBook( Book book ) throws Exception {
-			ArrayList<Book> titleIds = (ArrayList<Book>)bookIdsByTitle.get( book.getTitle() );
-			ArrayList<Book> authorIds = (ArrayList<Book>)bookIdsByAuthor.get( book.getAuthor() );
-			if ( titleIds != null && authorIds != null ) {
-				if ( intersection( titleIds, authorIds ) != null )
-					throw new Exception("Duplicate Book");
+		public void add_book( Book book ) throws Exception {
+			ArrayList<int> titleIds = bookIdsByTitle.get(book.title);
+			ArrayList<int> authorIds = bookIdsByAuthor.get(book.author);
+			if (titleIds != null && authorIds != null) {
+				if (intersection(titleIds, authorIds) != null )
+					throw new Exception.DUPLICATE("Duplicate Book");
 			}
 			if ( titleIds == null )
-				titleIds = new ArrayList<Book>();
+				titleIds = new ArrayList<int>();
 			if ( authorIds == null )
-				authorIds = new ArrayList<Book>();
+				authorIds = new ArrayList<int>();
 			nextBookId++;
-			int id = new Integer( nextBookId );
-			titleIds.add( id );
-			bookIdsByTitle.put( book.getTitle(), titleIds );
-			authorIds.add( id );
-			bookIdsByAuthor.put( book.getAuthor(), authorIds );
-			booksById.put( id, book );
+			int id = nextBookId;
+			titleIds.add(id);
+			bookIdsByTitle.set(book.title, titleIds);
+			authorIds.add(id);
+			bookIdsByAuthor.set(book.author, authorIds);
+			booksById.set(id, book);
 		}
 
-		public Book getBook( string title, string author ) {
-			ArrayList<Book> titleIds = (ArrayList<Book>)bookIdsByTitle.get( title );
+		public Book? get_book( string title, string author ) {
+			ArrayList<int> titleIds = bookIdsByTitle.get(title);
 			if ( titleIds == null )
 				return null;
-			ArrayList<Book> authorIds = (ArrayList<Book>)bookIdsByAuthor.get( author );
+			ArrayList<int> authorIds = bookIdsByAuthor.get(author);
 			if ( authorIds == null )
 				return null;
-			int id = (int)intersection( titleIds, authorIds );
+			int? id = intersection( titleIds, authorIds );
 			if ( id == null )
 				return null;
-			return (Book)booksById.get( id );
+			return booksById.get(id);
 		}
 
-		public ArrayList<Book> getBooksByTitle( string title ) {
+		public ArrayList<Book> get_books_by_title( string title ) {
 			ArrayList<Book> books = new ArrayList<Book>();
 			ArrayList<Book> titleIds = (ArrayList<Book>)bookIdsByTitle.get( title );
 			if ( titleIds == null ) 
 				return books;
-			for ( Enumeration e = titleIds.elements(); 
-					e.hasMoreElements(); ) {
-				int id = (int)e.nextElement();
-				Book book = (Book)booksById.get( id );
+			foreach (Book book in titleIds)
 				books.add( book );
-			}
 			return books;
 		}
 
@@ -68,46 +69,42 @@ namespace Library {
 			ArrayList<Book> authorIds = (ArrayList<Book>)bookIdsByAuthor.get( author );
 			if ( authorIds == null )
 				return books;
-			for ( Enumeration e = authorIds.elements(); 
-					e.hasMoreElements(); ) {
-				int id = (int)e.nextElement();
-				Book book = (Book)booksById.get( id );
+			foreach (Book book in authorIds)
 				books.add( book );
-			}
 			return books;   
 		}
 
 		public void removeBook( string title, string author ) throws Exception {
-			ArrayList<Book> titleIds = (ArrayList<Book>)bookIdsByTitle.get( title );
-			if ( titleIds == null )
-				throw new Exception("Book not found");
-			ArrayList<Book> authorIds = (ArrayList<Book>)bookIdsByAuthor.get( author );
-			if ( authorIds == null ) {
-				throw new Exception("Book not found");
-			}
-			int id = (int)intersection( titleIds, authorIds );
-			if ( titleIds.size() == 1 )
-				bookIdsByTitle.remove( title );
+			ArrayList<int> titleIds = bookIdsByTitle.get( title );
+			if (titleIds == null)
+				throw new Exception.NOT_FOUND("Book title: %s not found", title);
+			ArrayList<int> authorIds = bookIdsByAuthor.get(author);
+			if ( authorIds == null )
+				throw new Exception.NOT_FOUND("Book by author: %s not found", author);
+
+			int id = intersection(titleIds, authorIds);
+			if (titleIds.size == 1)
+				bookIdsByTitle.unset(title);
 			else {
-				titleIds.remove( id );
-				bookIdsByTitle.put( title, titleIds );
+				titleIds.remove(id);
+				bookIdsByTitle.set(title, titleIds);
 			}
-			if ( authorIds.size() == 1 )
-				bookIdsByAuthor.remove( author );
+			if (authorIds.size == 1)
+				bookIdsByAuthor.unset(author);
 			else {	
-				authorIds.remove( id );
-				bookIdsByAuthor.put( author, authorIds );
+				authorIds.remove(id);
+				bookIdsByAuthor.set(author, authorIds);
 			}
-			if ( booksById.remove( id ) == null )
-				throw new Exception("Book not found");
+			if ( booksById.unset(id) == false )
+				throw new Exception.NOT_FOUND("Book %s not found", title);
 		}
 
-		public Enumeration elements() {
-			return booksById.elements();
+		public Iterator iterator() {
+			return booksById.iterator();
 		}
 
 		public int getNumBooks() {
-			return booksById.size();
+			return booksById.size;
 		}
 
 		public void empty() {
@@ -117,11 +114,11 @@ namespace Library {
 			nextBookId = 0;
 		}
 
-		private Object intersection(ArrayList<Book> v1, ArrayList<Book> v2) {
-			Iterator iter = v1.iterator();
-			while ( iter.hasNext() )
+		private int? intersection(ArrayList<int> v1, ArrayList<int> v2) {
+			Iterator<int> iter = v1.iterator();
+			while ( iter.next() )
 			{
-				Object obj = iter.next();
+				int obj = iter.get();
 				if ( v2.contains( obj ) )
 					return obj;
 			}

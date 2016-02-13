@@ -20,14 +20,6 @@ namespace Valadate {
 
 	public class TestLoadPIE : TestCase {
 		
-		public delegate void test_method();
-		
-		public TestLoadPIE() {
-			//base("Load PIE Tests");
-			//add_test("Load PIE", load_pie);
-			//add_test("Has Test Method", has_test_method);
-		}
-
 		[Test (name="load_pie")]
 		public void load_pie () {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE";
@@ -42,16 +34,7 @@ namespace Valadate {
 			void* function;
 			assert(mod.symbol ("valadate_test_pie_test_pie_fail", out function));
 			assert(function != null);
-			((test_method)function)();
 		}
 	}
-
-/*
-	static void main (string[] args) {
-		GLib.Test.init (ref args);
-		GLib.TestSuite.get_root ().add_suite (new TestLoadPIE().suite);
-		GLib.Test.run ();
-	}
-*/	
 	
 }

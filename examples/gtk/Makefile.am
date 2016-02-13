@@ -1,6 +1,10 @@
 #include $(top_srcdir)/../../base.am
+include $(top_srcdir)/build-aux/glib-tap.mk
 
+ACLOCAL_AMFLAGS  = -I build-aux ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
+
+#SUBDIRS = . tests 
 
 bin_PROGRAMS = src/exampleapp
 
@@ -62,7 +66,7 @@ data/exampleapp.desktop: data/exampleapp.desktop.in
 data_iconsdir = $(datadir)/icons/hicolor/48x48/apps
 data_icons_DATA = data/exampleapp.png
 
-noinst_DATA =					\
+noinst_DATA +=					\
 	$(gresource_file)			\
 	$(resource_files)			\
 	$(NULL)
@@ -99,7 +103,7 @@ docs_images =					\
 	docs/images/exampleapp9.png		\
 	$(NULL)
 
-EXTRA_DIST =					\
+EXTRA_DIST +=					\
 	data/exampleapp.desktop.in		\
 	data/exampleapp.gresource.xml		\
 	docs/vala.xml				\
@@ -112,7 +116,7 @@ EXTRA_DIST =					\
 	$(docs_images)				\
 	$(NULL)
 
-DISTCLEANFILES =				\
+DISTCLEANFILES +=				\
 	$(data_desktop_DATA)			\
 	$(NULL)
 
@@ -124,11 +128,60 @@ docs/index.html: docs/index.page
 	$(YELP_BUILD) html -o docs $< ;\
 	sed -i -e "s/C\.css/vala-example.css/g" $@
 
-CLEANFILES =					\
+
+CLEANFILES +=					\
 	docs/index.html				\
 	docs/index.page				\
 	docs/C.css				\
 	$(NULL)
 endif
+
+
+test_programs = tests/test_example
+
+tests_test_example_SOURCES =  \
+	tests/example.vala
+	
+tests_test_example_VALAFLAGS = \
+	--pkg libvaladate-1.0 \
+	--vapidir $(abs_builddir)/../../libvaladate \
+	--gir test_example-0.gir \
+	--library test_example \
+	--shared-library test_example \
+	--target-glib=2.40.0 \
+	--pkg gio-2.0 \
+	-g
+
+tests_test_example_LDFLAGS =  \
+	-fPIE \
+	-rdynamic
+
+tests_test_example_LDADD = \
+	$(EXAMPLE_LIBS) \
+	$(abs_builddir)/../../libvaladate/libvaladate.la \
+	-lgio-2.0
+
+tests_test_example_CPPFLAGS = \
+	$(EXAMPLE_CPPFLAGS) \
+	-fPIE
+	
+tests_test_example_CFLAGS = $(EXAMPLE_CFLAGS) \
+	-I$(abs_builddir)/../../libvaladate \
+	-pie \
+	-fPIE \
+	-shared
+
+CLEANFILES += \
+	$(tests_test_example_SOURCES:.vala=.c) \
+	*.stamp \
+	*.vapi \
+	*.o \
+	*.gir \
+	*.gcda \
+	*.gcno
+
+
+DISTCLEANFILES += $(CLEANFILES)
+
 
 -include $(top_srcdir)/git.mk

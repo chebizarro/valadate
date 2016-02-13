@@ -1,28 +1,30 @@
 namespace Library {
 
-	public class LibraryTest : TestCase {
+	using Gee;
+	using Valadate;
+	
+	public class LibraryTest : Valadate.TestCase {
 
 		private Library library;
 
-		public void setUp() throws Exception {
+		public override void set_up() {
 			library = new Library();
-			library.addBook(new Book( "Cosmos", "Carl Sagan" ));
-			library.addBook(new Book( "Contact", "Carl Sagan" ));
-			library.addBook(new Book( "Solaris", "Stanislaw Lem" ));
-			library.addBook(new Book( "American Beauty", "Allen M Steele" ));
-			library.addBook(new Book( "American Beauty", "Edna Ferber" ));
+			library.add_book(new Book( "Cosmos", "Carl Sagan" ));
+			library.add_book(new Book( "Contact", "Carl Sagan" ));
+			library.add_book(new Book( "Solaris", "Stanislaw Lem" ));
+			library.add_book(new Book( "American Beauty", "Allen M Steele" ));
+			library.add_book(new Book( "American Beauty", "Edna Ferber" ));
 		}
 
-		public void tearDown() {
-		}
-
+		[Test (name="get_books_by_title")]
 		public void testGetBooksByTitle() {
-			Vector books = library.getBooksByTitle( "American Beauty" );
-			assertEquals( "wrong number of books found", 2, books.size() );
+			ArrayList<Book> books = library.get_books_by_title( "American Beauty" );
+			//assertEquals( "wrong number of books found", 2, books.size() );
+			assert(books.size == 2 );
 		}
 
 		public void testGetBooksByAuthor() {
-			Vector books = library.getBooksByAuthor( "Carl Sagan" );
+			ArrayList<Book> books = library.getBooksByAuthor( "Carl Sagan" );
 			assertEquals( "2 books not found", 2, books.size() );
 		}
 
@@ -37,12 +39,12 @@ namespace Library {
 		}
 
 		public void testGetNonexistentBookByTitle() {
-			Vector books = library.getBooksByTitle( "Nonexistent" );
+			ArrayList<Book> books = library.getBooksByTitle( "Nonexistent" );
 			assertEquals( "Nonexistent book found", 0, books.size() );
 		}
 
 		public void testGetNonexistentBookByAuthor() {
-			Vector books = library.getBooksByAuthor( "Nobody" );
+			ArrayList<Book> books = library.getBooksByAuthor( "Nobody" );
 			assertEquals( "Book by Nobody found", 0, books.size() );
 		}
 
@@ -70,7 +72,7 @@ namespace Library {
 
 		public void testCreateDuplicateBook() {
 			try {
-				library.addBook(new Book( "Cosmos", "Carl Sagan" ));
+				library.add_book(new Book( "Cosmos", "Carl Sagan" ));
 				fail( "Expected exception not thrown" );
 			} catch (Exception e) {
 			}
@@ -78,9 +80,7 @@ namespace Library {
 
 		public void testEnumeration() {
 			int count = 0;
-			for (Enumeration e = library.elements();
-				  e.hasMoreElements(); ) {
-				Book book = (Book)e.nextElement();
+			foreach (Book book in library.iterator()) {
 				count++;
 			}
 			assertEquals(5, count);

@@ -1,5 +1,5 @@
-include $(top_srcdir)/base.am
+#include $(top_srcdir)/base.am
 
-SUBDIRS = gtk library
+SUBDIRS = . library gtk
 
 -include $(top_srcdir)/git.mk

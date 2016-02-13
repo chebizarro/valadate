@@ -3,7 +3,9 @@
 lib_LTLIBRARIES = liblibrary.la
 
 liblibrary_la_SOURCES = \
-	Book.vala
+	Book.vala \
+	Library.vala
+
 
 liblibrary_la_CFLAGS = $(LIBRARY_CFLAGS)
 

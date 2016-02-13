@@ -27,25 +27,61 @@ namespace Valadate {
 
 	public class TextRunner : Object, TestRunner {
 		
+		public delegate Object CreateTestObject();
+		public delegate void TestMethod(TestCase self);
+		
 		private Module module;
 		private string path;
-		private Test[] tests;
+		private Test[] _tests;
+		private Xml.Doc* gir;
 		
+		public Test[] tests {
+			get {
+				return _tests;
+			}
+		}
 		
 		public TextRunner(string path) {
 			this.path = path;
 		}
 		
-		public void load_module() throws RunError {
-			
+		~TextRunner() {
+			delete gir;
+		}
+		
+		public void load() throws RunError {
+			try {
+				load_module();
+				load_gir();
+				load_tests();
+			} catch (RunError err) {
+				throw err;
+			}
+		}
+		
+		public void load_module() throws RunError
+			requires(this.path != null)
+		{
 			var modname = path.replace("lt-","");
 			module = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			if (module == null)
 				throw new RunError.MODULE(Module.error());
 			
-			module.make_resident();
+			//module.make_resident();
 		}
 		
+		public void load_gir() throws RunError
+			requires(this.path != null)
+			requires(this.module != null)
+		{
+			var girpath = path.replace(".libs/lt-","") + "-0.gir";
+			
+			gir = Xml.Parser.parse_file (girpath);
+			if (gir == null)
+				throw new RunError.GIR("Gir for %s not found", path);
+			
+		}
+
 		private void* load_method(string method_name) throws RunError {
 			void* function;
 			if(module.symbol (method_name, out function))
@@ -57,51 +93,49 @@ namespace Valadate {
 		public void load_tests() throws RunError
 			requires(this.module != null)
 		{
-			var gir = path.replace(".libs/lt-","") + "-0.gir";
-			
-			Xml.Doc* doc = Xml.Parser.parse_file (gir);
-			if (doc == null)
-				throw new RunError.GIR("Gir for %s not found", gir);
 
 			string ns = "'http://www.gtk.org/introspection/core/1.0'";
 			string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.TestCase']";
 			xpath += @"/*[local-name()='constructor' and namespace-uri()=$ns]";
-			Xml.XPath.Context cntx = new Xml.XPath.Context (doc);
+			Xml.XPath.Context cntx = new Xml.XPath.Context (gir);
 			Xml.XPath.Object* res = cntx.eval_expression (xpath);
 
 			if (res == null ||
 				res->type != Xml.XPath.ObjectType.NODESET ||
 				res->nodesetval == null ||
 				res->nodesetval->length() <= 0 )
-				throw new RunError.TESTS("No Tests were found");
+				throw new RunError.TESTS("No TestCases were found");
 
 			for (int i = 0; i < res->nodesetval->length (); i++) {
 				Xml.Node* node = res->nodesetval->item (i);
 				var gtype = node->get_prop("identifier");
-				//var cmth = load_method(gtype);
+				if(gtype == null)
+					throw new RunError.TESTS("No Constructor found!");
 				CreateTestObject create = (CreateTestObject)load_method(gtype);
 
-				var testcase = create();
-				Valadate.TestCase test = testcase as Valadate.TestCase;
-				assert(test != null);
-
+				Valadate.TestCase test = create() as Valadate.TestCase;
+				
+				if (test == null)
+					throw new RunError.TESTS("Error creating test");
+				
+				_tests += test;
+				
 				Xml.Node* func = node->parent->children;
-				assert(func != null);
+				if (func == null)
+					throw new RunError.TESTS("No Unit Tests were found");
+
 				while(func != null) {
-					//debug(func->name);
-					if (func->name == "function" || func->name == "method") {
+					if (func->name == "method") {
 						if(func->children != null) {
 							Xml.Node* meth = func->children;
-							//debug(meth->name);
 							while (meth != null) {
 								if(meth->get_prop("key") == "test.name") {
-									var funcname = func->get_prop("identifier");
-									//debug(funcname);
-									void* test_function;
-									assert(module.symbol (funcname, out test_function));
-									assert(test_function != null);
-									var method = (TestMethod)test_function;
-									test.add_test(funcname, ()=> {method(test); });
+									try {
+										var method = (TestMethod)load_method(func->get_prop("identifier"));
+										test.add_test(meth->get_prop("value"), ()=> {method(test); });
+									} catch (RunError e) {
+										throw e;
+									}
 								}
 								meth = meth->next;
 							}
@@ -111,108 +145,28 @@ namespace Valadate {
 				}
 			}
 			delete res;
-			delete doc;
-
 		}
-		
 	}
 
-	public delegate Type CreateTest();
-	public delegate Object CreateTestObject();
-	public delegate void TestMethod(TestCase self);
-
 	public int main (string[] args) {
-	
-		/*
-		foreach (string arg in args)
-			message (arg);
-		*/
-		
-		var modname = args[0].replace("lt-",""); // GLib.Environment.get_current_dir() + "/" + args[0].replace(".libs/","");
+
+		TextRunner runner = new TextRunner(args[0]);
 
 		GLib.Test.init (ref args);
-		
-		var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
-		/*
-		if(mod == null) {
-			modname = args[0];
-			mod = Module.open (modname, ModuleFlags.BIND_LAZY);
-		}*/
-		//debug(Module.error());
-		assert (mod != null);
-		//mod.make_resident();
-		
-		var gir = modname.replace(".libs/","") + "-0.gir";
-		
-		Xml.Doc* doc = Xml.Parser.parse_file (gir);
-		if (doc == null) {
-			debug ("File not found\n");
-			return 0;
+
+		try {
+			runner.load();
+		} catch (RunError err) {
+			debug(err.message);
+			return -1;
 		}
 
-		string ns = "'http://www.gtk.org/introspection/core/1.0'";
-		string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.TestCase']";
-		xpath += @"/*[local-name()='constructor' and namespace-uri()=$ns]";
-		Xml.XPath.Context cntx = new Xml.XPath.Context (doc);
-		Xml.XPath.Object* res = cntx.eval_expression (xpath);
+		foreach (Test test in runner.tests)
+			GLib.TestSuite.get_root().add_suite(((TestCase)test).suite);
 
-		assert (res != null);
-		assert (res->type == Xml.XPath.ObjectType.NODESET);
-		assert (res->nodesetval != null);
-		assert (res->nodesetval->length() > 0);
-
-		for (int i = 0; i < res->nodesetval->length (); i++) {
-			Xml.Node* node = res->nodesetval->item (i);
-			var gtype = node->get_prop("identifier");
-			//debug(gtype);
-			void* function;
-			assert(mod.symbol (gtype, out function));
-			//mod.symbol (gtype, out function);
-			//debug(Module.error());
-			assert(function != null);
-			CreateTestObject create = (CreateTestObject)function;
-
-			var testcase = create();
-			Valadate.TestCase test = testcase as Valadate.TestCase;
-			assert(test != null);
-
-			Xml.Node* func = node->parent->children;
-			assert(func != null);
-			while(func != null) {
-				//debug(func->name);
-				if (func->name == "function" || func->name == "method") {
-					if(func->children != null) {
-						Xml.Node* meth = func->children;
-						//debug(meth->name);
-						while (meth != null) {
-							if(meth->get_prop("key") == "test.name") {
-								var funcname = func->get_prop("identifier");
-								//debug(funcname);
-								void* test_function;
-								assert(mod.symbol (funcname, out test_function));
-								assert(function != null);
-								var method = (TestMethod)function;
-								test.add_test(funcname, ()=> {method(test); });
-							}
-							meth = meth->next;
-						}
-					}
-				}
-				func = func->next;
-			}
-		
-
-
-			var suite = test.suite;
-			GLib.TestSuite.get_root().add_suite(suite);
-			
-		}
-
-		delete res;
-		delete doc;
-		
 		GLib.Test.run ();
 		return 0;
+		
 	}
 
 }

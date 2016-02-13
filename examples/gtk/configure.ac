@@ -1,3 +1,4 @@
+AC_PREREQ(2.63)
 AC_INIT([exampleapp],
         [0.0],
         [https://github.com/canek-pelaez/exampleapp/issues],
@@ -6,10 +7,12 @@ AC_INIT([exampleapp],
 AC_CONFIG_SRCDIR([src/main.vala])
 
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([1.11 foreign no-dist-gzip dist-xz])
-AM_SILENT_RULES([yes])
+AM_INIT_AUTOMAKE([1.11 foreign subdir-objects no-dist-gzip dist-xz])
+dnl AM_SILENT_RULES([yes])
 
+AM_PATH_GLIB_2_0
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CC_STDC
@@ -35,6 +38,21 @@ AC_ARG_ENABLE([docs],
 ])
 
 AM_CONDITIONAL([DOCS], [test "x$YELP_BUILD" != "x"])
+
+# Honor aclocal flags
+ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
+
+EXAMPLE_TESTS_DIR=[${PWD}/tests]
+AC_SUBST(EXAMPLE_TESTS_DIR)
+
+LT_PREREQ([2.2.6])
+LT_INIT([disable-static])
+
+
+dnl === Test suite ============================================================
+
+GLIB_TESTS
+
 
 AC_CONFIG_FILES([
 	Makefile

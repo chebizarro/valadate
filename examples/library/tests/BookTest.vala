@@ -4,7 +4,7 @@ namespace Library {
 
 	public class BookTest : Valadate.TestCase {
 
-		[Test (name="construct_bool")]
+		[Test (name="construct_book")]
 		public void testConstructBook() {
 			Book book = new Book("");
 			assert(book != null);

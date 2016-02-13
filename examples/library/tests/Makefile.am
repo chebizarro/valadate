@@ -25,10 +25,10 @@ bad_sources = \
 	xml/LibraryXMLDocTest.vala
 
 test_library_SOURCES =  \
-	BookTest.vala
+	BookTest.vala \
+	LibraryTest.vala
 	
 test_library_VALAFLAGS = \
-	-C \
 	--pkg libvaladate-1.0 \
 	--pkg liblibrary-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
@@ -39,6 +39,7 @@ test_library_VALAFLAGS = \
 	--shared-library test_library \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
+	--pkg gee-0.8 \
 	-g
 
 test_library_LDFLAGS =  \

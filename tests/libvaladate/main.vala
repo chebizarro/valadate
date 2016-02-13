@@ -36,13 +36,48 @@ namespace Valadate.Tests {
 				debug(err.message);
 				assert_not_reached();
 			}
-			
-			/*
-			string[] argcp = {
-				Config.VALADATE_TESTS_DIR +"/data/.libs/lt-testexe",
-				"-k",
-				"--tap"
-			};*/
+		});
+
+		GLib.Test.add_func ("/textrunner/load_gir", () => {
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			TextRunner runner = new TextRunner(testexe);
+			try {
+				runner.load_module();
+				runner.load_gir();
+			} catch (RunError err) {
+				debug(err.message);
+				assert_not_reached();
+			}
+		});
+
+		GLib.Test.add_func ("/textrunner/load_tests", () => {
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			TextRunner runner = new TextRunner(testexe);
+			assert(runner.tests.length == 0);
+			try {
+				runner.load_module();
+				runner.load_gir();
+				runner.load_tests();
+			} catch (RunError err) {
+				debug(err.message);
+				assert_not_reached();
+			}
+			assert(runner.tests.length == 1);
+			assert(((TestCase)runner.tests[0]).name == "ValadateTestExe");
+		});
+
+		GLib.Test.add_func ("/textrunner/load", () => {
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			TextRunner runner = new TextRunner(testexe);
+			assert(runner.tests.length == 0);
+			try {
+				runner.load();
+			} catch (RunError err) {
+				debug(err.message);
+				assert_not_reached();
+			}
+			assert(runner.tests.length == 1);
+			assert(((TestCase)runner.tests[0]).name == "ValadateTestExe");
 		});
 
 
