@@ -11,3 +11,5 @@ NO_DIST = \
 	README.Debian \
 	rules \
 	valadate.install
+
+-include $(top_srcdir)/git.mk

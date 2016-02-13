@@ -48,7 +48,6 @@ test_library_LDFLAGS =  \
 test_library_LDADD = \
 	$(LIBRARY_LIBS) \
 	$(abs_builddir)/../../../libvaladate/libvaladate.la \
-	$(abs_builddir)/../../../libvaladate/librunner.la \
 	$(top_builddir)/src/liblibrary.la \
 	-lgio-2.0
 

@@ -27,8 +27,7 @@ tests_PIE_LDFLAGS =  \
 
 tests_PIE_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la \
-	$(top_builddir)/libvaladate/librunner.la
+	$(top_builddir)/libvaladate/libvaladate.la
 
 tests_PIE_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
@@ -64,8 +63,7 @@ testload_PIE_VALAFLAGS = \
 
 testload_PIE_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la \
-	$(top_builddir)/libvaladate/librunner.la
+	$(top_builddir)/libvaladate/libvaladate.la
 
 testload_PIE_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \

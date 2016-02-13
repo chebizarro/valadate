@@ -2,15 +2,11 @@ namespace Valadate.Tests {
 
 	public class TestTestCase : TestCase {
 		
-		/*
-		public TestTestCase(string name) {
-			base(name);
-		}
-		*/
 		
 	}
 
 	static void main (string[] args) {
+
 		GLib.Test.init (ref args);
 
 		GLib.Test.add_func ("/testcase/new", () => {
@@ -23,6 +19,30 @@ namespace Valadate.Tests {
 			TestCase test = new TestTestCase();
 			test.add_test("add_test", ()=> { assert(true); });
 			assert(test is TestCase);
+		});
+
+		GLib.Test.add_func ("/textrunner/new", () => {
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			TextRunner runner = new TextRunner(testexe);
+			assert(runner is TextRunner);
+		});
+
+		GLib.Test.add_func ("/textrunner/load_module", () => {
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			TextRunner runner = new TextRunner(testexe);
+			try {
+				runner.load_module();
+			} catch (RunError err) {
+				debug(err.message);
+				assert_not_reached();
+			}
+			
+			/*
+			string[] argcp = {
+				Config.VALADATE_TESTS_DIR +"/data/.libs/lt-testexe",
+				"-k",
+				"--tap"
+			};*/
 		});
 
 

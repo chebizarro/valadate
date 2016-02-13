@@ -26,9 +26,8 @@ testexe_LDFLAGS =  \
 
 testexe_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la \
-	$(top_builddir)/libvaladate/librunner.la
-
+	$(top_builddir)/libvaladate/libvaladate.la
+	
 testexe_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
 	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
@@ -46,7 +45,9 @@ CLEANFILES += \
 	*.stamp \
 	*.vapi \
 	*.o \
-	*.gir
+	*.gir \
+	*.gcda \
+	*.gcno
 
 DISTCLEANFILES += $(CLEANFILES)
 

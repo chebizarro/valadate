@@ -130,3 +130,5 @@ CLEANFILES =					\
 	docs/C.css				\
 	$(NULL)
 endif
+
+-include $(top_srcdir)/git.mk

@@ -1085,6 +1085,8 @@ data/exampleapp.desktop: data/exampleapp.desktop.in
 @DOCS_TRUE@	$(YELP_BUILD) html -o docs $< ;\
 @DOCS_TRUE@	sed -i -e "s/C\.css/vala-example.css/g" $@
 
+-include $(top_srcdir)/git.mk
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
