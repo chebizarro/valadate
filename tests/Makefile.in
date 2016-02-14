@@ -217,6 +217,13 @@ GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
+GTKDOC_CHECK = @GTKDOC_CHECK@
+GTKDOC_CHECK_PATH = @GTKDOC_CHECK_PATH@
+GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
+GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
+GTKDOC_MKPDF = @GTKDOC_MKPDF@
+GTKDOC_REBASE = @GTKDOC_REBASE@
+HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -265,6 +272,7 @@ VALADATE_GCOV_CFLAGS = @VALADATE_GCOV_CFLAGS@
 VALADATE_GCOV_LDADD = @VALADATE_GCOV_LDADD@
 VALADATE_LIBS = @VALADATE_LIBS@
 VALADATE_TESTS_DIR = @VALADATE_TESTS_DIR@
+VALADOC = @VALADOC@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -331,10 +339,20 @@ AM_CPPFLAGS = \
 	-g \
 	$(VALADATE_CPPFLAGS)
 
-AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
+AM_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
 	--pkg config \
 	-g
 
+CLEANFILES = \
+	*.stamp \
+	*.o \
+	*.gcda \
+	*.gcno \
+	*.html \
+	*.xml
+
+DISTCLEANFILES = $(CLEANFILES)
 SUBDIRS = libvaladate PIE
 all: all-recursive
 
@@ -557,10 +575,12 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -649,7 +669,7 @@ uninstall-am:
 .PRECIOUS: Makefile
 
 
-# DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+#DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
 # use recursive makes in order to ignore errors during check/perf
 @ENABLE_GCOV_TRUE@lcov:

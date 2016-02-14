@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  */
 
-[ CCode ( gir_version = "1.0", gir_namespace = "Valadate.Utils") ]
+//[ CCode ( gir_version = "1.0", gir_namespace = "Valadate.Utils") ]
 namespace Valadate.Utils {
 
 	private class SignalWrapper {
@@ -50,10 +50,12 @@ namespace Valadate.Utils {
 	 * this signals to be triggered. The waiter will return a failure when a timeout is
 	 * reached and no or not all signals has triggered.
 	 *
-	 * Example:
-	 *  var waiter = new MultiSignalWaiter();
-	 *  waiter.add_signal( emitter, "signal0" );
-	 *  var result = waiter.run( () => { triggerSignal0(); } );
+	 * Example
+	 * {{{
+	 * var waiter = new MultiSignalWaiter();
+	 * waiter.add_signal( emitter, "signal0" );
+	 * var result = waiter.run( () => { triggerSignal0(); } );
+	 * }}}
 	 **/
 	public class MultiSignalWaiter : Object {
 		private GLib.List<SignalWrapper> signals = new GLib.List<SignalWrapper>();

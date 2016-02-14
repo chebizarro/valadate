@@ -1,10 +1,14 @@
 /*.bak
+/*.gcda
+/*.gcno
+/*.html
 /*.lo
 /*.o
 /*.orig
 /*.rej
 /*.stamp
 /*.tab.c
+/*.xml
 /*~
 /.*.sw[nop]
 /.deps

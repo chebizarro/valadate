@@ -8,9 +8,7 @@ EXTRA_DIST = \
 	$(INTLTOOL_FILES) \
 	autogen.sh
 
-CLEANFILES = *.stamp
-
-SUBDIRS = build libvaladate tests vapi
+SUBDIRS = build libvaladate docs tests vapi
 
 if ENABLE_EXAMPLES
 SUBDIRS += examples

@@ -204,8 +204,8 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 src_exampleapp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(src_exampleapp_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
-	$@
+	$(src_exampleapp_CFLAGS) $(CFLAGS) $(src_exampleapp_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am_tests_test_example_OBJECTS =  \
 	tests/tests_test_example-example.$(OBJEXT)
 tests_test_example_OBJECTS = $(am_tests_test_example_OBJECTS)
@@ -714,6 +714,9 @@ src_exampleapp_CFLAGS = \
 	@EXAMPLE_CFLAGS@			\
 	-w					\
 	$(NULL)
+
+src_exampleapp_LDFLAGS = \
+	-all-static
 
 src_exampleapp_LDADD = \
 	@EXAMPLE_LIBS@				\

@@ -150,14 +150,13 @@ namespace Valadate {
 	 * somewhere.
 	 * @return ture if the function completed and passed the check, false
 	 * otherwise.
-	 * [[warning:
+	 * [warning:
 	 * If it times out, the async function may run to completion when
 	 * main loop is entered again later. By that time, the callback data
 	 * will be destroyed and the callback will crash.
-	 *
 	 * This should be avoided by setting new GLib.MainContext for each
 	 * test case, but that is only available in development 2.21 GLib.
-	 * ]]
+	 * ]
 	 */
 	public bool wait_for_async(int timeout, AsyncBegin async_function, AsyncFinish async_finish) throws GLib.Error
 	{
@@ -200,15 +199,14 @@ namespace Valadate {
 	 * somewhere.
 	 * @return ture if the function completed (without being cancelled)
 	 * and passed the check, false otherwise.
-	 * [[warning:
+	 * [warning:
 	 * If the cancel fails and it times out second time, the async
 	 * function may run to completion when main loop is entered again
 	 * later. By that time, the callback data will be destroyed and the
 	 * callback will crash.
-	 *
 	 * This should be avoided by setting new GLib.MainContext for each
 	 * test case, but that is only available in development 2.21 GLib.
-	 * ]]
+	 * ]
 	 */
 	public bool wait_for_cancellable_async(int timeout, CancelableAsyncBegin async_function, AsyncFinish async_finish) throws GLib.Error
 	{

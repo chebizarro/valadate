@@ -232,6 +232,95 @@ main ()
   rm -f conf.glibtest
 ])
 
+dnl -*- mode: autoconf -*-
+
+# serial 2
+
+dnl Usage:
+dnl   GTK_DOC_CHECK([minimum-gtk-doc-version])
+AC_DEFUN([GTK_DOC_CHECK],
+[
+  AC_REQUIRE([PKG_PROG_PKG_CONFIG])
+  AC_BEFORE([AC_PROG_LIBTOOL],[$0])dnl setup libtool first
+  AC_BEFORE([AM_PROG_LIBTOOL],[$0])dnl setup libtool first
+
+  ifelse([$1],[],[gtk_doc_requires="gtk-doc"],[gtk_doc_requires="gtk-doc >= $1"])
+  AC_MSG_CHECKING([for gtk-doc])
+  PKG_CHECK_EXISTS([$gtk_doc_requires],[have_gtk_doc=yes],[have_gtk_doc=no])
+  AC_MSG_RESULT($have_gtk_doc)
+
+  if test "$have_gtk_doc" = "no"; then
+      AC_MSG_WARN([
+  You will not be able to create source packages with 'make dist'
+  because $gtk_doc_requires is not found.])
+  fi
+
+  dnl check for tools we added during development
+  dnl Use AC_CHECK_PROG to avoid the check target using an absolute path that
+  dnl may not be writable by the user. Currently, automake requires that the
+  dnl test name must end in '.test'.
+  dnl https://bugzilla.gnome.org/show_bug.cgi?id=701638
+  AC_CHECK_PROG([GTKDOC_CHECK],[gtkdoc-check],[gtkdoc-check.test])
+  AC_PATH_PROG([GTKDOC_CHECK_PATH],[gtkdoc-check])
+  AC_PATH_PROGS([GTKDOC_REBASE],[gtkdoc-rebase],[true])
+  AC_PATH_PROG([GTKDOC_MKPDF],[gtkdoc-mkpdf])
+
+  dnl for overriding the documentation installation directory
+  AC_ARG_WITH([html-dir],
+    AS_HELP_STRING([--with-html-dir=PATH], [path to installed docs]),,
+    [with_html_dir='${datadir}/gtk-doc/html'])
+  HTML_DIR="$with_html_dir"
+  AC_SUBST([HTML_DIR])
+
+  dnl enable/disable documentation building
+  AC_ARG_ENABLE([gtk-doc],
+    AS_HELP_STRING([--enable-gtk-doc],
+                   [use gtk-doc to build documentation [[default=no]]]),,
+    [enable_gtk_doc=no])
+
+  AC_MSG_CHECKING([whether to build gtk-doc documentation])
+  AC_MSG_RESULT($enable_gtk_doc)
+
+  if test "x$enable_gtk_doc" = "xyes" && test "$have_gtk_doc" = "no"; then
+    AC_MSG_ERROR([
+  You must have $gtk_doc_requires installed to build documentation for
+  $PACKAGE_NAME. Please install gtk-doc or disable building the
+  documentation by adding '--disable-gtk-doc' to '[$]0'.])
+  fi
+
+  dnl don't check for glib if we build glib
+  if test "x$PACKAGE_NAME" != "xglib"; then
+    dnl don't fail if someone does not have glib
+    PKG_CHECK_MODULES(GTKDOC_DEPS, glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0,,[:])
+  fi
+
+  dnl enable/disable output formats
+  AC_ARG_ENABLE([gtk-doc-html],
+    AS_HELP_STRING([--enable-gtk-doc-html],
+                   [build documentation in html format [[default=yes]]]),,
+    [enable_gtk_doc_html=yes])
+    AC_ARG_ENABLE([gtk-doc-pdf],
+      AS_HELP_STRING([--enable-gtk-doc-pdf],
+                     [build documentation in pdf format [[default=no]]]),,
+      [enable_gtk_doc_pdf=no])
+
+  if test -z "$GTKDOC_MKPDF"; then
+    enable_gtk_doc_pdf=no
+  fi
+
+  if test -z "$AM_DEFAULT_VERBOSITY"; then
+    AM_DEFAULT_VERBOSITY=1
+  fi
+  AC_SUBST([AM_DEFAULT_VERBOSITY])
+
+  AM_CONDITIONAL([HAVE_GTK_DOC], [test x$have_gtk_doc = xyes])
+  AM_CONDITIONAL([ENABLE_GTK_DOC], [test x$enable_gtk_doc = xyes])
+  AM_CONDITIONAL([GTK_DOC_BUILD_HTML], [test x$enable_gtk_doc_html = xyes])
+  AM_CONDITIONAL([GTK_DOC_BUILD_PDF], [test x$enable_gtk_doc_pdf = xyes])
+  AM_CONDITIONAL([GTK_DOC_USE_LIBTOOL], [test -n "$LIBTOOL"])
+  AM_CONDITIONAL([GTK_DOC_USE_REBASE], [test -n "$GTKDOC_REBASE"])
+])
+
 # pkg.m4 - Macros to locate and utilise pkg-config.            -*- Autoconf -*-
 # serial 1 (pkg-config-0.24)
 # 
@@ -1613,44 +1702,6 @@ m4_if([$1], [v7],
 AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
-
-# Autoconf support for the Vala compiler
-
-# Copyright (C) 2008-2014 Free Software Foundation, Inc.
-#
-# This file is free software; the Free Software Foundation
-# gives unlimited permission to copy and/or distribute it,
-# with or without modifications, as long as this notice is preserved.
-
-# Check whether the Vala compiler exists in $PATH.  If it is found, the
-# variable VALAC is set pointing to its absolute path.  Otherwise, it is
-# simply set to 'valac'.
-# Optionally a minimum release number of the compiler can be requested.
-# If the ACTION-IF-FOUND parameter is given, it will be run if a proper
-# Vala compiler is found.
-# Similarly, if the ACTION-IF-FOUND is given, it will be run if no proper
-# Vala compiler is found.  It defaults to simply print a warning about the
-# situation, but otherwise proceeding with the configuration.
-#
-# AM_PROG_VALAC([MINIMUM-VERSION], [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
-# --------------------------------------------------------------------------
-AC_DEFUN([AM_PROG_VALAC],
-  [AC_PATH_PROG([VALAC], [valac], [valac])
-   AS_IF([test "$VALAC" != valac && test -n "$1"],
-      [AC_MSG_CHECKING([whether $VALAC is at least version $1])
-       am__vala_version=`$VALAC --version | sed 's/Vala  *//'`
-       AS_VERSION_COMPARE([$1], ["$am__vala_version"],
-         [AC_MSG_RESULT([yes])],
-         [AC_MSG_RESULT([yes])],
-         [AC_MSG_RESULT([no])
-          VALAC=valac])])
-    if test "$VALAC" = valac; then
-      m4_default([$3],
-        [AC_MSG_WARN([no proper vala compiler found])
-         AC_MSG_WARN([you will not be able to compile vala source files])])
-    else
-      m4_default([$2], [:])
-    fi])
 
 m4_include([build/autotools/glibtests.m4])
 m4_include([build/autotools/libtool.m4])

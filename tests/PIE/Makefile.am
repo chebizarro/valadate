@@ -88,6 +88,7 @@ CLEANFILES += \
 	*.html \
 	*.xml \
 	*.gcda \
+	*.h \
 	*.gcno \
 	*.gir
 

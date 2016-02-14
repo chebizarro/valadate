@@ -1,25 +1,16 @@
 include $(top_srcdir)/base.am
-
-# --- libvaladate ---
+include $(top_srcdir)/libvaladate/libvaladate.am
 
 lib_LTLIBRARIES = libvaladate.la
 
 libvaladate_la_SOURCES = \
-	assert.vala \
-	test.vala \
-	testcase.vala \
-	testfixture.vala \
-	testsuite.vala \
-	testresult.vala \
-	testrunner.vala \
-	tempdir.vala \
-	wait.vala \
-	runner.vala \
-	signalwaiter.vala
+	$(libvaladate_sources)
 
-libvaladate_la_CFLAGS = $(VALADATE_CFLAGS)
+libvaladate_la_CFLAGS = \
+	$(VALADATE_CFLAGS)
 
-libvaladate_la_CPPLAGS = $(VALADATE_CPPFLAGS) \
+libvaladate_la_CPPLAGS = \
+	$(VALADATE_CPPFLAGS) \
 	$(addprefix -I ,$(VALADATE_LIBS)) \
 	`pkg-config --cflags --libs gio-2.0`
 
@@ -37,18 +28,18 @@ libvaladate_la_VALAFLAGS = \
 	--target-glib=2.40.0 \
 	-g
 
-libvaladate_la_LIBADD = $(VALADATE_LIBS) \
+libvaladate_la_LIBADD = \
+	$(VALADATE_LIBS) \
 	-lgio-2.0
 
 
-CLEANFILES = \
+CLEANFILES += \
 	$(libvaladate_la_SOURCES:.vala=.c) \
 	*.vapi \
 	*.h \
-	*.gir \
-	*.stamp
+	*.gir
 
-DISTCLEANFILES = $(CLEANFILES)
+DISTCLEANFILES += $(CLEANFILES)
 
 MAINTAINERCLEANFILES = $(libvaladate_la_SOURCES:.vala=.c)
 

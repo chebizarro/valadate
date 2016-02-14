@@ -9,11 +9,22 @@ AM_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS)
 
 
-AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
+AM_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
 	--pkg config \
 	-g
 
-# DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+CLEANFILES = \
+	*.stamp \
+	*.o \
+	*.gcda \
+	*.gcno \
+	*.html \
+	*.xml
+
+DISTCLEANFILES = $(CLEANFILES)
+
+#DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
 
 if ENABLE_GCOV
 # use recursive makes in order to ignore errors during check/perf

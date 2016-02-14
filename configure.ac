@@ -15,10 +15,11 @@ AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 dnl AM_MAINTAINER_MODE([enable])
 
 dnl AM_SILENT_RULES([yes])
+
 AM_PATH_GLIB_2_0
 AM_PROG_CC_C_O
-dnl AM_PROG_AR
-AM_PROG_VALAC
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
 
 dnl ***************************************************************************
 dnl Check for Windows
@@ -45,6 +46,8 @@ AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 
+GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
+
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
@@ -60,6 +63,24 @@ PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
 AC_SUBST(VALADATE_CFLAGS)
 
+dnl === Valadoc ==============================================================
+
+AC_ARG_ENABLE(valadoc,
+	AS_HELP_STRING([--enable-valadoc[=@<:@no/auto/yes@:>@]], [Enable valadoc support]),,
+		[enable_valadoc=auto])
+
+found_valadoc=no
+AS_IF([test "x$enable_valadoc" != "xno"], [
+		AC_PATH_PROG(VALADOC, valadoc, :)
+		AS_IF([test -x "$VALADOC"], [
+		found_valadoc=yes
+		AC_SUBST(VALADOC)
+		], [
+		AS_IF([test "x$enable_valadoc" == "xyes"], AC_MSG_ERROR([Unable to find valadoc]))
+		])
+	])
+
+AM_CONDITIONAL(ENABLE_VALADOC, test x$found_valadoc = xyes)
 
 dnl === Test suite ============================================================
 
@@ -159,6 +180,7 @@ AC_CONFIG_FILES([
 	build/Makefile
 	build/autotools/Makefile
 	build/debian/Makefile
+	docs/Makefile
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
