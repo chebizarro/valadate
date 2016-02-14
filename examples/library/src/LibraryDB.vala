@@ -2,10 +2,10 @@ namespace Library {
 
 	using Gee;
 
-	public interface LibraryDB {
-		void addBook( Book book );
-		Book getBook( string title, string author );
-		ArrayList<Book> getBooksByTitle( string title );
-		ArrayList<Book> getBooksByAuthor( string author );
+	public interface LibraryDB : Object {
+		public abstract void add_book(Book book);
+		public abstract Book? get_book(string title, string author);
+		public abstract ArrayList<Book> get_books_by_title(string title);
+		public abstract ArrayList<Book> get_books_by_author(string author);
 	}
 }

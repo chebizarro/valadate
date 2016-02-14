@@ -30,7 +30,7 @@ namespace Library {
 				fields[i].setAccessible( true );
 				try {
 					string value = (string)fields[i].get( book );
-					assertEquals( "test", value );
+					Assert.equals( "test", value );
 				} catch (Exception e) {
 					fail( e.getMessage() );
 				}
@@ -45,7 +45,7 @@ namespace Library {
 					methods[i].setAccessible( true );
 					try {
 						string value = (string)methods[i].invoke( book, null );
-						assertEquals( "test", value );
+						Assert.equals( "test", value );
 					} catch (Exception e) {
 						fail( e.getMessage() );
 					}

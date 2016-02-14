@@ -98,6 +98,35 @@ namespace Valadate.Tests {
 			Assert.equals(24, 23, "Values must be equal");
 		});
 
+		GLib.Test.add_func ("/assert/null", () => {
+			void* nullval = null;
+			Assert.null(nullval, "Value must be null");
+		});
+
+		GLib.Test.add_func ("/assert/null/fail", () => {
+			GLib.Test.trap_subprocess("/assert/null/fail/subprocess", 0,0);
+			GLib.Test.trap_assert_failed();
+		});
+
+		GLib.Test.add_func ("/assert/null/fail/subprocess", () => {
+			string nullval = "test";
+			Assert.null(nullval, "Value must be null");
+		});
+
+		GLib.Test.add_func ("/assert/not_null", () => {
+			string nullval = "test";
+			Assert.not_null(nullval, "Value must not be null");
+		});
+
+		GLib.Test.add_func ("/assert/not_null/fail", () => {
+			GLib.Test.trap_subprocess("/assert/not_null/fail/subprocess", 0,0);
+			GLib.Test.trap_assert_failed();
+		});
+
+		GLib.Test.add_func ("/assert/not_null/fail/subprocess", () => {
+			void* nullval = null;
+			Assert.not_null(nullval, "Value must not be null");
+		});
 
 		//GLib.TestSuite.get_root().add_suite(new TempDirTest().suite);
 

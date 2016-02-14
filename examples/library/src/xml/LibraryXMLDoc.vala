@@ -7,20 +7,24 @@ namespace Library.Xml {
 		private Library library;
 		private XMLElement rootElement;
 
-		LibraryXMLDoc(Library lib) {
+		public int num_books {
+			get {
+				return library.get_num_books();
+			}
+		}
+
+		public LibraryXMLDoc(Library lib) {
 			library = lib;
 			rootElement = new XMLElement( "library" );
-			for (Enumeration e = library.elements();
-				  e.hasMoreElements(); ) {
-				Book book = (Book)e.nextElement();
+			foreach (Book book in library) {
 				XMLElement bookElement = new XMLElement( "book" );
 				XMLElement titleElement = 
-					new XMLElement( "title", book.getTitle() );
-				bookElement.addChild( titleElement );
+					new XMLElement("title", book.title);
+				bookElement.add_child(titleElement );
 				XMLElement authorElement = 
-					new XMLElement( "author", book.getAuthor() );
-				bookElement.addChild( authorElement );
-				rootElement.addChild( bookElement );
+					new XMLElement( "author", book.author);
+				bookElement.add_child(authorElement);
+				rootElement.add_child(bookElement);
 			}
 		}
 
@@ -37,14 +41,10 @@ namespace Library.Xml {
 				+ "]>\n";
 		}
 
-		public string toString() {
+		public string to_string() {
 			string result = header()+DTD();
-			result += rootElement.toString();
+			result += rootElement.to_string();
 			return result;
-		}
-
-		public int getNumBooks() {
-			return library.getNumBooks();
 		}
 	}
 }

@@ -29,27 +29,26 @@ namespace Valadate {
 
 	public class Assert : GLib.Object {
 		
-		public static void equals<T>(T expected, T actual, string message = "" ) {
+		public static inline void equals<T>(T expected, T actual, string message = "" ) {
 			if (typeof(T) == typeof (string) &&
 				str_equal ((string) expected, (string) actual))
 				return;
 			else if (direct_equal(expected, actual))
 				return;
 			var msg = @"$(typed_value_to_string(expected)) != $(typed_value_to_string(actual))";
-			GLib.Test.fail();
 			GLib.error(@"Actual value is not the same as the expected one: $(msg)", message);
 		}
 		
 		public static void not_null<T>(T value, string message = "") {
 			if (value == null) {
-				GLib.Test.fail();
+				//GLib.Test.fail();
 				GLib.error("Expected non-null value (%s)", message);
 			}
 		}
 
 		public static void null<T>(T value, string message = "") {
 			if (value != null) {
-				GLib.Test.fail();
+				//GLib.Test.fail();
 				GLib.error("Expected non-null value (%s)", message);
 			}
 		}

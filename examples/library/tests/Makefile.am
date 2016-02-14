@@ -7,9 +7,7 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 test_programs = testlibrary
 
 bad_sources = \
-	LibraryTest.vala \
 	LibraryPerfTest.vala \
-	MockLibraryDB.vala \
 	LibraryTests.vala \
 	LibraryDBTest.vala \
 	PerfTestSetup.vala \
@@ -26,6 +24,8 @@ bad_sources = \
 
 testlibrary_SOURCES =  \
 	BookTest.vala \
+	MockLibraryDB.vala \
+	LibraryDBTest.vala \
 	LibraryTest.vala
 	
 testlibrary_VALAFLAGS = \

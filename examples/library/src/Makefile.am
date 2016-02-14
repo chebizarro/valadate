@@ -4,8 +4,10 @@ noinst_LTLIBRARIES = liblibrary.la
 
 liblibrary_la_SOURCES = \
 	Book.vala \
-	Library.vala
-
+	LibraryDB.vala \
+	Library.vala \
+	xml/LibraryXMLDoc.vala \
+	xml/XMLElement.vala
 
 liblibrary_la_CFLAGS = $(LIBRARY_CFLAGS)
 
@@ -27,9 +29,6 @@ liblibrary_la_LIBADD = $(LIBRARY_LIBS)
 bin_PROGRAMS = library
 
 bad_sources = \
-	Book.vala \
-	LibraryDB.vala \
-	Library.vala \
 	gui/FindBookByTitle.vala \
 	gui/FindBookByTitleView.vala \
 	gui/AddBook.vala \
@@ -37,9 +36,7 @@ bad_sources = \
 	gui/AddBookView.vala \
 	gui/BaseView.vala \
 	gui/BookView.vala \
-	gui/LibraryFrame.vala \
-	xml/LibraryXMLDoc.vala \
-	xml/XMLElement.vala
+	gui/LibraryFrame.vala
 
 library_SOURCES = \
 	LibraryApp.vala

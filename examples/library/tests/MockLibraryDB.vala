@@ -1,46 +1,41 @@
 namespace Library {
 
-	public class MockLibraryDB : LibraryDB {
+	using Gee;
 
-		MockLibraryDB() {
-			books = new Vector();
+	public class MockLibraryDB : Object, LibraryDB {
+
+		public MockLibraryDB() {
+			books = new ArrayList<Book>();
 		}
 
-		public void addBook( Book book ) {
+		public void add_book( Book book ) {
 			books.add( book );
 		}
 
-		public Book getBook( String title, String author ) {
-			for ( int i=0; i < books.size(); i++ ) {
-				Book book = (Book) books.elementAt( i );
-				if ( book.getTitle().equals(title)
-				  && book.getAuthor().equals(author) )
+		public Book? get_book(string title, string author) {
+			foreach (Book book in books)
+				if (book.title == title && book.author == author)
 					return book;
-			}
 			return null;
 		}
 
-		public Vector getBooksByTitle( String title ) {
-			Vector title_books = new Vector();
-			for ( int i=0; i < books.size(); i++ ) {
-				Book book = (Book) books.elementAt( i );
-				if ( book.getTitle().equals(title) )
+		public ArrayList<Book> get_books_by_title(string title) {
+			ArrayList<Book> title_books = new ArrayList<Book>();
+			foreach (Book book in books)
+				if (book.title == title)
 					title_books.add( book );
-			}
 			return title_books;
 		}
 
-		public Vector getBooksByAuthor( String author ) {
-			Vector auth_books = new Vector();
-			for ( int i=0; i < books.size(); i++ ) {
-				Book book = (Book) books.elementAt( i );
-				if ( book.getAuthor().equals(author) ) 
-					auth_books.add( book );
-			}
-			return auth_books;   
+		public ArrayList<Book> get_books_by_author(string author) {
+			ArrayList<Book> auth_books = new ArrayList<Book>();
+			foreach (Book book in books)
+				if (book.author == author)
+					auth_books.add(book);
+			return auth_books;
 		}
 
-		private Vector books;
+		private ArrayList<Book> books;
 
 	}
 }
