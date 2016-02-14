@@ -14,7 +14,8 @@ libvaladate_la_SOURCES = \
 	testrunner.vala \
 	tempdir.vala \
 	wait.vala \
-	runner.vala
+	runner.vala \
+	signalwaiter.vala
 
 libvaladate_la_CFLAGS = $(VALADATE_CFLAGS)
 

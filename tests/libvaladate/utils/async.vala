@@ -1,9 +1,15 @@
-using GLib;
-using Valadate;
+namespace Valadate.Tests.Utils {
+	
+	using Valadate;
 
-namespace Test {
-    public class AsyncTest : Object, Fixture {
-        public void set_up() { set_timeout(1000); }
+    public class AsyncTest : TestCase {
+
+		public AsyncTest() {
+			//add_test("non-cancellable", test_noncancellable);
+			//add_test("cancellable", test_cancellable);
+		}
+
+        //public override void set_up() { set_timeout(1000); }
 
         public async void test_noncancellable() {
             Timeout.add(100, test_noncancellable.callback);
