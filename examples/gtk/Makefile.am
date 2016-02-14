@@ -27,6 +27,9 @@ src_exampleapp_CFLAGS =				\
 	-w					\
 	$(NULL)
 
+src_exampleapp_LDADD = \
+	-all-static
+
 src_exampleapp_LDADD =				\
 	@EXAMPLE_LIBS@				\
 	$(NULL)

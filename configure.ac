@@ -164,6 +164,8 @@ AC_CONFIG_FILES([
 	tests/Makefile
 	tests/libvaladate/Makefile
 	tests/libvaladate/data/Makefile
+	tests/libvaladate/framework/Makefile
+	tests/libvaladate/utils/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 ])
