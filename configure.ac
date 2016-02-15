@@ -46,6 +46,8 @@ AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 
+GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
+
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
@@ -66,8 +68,6 @@ dnl === Valadoc ==============================================================
 AC_ARG_ENABLE(valadoc,
 	AS_HELP_STRING([--enable-valadoc[=@<:@no/auto/yes@:>@]], [Enable valadoc support]),,
 		[enable_valadoc=auto])
-
-dnl GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 
 found_valadoc=no
 AS_IF([test "x$enable_valadoc" != "xno"], [
@@ -184,7 +184,7 @@ AC_CONFIG_FILES([
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
-	tests/genie/Makefile
+	tests/Makefile
 	tests/libvaladate/Makefile
 	tests/libvaladate/data/Makefile
 	tests/libvaladate/framework/Makefile
