@@ -23,7 +23,8 @@ testexe_LDFLAGS =  \
 
 testexe_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(top_builddir)/libvaladate/libvaladate.la \
+	-lgio-2.0
 	
 testexe_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
