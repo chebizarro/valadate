@@ -1,0 +1,12 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+bindir=@CMAKE_INSTALL_FULL_BINDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+datarootdir=@CMAKE_INSTALL_FULL_DATAROOTDIR@
+datadir=@CMAKE_INSTALL_FULL_DATADIR@
+
+Name: @PACKAGE_NAME@
+Description: CMake example for the Valadate Testing Framework
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lsquash@SQUASH_VERSION_API@
+Cflags: -I${includedir}/squash-@SQUASH_VERSION_API@
