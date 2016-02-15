@@ -19,6 +19,8 @@
 
 namespace Valadate {
 
+	using Valadate.Utils;
+
 	public errordomain AssertError
 	{
 		UNEXPECTED_VALUE,

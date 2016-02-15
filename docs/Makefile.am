@@ -1,9 +1,8 @@
 include $(top_srcdir)/base.am
 include $(top_srcdir)/libvaladate/libvaladate.am
 
-#man_MANS = valarade-ide.1
-
-#EXTRA_DIST = valarade-ide.1
+#man_MANS = valadate.1
+#EXTRA_DIST = valadate.1
 
 if ENABLE_VALADOC
 
@@ -14,7 +13,9 @@ VALADOC_FLAGS = --force \
 		--pkg gmodule-2.0 \
 		--pkg posix \
 		--package-name Valadate \
-		$(libvaladate_sources)
+		--package-version $(VERSION) \
+		--target-glib=2.40.0 \
+		$(addprefix $(top_srcdir)/libvaladate/,$(libvaladate_sources))
 
 valadoc:
 	$(VALADOC) \

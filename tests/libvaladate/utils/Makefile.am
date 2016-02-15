@@ -5,8 +5,8 @@ test_programs = tests_libvaladate_utils
 
 tests_libvaladate_utils_SOURCES =  \
 	testsignalwaiter.vala \
-	test_tempdir.vala \
-	async.vala \
+	testtempdir.vala \
+	testasync.vala \
 	main.vala
 	
 tests_libvaladate_utils_VALAFLAGS = \

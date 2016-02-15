@@ -22,15 +22,23 @@ namespace Valadate {
 		
 		[Test (name="test_one")]
 		public void test_one () {
-			assert_true(true);
+			Assert.is_true(true);
 		}
 
 		[Test (name="test_two")]
 		public void test_two () {
 			assert_true(true);
 		}
+
+		[AsyncTest (name="test_async", timeout=100000)]
+		public async void test_async () throws ThreadError {
+			assert_true(true);
+		}
 		
 	}
 
+	public class TestExeSubClass : TestExe {
+
+	}
 	
 }

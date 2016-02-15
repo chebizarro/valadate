@@ -110,7 +110,7 @@ namespace Valadate {
 				var gtype = node->get_prop("identifier");
 				if(gtype == null)
 					throw new RunError.TESTS("No Constructor found!");
-				CreateTestObject create = (CreateTestObject)load_method(gtype);
+				unowned CreateTestObject create = (CreateTestObject)load_method(gtype);
 
 				Valadate.TestCase test = create() as Valadate.TestCase;
 				
@@ -130,7 +130,7 @@ namespace Valadate {
 							while (meth != null) {
 								if(meth->get_prop("key") == "test.name") {
 									try {
-										var method = (TestMethod)load_method(func->get_prop("identifier"));
+										unowned TestMethod method = (TestMethod)load_method(func->get_prop("identifier"));
 										test.add_test(meth->get_prop("value"), ()=> {method(test); });
 									} catch (RunError e) {
 										throw e;

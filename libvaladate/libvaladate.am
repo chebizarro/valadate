@@ -1,12 +1,12 @@
 libvaladate_sources = \
-	$(top_srcdir)/libvaladate/assert.vala \
-	$(top_srcdir)/libvaladate/test.vala \
-	$(top_srcdir)/libvaladate/testcase.vala \
-	$(top_srcdir)/libvaladate/testfixture.vala \
-	$(top_srcdir)/libvaladate/testsuite.vala \
-	$(top_srcdir)/libvaladate/testresult.vala \
-	$(top_srcdir)/libvaladate/testrunner.vala \
-	$(top_srcdir)/libvaladate/tempdir.vala \
-	$(top_srcdir)/libvaladate/wait.vala \
-	$(top_srcdir)/libvaladate/runner.vala \
-	$(top_srcdir)/libvaladate/signalwaiter.vala
+	assert.vala \
+	test.vala \
+	testcase.vala \
+	testfixture.vala \
+	testsuite.vala \
+	testresult.vala \
+	testrunner.vala \
+	tempdir.vala \
+	wait.vala \
+	runner.vala \
+	signalwaiter.vala

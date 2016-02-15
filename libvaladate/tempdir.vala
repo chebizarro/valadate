@@ -17,7 +17,7 @@
  */
 using GLib;
 
-namespace Valadate {
+namespace Valadate.Utils {
     /**
      * Class to provide a temporary test directory to unit tests.
      *

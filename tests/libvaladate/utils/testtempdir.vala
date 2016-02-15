@@ -17,15 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Valadate {
+namespace Valadate.Tests {
+	
+	using Valadate;
+	using Valadate.Utils;
+	
     public class TempDirTest : TestCase {
 
 		public TempDirTest() {
-			//base("tempdir");
 			add_test("store", test_store);
 			add_test("copy", test_copy_file);
-			//add_test("shell", test_shell);
-			//add_test("copy_dir", test_copy_dir);
+			add_test("shell", test_shell);
+			add_test("copy_dir", test_copy_dir);
 		}
 
 
@@ -43,13 +46,13 @@ namespace Valadate {
         }
 
         public void test_shell() {
-            tmp.shell("foo", "echo foobar > bar");
-            assert(tmp.contents("foo/bar") == "foobar\n");
+            tmp.shell("foo1", "echo foobar > bar");
+            assert(tmp.contents("foo1/bar") == "foobar\n");
         }
 
         public void test_copy_dir() {
-            tmp.shell("foo", "echo qyzzy > qyzzy; mkdir 42; echo 42/baz > 42/baz\n");
-            tmp.copy("bar", tmp.dir.resolve_relative_path("foo").get_path());
+            tmp.shell("foo2", "echo qyzzy > qyzzy; mkdir 42; echo 42/baz > 42/baz\n");
+            tmp.copy("bar", tmp.dir.resolve_relative_path("foo2").get_path());
             assert(tmp.contents("bar/qyzzy") == "qyzzy\n");
             assert(tmp.contents("bar/42/baz") == "42/baz\n");
         }
