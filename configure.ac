@@ -46,8 +46,6 @@ AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 
-GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
-
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
@@ -71,6 +69,7 @@ AC_ARG_ENABLE(valadoc,
 
 found_valadoc=no
 AS_IF([test "x$enable_valadoc" != "xno"], [
+		GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 		AC_PATH_PROG(VALADOC, valadoc, :)
 		AS_IF([test -x "$VALADOC"], [
 		found_valadoc=yes

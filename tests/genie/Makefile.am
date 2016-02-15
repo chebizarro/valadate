@@ -3,7 +3,6 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # --- Test exe ---
 test_programs = testgenie
-#bin_PROGRAMS = testgenie
 
 testgenie.c: testgenie.gs
 	$(VALAC) -C $< $(testgenie_VALAFLAGS)
@@ -43,7 +42,8 @@ CLEANFILES += \
 	*.o \
 	*.gir \
 	*.gcda \
-	*.gcno
+	*.gcno \
+	*.vapi
 
 DISTCLEANFILES += $(CLEANFILES)
 
