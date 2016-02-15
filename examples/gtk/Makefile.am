@@ -140,12 +140,12 @@ CLEANFILES +=					\
 endif
 
 
-test_programs = tests/test_example
+test_programs = tests/test_example-0
 
-tests_test_example_SOURCES =  \
+tests_test_example_0_SOURCES =  \
 	tests/example.vala
 	
-tests_test_example_VALAFLAGS = \
+tests_test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../libvaladate \
 	--gir test_example-0.gir \
@@ -155,27 +155,27 @@ tests_test_example_VALAFLAGS = \
 	--pkg gio-2.0 \
 	-g
 
-tests_test_example_LDFLAGS =  \
+tests_test_example_0_LDFLAGS =  \
 	-fPIE \
 	-rdynamic
 
-tests_test_example_LDADD = \
+tests_test_example_0_LDADD = \
 	$(EXAMPLE_LIBS) \
 	$(abs_builddir)/../../libvaladate/libvaladate.la \
 	-lgio-2.0
 
-tests_test_example_CPPFLAGS = \
+tests_test_example_0_CPPFLAGS = \
 	$(EXAMPLE_CPPFLAGS) \
 	-fPIE
 	
-tests_test_example_CFLAGS = $(EXAMPLE_CFLAGS) \
+tests_test_example_0_CFLAGS = $(EXAMPLE_CFLAGS) \
 	-I$(abs_builddir)/../../libvaladate \
 	-pie \
 	-fPIE \
 	-shared
 
 CLEANFILES += \
-	$(tests_test_example_SOURCES:.vala=.c) \
+	$(tests_test_example_0_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o \

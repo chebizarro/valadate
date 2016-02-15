@@ -73,7 +73,7 @@ namespace Valadate {
 			requires(this.path != null)
 			requires(this.module != null)
 		{
-			var girpath = path.replace(".libs/lt-","") + "-0.gir";
+			var girpath = path.replace(".libs/lt-","") + ".gir";
 			
 			gir = Xml.Parser.parse_file (girpath);
 			if (gir == null)

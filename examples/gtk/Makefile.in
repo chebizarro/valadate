@@ -181,7 +181,7 @@ am__installdirs = "$(DESTDIR)$(installed_testdir)" \
 	"$(DESTDIR)$(installed_test_metadir)" \
 	"$(DESTDIR)$(installed_testdir)"
 LTLIBRARIES = $(installed_test_LTLIBRARIES) $(noinst_LTLIBRARIES)
-am__EXEEXT_1 = tests/test_example$(EXEEXT)
+am__EXEEXT_1 = tests/test_example-0$(EXEEXT)
 am__EXEEXT_2 = $(am__EXEEXT_1)
 @ENABLE_ALWAYS_BUILD_TESTS_FALSE@am__EXEEXT_3 = $(am__EXEEXT_2)
 @ENABLE_INSTALLED_TESTS_TRUE@am__EXEEXT_4 = $(am__EXEEXT_1)
@@ -206,15 +206,15 @@ src_exampleapp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(src_exampleapp_CFLAGS) $(CFLAGS) $(src_exampleapp_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_tests_test_example_OBJECTS =  \
-	tests/tests_test_example-example.$(OBJEXT)
-tests_test_example_OBJECTS = $(am_tests_test_example_OBJECTS)
-tests_test_example_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+am_tests_test_example_0_OBJECTS =  \
+	tests/tests_test_example_0-example.$(OBJEXT)
+tests_test_example_0_OBJECTS = $(am_tests_test_example_0_OBJECTS)
+tests_test_example_0_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(abs_builddir)/../../libvaladate/libvaladate.la
-tests_test_example_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+tests_test_example_0_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(tests_test_example_CFLAGS) $(CFLAGS) \
-	$(tests_test_example_LDFLAGS) $(LDFLAGS) -o $@
+	$(tests_test_example_0_CFLAGS) $(CFLAGS) \
+	$(tests_test_example_0_LDFLAGS) $(LDFLAGS) -o $@
 SCRIPTS = $(installed_test_SCRIPTS) $(noinst_SCRIPTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -258,8 +258,9 @@ AM_V_VALAC = $(am__v_VALAC_@AM_V@)
 am__v_VALAC_ = $(am__v_VALAC_@AM_DEFAULT_V@)
 am__v_VALAC_0 = @echo "  VALAC   " $@;
 am__v_VALAC_1 = 
-SOURCES = $(src_exampleapp_SOURCES) $(tests_test_example_SOURCES)
-DIST_SOURCES = $(src_exampleapp_SOURCES) $(tests_test_example_SOURCES)
+SOURCES = $(src_exampleapp_SOURCES) $(tests_test_example_0_SOURCES)
+DIST_SOURCES = $(src_exampleapp_SOURCES) \
+	$(tests_test_example_0_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -467,7 +468,7 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/src_exampleapp_vala.stamp \
 	$(srcdir)/test_example-0.gir \
-	$(srcdir)/tests_test_example_vala.stamp \
+	$(srcdir)/tests_test_example_0_vala.stamp \
 	$(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
 	$(top_srcdir)/build-aux/config.sub \
@@ -649,7 +650,7 @@ NULL =
 BUILT_SOURCES = 
 BUILT_EXTRA_DIST = 
 CLEANFILES = *.log *.trs $(am__append_13) $(am__append_14) \
-	$(tests_test_example_SOURCES:.vala=.c) *.stamp *.vapi *.o \
+	$(tests_test_example_0_SOURCES:.vala=.c) *.stamp *.vapi *.o \
 	*.gir *.gcda *.gcno
 DISTCLEANFILES = $(data_desktop_DATA) $(NULL) $(CLEANFILES)
 MAINTAINERCLEANFILES = 
@@ -771,11 +772,11 @@ docs_images = \
 	docs/images/exampleapp9.png		\
 	$(NULL)
 
-test_programs = tests/test_example
-tests_test_example_SOURCES = \
+test_programs = tests/test_example-0
+tests_test_example_0_SOURCES = \
 	tests/example.vala
 
-tests_test_example_VALAFLAGS = \
+tests_test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../libvaladate \
 	--gir test_example-0.gir \
@@ -785,20 +786,20 @@ tests_test_example_VALAFLAGS = \
 	--pkg gio-2.0 \
 	-g
 
-tests_test_example_LDFLAGS = \
+tests_test_example_0_LDFLAGS = \
 	-fPIE \
 	-rdynamic
 
-tests_test_example_LDADD = \
+tests_test_example_0_LDADD = \
 	$(EXAMPLE_LIBS) \
 	$(abs_builddir)/../../libvaladate/libvaladate.la \
 	-lgio-2.0
 
-tests_test_example_CPPFLAGS = \
+tests_test_example_0_CPPFLAGS = \
 	$(EXAMPLE_CPPFLAGS) \
 	-fPIE
 
-tests_test_example_CFLAGS = $(EXAMPLE_CFLAGS) \
+tests_test_example_0_CFLAGS = $(EXAMPLE_CFLAGS) \
 	-I$(abs_builddir)/../../libvaladate \
 	-pie \
 	-fPIE \
@@ -1042,12 +1043,12 @@ tests/$(am__dirstamp):
 tests/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) tests/$(DEPDIR)
 	@: > tests/$(DEPDIR)/$(am__dirstamp)
-tests/tests_test_example-example.$(OBJEXT): tests/$(am__dirstamp) \
+tests/tests_test_example_0-example.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 
-tests/test_example$(EXEEXT): $(tests_test_example_OBJECTS) $(tests_test_example_DEPENDENCIES) $(EXTRA_tests_test_example_DEPENDENCIES) tests/$(am__dirstamp)
-	@rm -f tests/test_example$(EXEEXT)
-	$(AM_V_CCLD)$(tests_test_example_LINK) $(tests_test_example_OBJECTS) $(tests_test_example_LDADD) $(LIBS)
+tests/test_example-0$(EXEEXT): $(tests_test_example_0_OBJECTS) $(tests_test_example_0_DEPENDENCIES) $(EXTRA_tests_test_example_0_DEPENDENCIES) tests/$(am__dirstamp)
+	@rm -f tests/test_example-0$(EXEEXT)
+	$(AM_V_CCLD)$(tests_test_example_0_LINK) $(tests_test_example_0_OBJECTS) $(tests_test_example_0_LDADD) $(LIBS)
 install-installed_testSCRIPTS: $(installed_test_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(installed_test_SCRIPTS)'; test -n "$(installed_testdir)" || list=; \
@@ -1097,7 +1098,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_exampleapp-application.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_exampleapp-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_exampleapp-resources.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/tests_test_example-example.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/tests_test_example_0-example.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1193,32 +1194,32 @@ src/src_exampleapp-resources.obj: src/resources.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_exampleapp_CFLAGS) $(CFLAGS) -c -o src/src_exampleapp-resources.obj `if test -f 'src/resources.c'; then $(CYGPATH_W) 'src/resources.c'; else $(CYGPATH_W) '$(srcdir)/src/resources.c'; fi`
 
-tests/tests_test_example-example.o: tests/example.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_CFLAGS) $(CFLAGS) -MT tests/tests_test_example-example.o -MD -MP -MF tests/$(DEPDIR)/tests_test_example-example.Tpo -c -o tests/tests_test_example-example.o `test -f 'tests/example.c' || echo '$(srcdir)/'`tests/example.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/tests_test_example-example.Tpo tests/$(DEPDIR)/tests_test_example-example.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/example.c' object='tests/tests_test_example-example.o' libtool=no @AMDEPBACKSLASH@
+tests/tests_test_example_0-example.o: tests/example.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_0_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_0_CFLAGS) $(CFLAGS) -MT tests/tests_test_example_0-example.o -MD -MP -MF tests/$(DEPDIR)/tests_test_example_0-example.Tpo -c -o tests/tests_test_example_0-example.o `test -f 'tests/example.c' || echo '$(srcdir)/'`tests/example.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/tests_test_example_0-example.Tpo tests/$(DEPDIR)/tests_test_example_0-example.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/example.c' object='tests/tests_test_example_0-example.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_CFLAGS) $(CFLAGS) -c -o tests/tests_test_example-example.o `test -f 'tests/example.c' || echo '$(srcdir)/'`tests/example.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_0_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_0_CFLAGS) $(CFLAGS) -c -o tests/tests_test_example_0-example.o `test -f 'tests/example.c' || echo '$(srcdir)/'`tests/example.c
 
-tests/tests_test_example-example.obj: tests/example.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_CFLAGS) $(CFLAGS) -MT tests/tests_test_example-example.obj -MD -MP -MF tests/$(DEPDIR)/tests_test_example-example.Tpo -c -o tests/tests_test_example-example.obj `if test -f 'tests/example.c'; then $(CYGPATH_W) 'tests/example.c'; else $(CYGPATH_W) '$(srcdir)/tests/example.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/tests_test_example-example.Tpo tests/$(DEPDIR)/tests_test_example-example.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/example.c' object='tests/tests_test_example-example.obj' libtool=no @AMDEPBACKSLASH@
+tests/tests_test_example_0-example.obj: tests/example.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_0_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_0_CFLAGS) $(CFLAGS) -MT tests/tests_test_example_0-example.obj -MD -MP -MF tests/$(DEPDIR)/tests_test_example_0-example.Tpo -c -o tests/tests_test_example_0-example.obj `if test -f 'tests/example.c'; then $(CYGPATH_W) 'tests/example.c'; else $(CYGPATH_W) '$(srcdir)/tests/example.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) tests/$(DEPDIR)/tests_test_example_0-example.Tpo tests/$(DEPDIR)/tests_test_example_0-example.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/example.c' object='tests/tests_test_example_0-example.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_CFLAGS) $(CFLAGS) -c -o tests/tests_test_example-example.obj `if test -f 'tests/example.c'; then $(CYGPATH_W) 'tests/example.c'; else $(CYGPATH_W) '$(srcdir)/tests/example.c'; fi`
-$(srcdir)/tests/example.c: $(srcdir)/tests_test_example_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_vala.stamp; fi
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_0_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_0_CFLAGS) $(CFLAGS) -c -o tests/tests_test_example_0-example.obj `if test -f 'tests/example.c'; then $(CYGPATH_W) 'tests/example.c'; else $(CYGPATH_W) '$(srcdir)/tests/example.c'; fi`
+$(srcdir)/tests/example.c: $(srcdir)/tests_test_example_0_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_0_vala.stamp; fi
 	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_vala.stamp; \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_0_vala.stamp; \
 	fi
-$(srcdir)/test_example-0.gir: $(srcdir)/tests_test_example_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_vala.stamp; fi
+$(srcdir)/test_example-0.gir: $(srcdir)/tests_test_example_0_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_0_vala.stamp; fi
 	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_vala.stamp; \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_0_vala.stamp; \
 	fi
-$(srcdir)/tests_test_example_vala.stamp: tests/example.vala
+$(srcdir)/tests_test_example_0_vala.stamp: tests/example.vala
 	$(AM_V_at)rm -f $@ && echo stamp > $@-t
-	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(tests_test_example_VALAFLAGS) $(VALAFLAGS) -C tests/example.vala
+	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(tests_test_example_0_VALAFLAGS) $(VALAFLAGS) -C tests/example.vala
 	$(AM_V_at)mv -f $@-t $@
 $(srcdir)/src/application.c: $(srcdir)/src_exampleapp_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/src_exampleapp_vala.stamp; fi
@@ -1543,9 +1544,9 @@ recheck: all $(check_LTLIBRARIES) $(check_PROGRAMS) $(check_SCRIPTS) $(check_DAT
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-tests/test_example.log: tests/test_example$(EXEEXT)
-	@p='tests/test_example$(EXEEXT)'; \
-	b='tests/test_example'; \
+tests/test_example-0.log: tests/test_example-0$(EXEEXT)
+	@p='tests/test_example-0$(EXEEXT)'; \
+	b='tests/test_example-0'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -1785,7 +1786,7 @@ maintainer-clean-generic:
 	-rm -f $(srcdir)/src_exampleapp_vala.stamp
 	-rm -f $(srcdir)/test_example-0.gir
 	-rm -f $(srcdir)/tests/example.c
-	-rm -f $(srcdir)/tests_test_example_vala.stamp
+	-rm -f $(srcdir)/tests_test_example_0_vala.stamp
 	-rm -f src/application-preferences.c
 	-rm -f src/application-window.c
 	-rm -f src/application.c

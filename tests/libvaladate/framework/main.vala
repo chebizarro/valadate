@@ -22,13 +22,13 @@ namespace Valadate.Tests {
 		});
 
 		GLib.Test.add_func ("/textrunner/new", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			assert(runner is TextRunner);
 		});
 
 		GLib.Test.add_func ("/textrunner/load_module", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			try {
 				runner.load_module();
@@ -39,7 +39,7 @@ namespace Valadate.Tests {
 		});
 
 		GLib.Test.add_func ("/textrunner/load_gir", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			try {
 				runner.load_module();
@@ -51,7 +51,7 @@ namespace Valadate.Tests {
 		});
 
 		GLib.Test.add_func ("/textrunner/load_tests", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			assert(runner.tests.length == 0);
 			try {
@@ -68,7 +68,7 @@ namespace Valadate.Tests {
 		});
 
 		GLib.Test.add_func ("/textrunner/load", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			assert(runner.tests.length == 0);
 			try {
@@ -127,8 +127,6 @@ namespace Valadate.Tests {
 			void* nullval = null;
 			Assert.not_null(nullval, "Value must not be null");
 		});
-
-		//GLib.TestSuite.get_root().add_suite(new TempDirTest().suite);
 
 		GLib.Test.run ();
 

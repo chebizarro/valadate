@@ -22,14 +22,14 @@ namespace Valadate {
 		
 		[Test (name="load_pie")]
 		public void load_pie () {
-			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE";
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE-0";
 			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			assert (mod != null);
 		}
 		
 		[Test (name="has_test_method")]
 		public void has_test_method() {
-			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE";
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE-0";
 			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			void* function;
 			assert(mod.symbol ("valadate_test_pie_test_pie_fail", out function));

@@ -1,11 +1,11 @@
 include $(top_srcdir)/build-aux/glib-tap.mk
 
-test_programs = test_example
+test_programs = test_example-0
 
-test_example_SOURCES =  \
+test_example_0_SOURCES =  \
 	example.vala
 	
-test_example_VALAFLAGS = \
+test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
 	--gir test_example-0.gir \
@@ -15,20 +15,20 @@ test_example_VALAFLAGS = \
 	--pkg gio-2.0 \
 	-g
 
-test_example_LDFLAGS =  \
+test_example_0_LDFLAGS =  \
 	-fPIE \
 	-rdynamic
 
-test_example_LDADD = \
+test_example_0_LDADD = \
 	$(EXAMPLE_LIBS) \
 	$(abs_builddir)/../../../libvaladate/libvaladate.la \
 	-lgio-2.0
 
-test_example_CPPFLAGS = \
+test_example_0_CPPFLAGS = \
 	$(EXAMPLE_CPPFLAGS) \
 	-fPIE
 	
-test_example_CFLAGS = $(EXAMPLE_CFLAGS) \
+test_example_0_CFLAGS = $(EXAMPLE_CFLAGS) \
 	-I$(abs_builddir)/../../../libvaladate \
 	-pie \
 	-fPIE \
@@ -36,7 +36,7 @@ test_example_CFLAGS = $(EXAMPLE_CFLAGS) \
 
 
 CLEANFILES += \
-	$(test_example_SOURCES:.vala=.c) \
+	$(test_example_0_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o \

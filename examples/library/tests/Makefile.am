@@ -4,7 +4,7 @@
 
 include $(top_srcdir)/build/autotools/glib-tap.mk
 
-test_programs = testlibrary
+test_programs = testlibrary-0
 
 bad_sources = \
 	LibraryPerfTest.vala \
@@ -22,13 +22,13 @@ bad_sources = \
 	xml/XMLElementTest.vala \
 	xml/LibraryXMLDocTest.vala
 
-testlibrary_SOURCES =  \
+testlibrary_0_SOURCES =  \
 	BookTest.vala \
 	MockLibraryDB.vala \
 	LibraryDBTest.vala \
 	LibraryTest.vala
 	
-testlibrary_VALAFLAGS = \
+testlibrary_0_VALAFLAGS = \
 	$(LIBRARY_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
@@ -42,21 +42,21 @@ testlibrary_VALAFLAGS = \
 	-g
 
 
-testlibrary_LDFLAGS =  \
+testlibrary_0_LDFLAGS =  \
 	-fPIE \
 	-rdynamic
 
-testlibrary_LDADD = \
+testlibrary_0_LDADD = \
 	$(LIBRARY_LIBS) \
 	$(abs_builddir)/../../../libvaladate/libvaladate.la \
 	$(top_builddir)/src/liblibrary.la
 
-testlibrary_CPPFLAGS = \
+testlibrary_0_CPPFLAGS = \
 	$(LIBRARY_CPPFLAGS) \
 	-DLIBRARY_TESTS_DIR=\""$(LIBRARY_TESTS_DIR)"\" \
 	-fPIE
 	
-testlibrary_CFLAGS = $(LIBRARY_CFLAGS) \
+testlibrary_0_CFLAGS = $(LIBRARY_CFLAGS) \
 	-I$(abs_builddir)/../../../libvaladate \
 	-I$(top_builddir)/src \
 	-shared \
@@ -64,7 +64,7 @@ testlibrary_CFLAGS = $(LIBRARY_CFLAGS) \
 
 
 CLEANFILES += \
-	$(testlibrary_SOURCES:.vala=.c) \
+	$(testlibrary_0_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
 	*.o \
