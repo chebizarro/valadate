@@ -67,9 +67,10 @@ AC_ARG_ENABLE(valadoc,
 	AS_HELP_STRING([--enable-valadoc[=@<:@no/auto/yes@:>@]], [Enable valadoc support]),,
 		[enable_valadoc=auto])
 
+dnl GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
+
 found_valadoc=no
 AS_IF([test "x$enable_valadoc" != "xno"], [
-		GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 		AC_PATH_PROG(VALADOC, valadoc, :)
 		AS_IF([test -x "$VALADOC"], [
 		found_valadoc=yes
