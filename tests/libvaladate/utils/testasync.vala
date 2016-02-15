@@ -16,7 +16,7 @@ namespace Valadate.Tests.Utils {
 
 		public async void test_async_with_timeout()
 			throws GLib.Error, AssertError {
-			var dir = File.new_for_path (Environment.get_home_dir());
+			var dir = File.new_for_path (Environment.get_current_dir());
 			var e = yield dir.enumerate_children_async(
 				FileAttribute.STANDARD_NAME, 0, Priority.DEFAULT, null);
 			while (true) {
