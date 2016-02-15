@@ -8,7 +8,7 @@ namespace Valadate.Tests.Utils {
 			add_async_test( "AsyncWithTimeout",
 							cb => test_async_with_timeout.begin( cb ),
 							res => test_async_with_timeout.end( res ),
-							400 );
+							4000 );
 			add_async_test( "Async",
 							cb => do_calc_in_bg.begin( cb ),
 							res => do_calc_in_bg.end( res ));
