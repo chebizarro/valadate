@@ -184,6 +184,7 @@ AC_CONFIG_FILES([
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	tests/Makefile
+	tests/genie/Makefile
 	tests/libvaladate/Makefile
 	tests/libvaladate/data/Makefile
 	tests/libvaladate/framework/Makefile
@@ -211,5 +212,6 @@ echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
+echo " • Enable valadoc: ${found_valadoc}"
 echo " • Build examples: ${build_examples}"
 echo ""
