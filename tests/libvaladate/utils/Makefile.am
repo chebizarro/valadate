@@ -20,7 +20,9 @@ tests_libvaladate_utils_VALAFLAGS = \
 
 tests_libvaladate_utils_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(top_builddir)/libvaladate/libvaladate.la \
+	-lgio-2.0
+
 
 tests_libvaladate_utils_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS)
