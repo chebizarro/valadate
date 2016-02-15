@@ -9,4 +9,5 @@ RUN apt-get update && apt-get install -y \
 	shtool \
 	lcov \
 	libxml2-dev \
-	gtk-doc-tools
+	gtk-doc-tools \
+	packaging-dev

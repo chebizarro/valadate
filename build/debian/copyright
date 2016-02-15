@@ -1,18 +1,18 @@
 This work was packaged for Debian by:
 
-    Jan Hudec <bulb@ucw.cz> on Fri, 25 Sep 2009 11:19:10 +0200
+    Chris Daley <chebizarro@gmail.com> on Mon, 15 Feb 2016 11:00:00 -0800
 
 It was downloaded from:
 
-    http://gitorious.org/valadate/valadate/archive-tarball/master
+    http://github.com/chebizarro/valadate/tarball/master
 
 Upstream Author(s):
 
-    Jan Hudec <bulb@ucw.cz>
+    Chris Daley <chebizarro@gmail.com>
 
 Copyright:
 
-    Copyright (C) 2009 Jan Hudec
+    Copyright (C) 2016 Chris Daley
 
 License:
 
@@ -35,6 +35,6 @@ Public License can be found in `/usr/share/common-licenses/LGPL-3'.
 
 The Debian packaging is:
 
-    Copyright (C) 2009 Jan Hudec <bulb@ucw.cz>
+    Copyright (C) 2016 Chris Daley <chebizarro@gmail.com>
 
 and is licensed under the same terms as the package itself.

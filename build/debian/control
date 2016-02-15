@@ -1,14 +1,14 @@
 Source: valadate
 Priority: extra
-Maintainer: Jan Hudec <bulb@ucw.cz>
+Maintainer: Chris Daley <chebizarro@gmail.com>
 Build-Depends: debhelper (>= 7), libglib2.0-dev (>= 2.20), valac (> 0.7.6),
                libvala-dev (> 0.7.6), libgirepository1.0-dev (>= 0.6.5),
                python (>= 2.3)
 Standards-Version: 3.8.3
 Section: libs
-Homepage: http://gitorious.org/valadate
+Homepage: http://github.com/chebizarro/valadate
 
-Package: libvaladate0.0-dev
+Package: libvaladate1.0-dev
 Section: libdevel
 Architecture: any
 Depends: libvaladate0.0-0 (= ${binary:Version}), libglib2.0-dev (>= 2.20),
