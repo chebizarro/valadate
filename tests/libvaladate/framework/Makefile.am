@@ -5,32 +5,24 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 
 test_programs = tests_libvaladate
 
-log_file = $(VALADATE_TESTS_DIR)/results/ # Where to save the result and output of the test script.
-trs_file = $(VALADATE_TESTS_DIR)/results/ # Where to save the metadata of the test run.
+#log_file = $(VALADATE_TESTS_DIR)/results/ # Where to save the result and output of the test script.
+#trs_file = $(VALADATE_TESTS_DIR)/results/ # Where to save the metadata of the test run.
 
 
 tests_libvaladate_SOURCES =  \
 	main.vala
 	
 tests_libvaladate_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
-	--pkg config \
-	--vapidir $(top_builddir)/vapi \
-	--pkg gio-2.0 \
-	-g
+	$(TESTS_VALAFLAGS)
 
 tests_libvaladate_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(TESTS_LIBS)
 
 tests_libvaladate_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS)
+	$(TESTS_CPPFLAGS)
 	
-tests_libvaladate_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\"
+tests_libvaladate_CFLAGS = \
+	$(TESTS_CFLAGS)
 
 CLEANFILES += \
 	$(tests_libvaladate_SOURCES:.vala=.c) \

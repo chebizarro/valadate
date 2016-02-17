@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate {
+namespace Valadate.Tests {
 	
 	public class TestExe : TestCase {
 		
@@ -32,6 +32,11 @@ namespace Valadate {
 
 		[AsyncTest (name="test_async", timeout=100000)]
 		public async void test_async () throws ThreadError {
+			assert_true(true);
+		}
+
+		[AsyncTest (name="test_async_two")]
+		public async void test_async_two () throws ThreadError {
 			assert_true(true);
 		}
 		

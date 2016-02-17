@@ -1,13 +1,27 @@
 #include $(top_srcdir)/base.am
 
+gresource_file = $(top_srcdir)/src/data/library.gresource.xml
+resource_files = 				\
+	$(top_srcdir)/src/data/addbookview.ui
+
+resources.c: $(gresource_file) $(resource_files)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) 	\
+		--target=$@			\
+		--sourcedir=$(top_srcdir)/src/data	\
+		--generate-source $<
+
 noinst_LTLIBRARIES = liblibrary.la
 
 liblibrary_la_SOURCES = \
+	resources.c \
 	Book.vala \
 	LibraryDB.vala \
 	Library.vala \
 	xml/LibraryXMLDoc.vala \
-	xml/XMLElement.vala
+	xml/XMLElement.vala \
+	gui/AddBook.vala \
+	gui/AddBookView.vala \
+	gui/BaseView.vala
 
 liblibrary_la_CFLAGS = $(LIBRARY_CFLAGS)
 
@@ -16,11 +30,13 @@ liblibrary_la_CPPLAGS = $(LIBRARY_CPPFLAGS) \
 	`pkg-config --cflags`
 
 liblibrary_la_VALAFLAGS = \
+	--gresources $(gresource_file) \
 	--shared-library liblibrary-1.0 \
 	--library liblibrary-1.0 \
 	--vapi liblibrary-1.0.vapi \
 	-H liblibrary.h \
 	--pkg gee-0.8 \
+	--pkg gtk+-3.0 \
 	--target-glib=2.44.0 \
 	-g
 
@@ -31,10 +47,7 @@ bin_PROGRAMS = library
 bad_sources = \
 	gui/FindBookByTitle.vala \
 	gui/FindBookByTitleView.vala \
-	gui/AddBook.vala \
 	gui/LibraryFrameView.vala \
-	gui/AddBookView.vala \
-	gui/BaseView.vala \
 	gui/BookView.vala \
 	gui/LibraryFrame.vala
 

@@ -9,40 +9,29 @@ testexe_0_SOURCES =  \
 	testexetwo.vala
 	
 testexe_0_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
+	$(TESTS_VALAFLAGS) \
+	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
-	--library testexe \
-	--target-glib=2.40.0 \
-	--pkg gio-2.0 \
-	-g
+	--library testexe
 
-testexe_0_LDFLAGS =  \
-	-fPIE
+#testexe_0_LDFLAGS = 
 
 testexe_0_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la \
+	$(TESTS_LIBS) \
 	-lgio-2.0
 	
 testexe_0_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS) \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(TESTS_CPPFLAGS) \
 	-fPIE
 	
-testexe_0_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
+testexe_0_CFLAGS = \
+	$(TESTS_CFLAGS) \
 	-pie
 	
 CLEANFILES += \
 	$(testexe_0_SOURCES:.vala=.c) \
-	*.stamp \
 	*.vapi \
-	*.o \
-	*.gir \
-	*.gcda \
-	*.gcno
+	*.gir
 
 DISTCLEANFILES += $(CLEANFILES)
 

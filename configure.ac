@@ -18,6 +18,7 @@ dnl AM_SILENT_RULES([yes])
 
 AM_PATH_GLIB_2_0
 AM_PROG_CC_C_O
+AM_PROG_AR
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
@@ -51,17 +52,37 @@ GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-dnl AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
-VALADATE_TESTS_DIR=[${PWD}/tests]
-AC_SUBST(VALADATE_TESTS_DIR)
+dnl === Valadate =============================================================
 
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
+VALADATE_LIB_DIR=[${PWD}/libvaladate]
+AC_SUBST(VALADATE_LIB_DIR)
+
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
+
 AC_SUBST(pkg_modules)
 
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
 AC_SUBST(VALADATE_CFLAGS)
+AC_SUBST(VALADATE_VALAFLAGS)
+AC_SUBST(VALADATE_LIBS)
+
+dnl === Valadate Tests =======================================================
+
+VALADATE_TESTS_DIR=[${PWD}/tests]
+AC_SUBST(VALADATE_TESTS_DIR)
+
+tests_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0"
+
+AC_SUBST(tests_pkg_modules)
+
+PKG_CHECK_MODULES([TESTS], [$tests_pkg_modules])
+
+AC_SUBST(TESTS_CFLAGS)
+AC_SUBST(TESTS_VALAFLAGS)
+AC_SUBST(TESTS_LIBS)
 
 dnl === Valadoc ==============================================================
 
@@ -146,6 +167,7 @@ AS_IF([test "x$use_gcov" = "xyes"],
         changequote({,})
         CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         VALADATE_CFLAGS=`echo "$VALADATE_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
+        TESTS_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         changequote([,])
 
         dnl Define the special gcc flags
@@ -157,6 +179,9 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
         VALADATE_CFLAGS="$VALADATE_CFLAGS $VALADATE_GCOV_CFLAGS"
         VALADATE_LIBS="$VALADATE_LIBS $VALADATE_GCOV_LDADD"
+        
+        TESTS_CFLAGS="$TESTS_CFLAGS $VALADATE_GCOV_CFLAGS"
+        TESTS_LIBS="$TESTS_LIBS $VALADATE_GCOV_LDADD"
       ])
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
@@ -189,6 +214,7 @@ AC_CONFIG_FILES([
 	tests/libvaladate/data/Makefile
 	tests/libvaladate/framework/Makefile
 	tests/libvaladate/utils/Makefile
+	tests/libvaladate/introspection/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 ])
@@ -209,6 +235,7 @@ echo " • Prefix: ${prefix}"
 echo ""
 echo " • Debug level: ${enable_debug}"
 echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
+echo " • Vala flags: ${VALADATE_VALAFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"

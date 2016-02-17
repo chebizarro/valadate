@@ -9,4 +9,6 @@ libvaladate_sources = \
 	tempdir.vala \
 	wait.vala \
 	runner.vala \
-	signalwaiter.vala
+	signalwaiter.vala \
+	introspection.vala \
+	introspection/module.vala

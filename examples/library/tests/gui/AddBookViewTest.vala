@@ -1,6 +1,7 @@
-namespace Library.Gui {
+using Library;
+using Valadate;
 
-	using Library;
+namespace Library.Gui {
 
 	public class AddBookViewTest : BaseViewTestCase {
 
@@ -8,7 +9,7 @@ namespace Library.Gui {
 		private AddBook addBook;
 		private AddBookView view;
 
-		public BaseView getBaseView() {
+		public override BaseView getBaseView() {
 			return new AddBookView( addBook );
 		}
 
@@ -25,39 +26,39 @@ namespace Library.Gui {
 		}
 
 		public void testControlValues() {
-			assertEquals( "Add Book", view.getTitle() );
-			assertEquals( "", view.titleField.getText() );
-			assertEquals( "", view.authorField.getText() );
-			assertEquals( "Add", view.addButton.getText() );
-			assertEquals( "Cancel", view.cancelButton.getText() );
+			Assert.equals("Add Book", view.title );
+			Assert.equals("", view.title_field.get_text() );
+			Assert.equals("", view.author_field.get_text() );
+			Assert.equals("Add", view.add_button.label);
+			Assert.equals("Cancel", view.cancel_button.label);
 		}
 
 		public void testAddButton() {
-			view.titleField.setText("The Dragons of Eden");
-			view.authorField.setText("Carl Sagan");
-			view.addButton.doClick();
-			assertEquals(1, library.getBooksByTitle("The Dragons of Eden").size());
-			assertEquals( "", view.titleField.getText() );
-			assertEquals( "", view.authorField.getText() );
-			assertFalse( view.isVisible() );
+			view.title_field.set_text("The Dragons of Eden");
+			view.author_field.set_text("Carl Sagan");
+			view.add_button.clicked();
+			Assert.equals(1, library.get_books_by_title("The Dragons of Eden").size);
+			Assert.equals("", view.title_field.get_text() );
+			Assert.equals("", view.author_field.get_text() );
+			Assert.is_false(view.visible);
 		}
 
 		public void testCancelButton() {
-			view.cancelButton.doClick();
-			assertEquals( 0, library.getNumBooks() );
-			assertEquals( "", view.titleField.getText() );
-			assertEquals( "", view.authorField.getText() );
-			assertFalse( view.isVisible() );
+			view.cancel_button.clicked();
+			Assert.equals(0, library.get_num_books());
+			Assert.equals("", view.title_field.get_text());
+			Assert.equals("", view.author_field.get_text());
+			Assert.is_false(view.visible);
 		}
 
 		public void testAddDuplicateBook() {
 			addBook.add( "Solaris", "Stanislaw Lem" );
-			view.titleField.setText("Solaris");
-			view.authorField.setText("Stanislaw Lem");
-			view.addButton.doClick();
-			assertEquals( "Solaris", view.titleField.getText() );
-			assertEquals( "Stanislaw Lem", view.authorField.getText() );
-			assertTrue( view.isVisible() );
+			view.title_field.set_text("Solaris");
+			view.author_field.set_text("Stanislaw Lem");
+			view.add_button.clicked();
+			Assert.equals("Solaris", view.title_field.get_text() );
+			Assert.equals("Stanislaw Lem", view.author_field.get_text() );
+			Assert.is_true(view.visible);
 		}
 	}
 }

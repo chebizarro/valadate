@@ -10,4 +10,6 @@ RUN apt-get update && apt-get install -y \
 	lcov \
 	libxml2-dev \
 	gtk-doc-tools \
-	packaging-dev
+	packaging-dev \
+	libjson-glib-dev \
+	libxslt1-dev

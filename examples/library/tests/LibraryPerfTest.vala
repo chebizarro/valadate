@@ -22,14 +22,14 @@ namespace Library {
 
 		public void testPerfGetBooksByTitle() {
 			long startTime = System.currentTimeMillis();
-			Vector books = library.getBooksByTitle( "book99999" );
+			Vector books = library.get_books_by_title( "book99999" );
 			long endTime = System.currentTimeMillis();
 			long time = endTime-startTime;
 			System.out.println("time="+time);
-			assertTrue( time < maxTime );
-			assertEquals( 1, books.size() );
+			Assert.is_true(time < maxTime );
+			Assert.equals(1, books.size() );
 			Book book = (Book)books.elementAt(0);
-			assertEquals( "book99999", book.getTitle() );
+			Assert.equals("book99999", book.getTitle() );
 		}
 
 		public void testPerfGetBooksByAuthor() {
@@ -38,10 +38,10 @@ namespace Library {
 			long endTime = System.currentTimeMillis();
 			long time = endTime-startTime;
 			System.out.println("time="+time);
-			assertTrue( time < maxTime );
-			assertEquals( 1, books.size() );
+			Assert.is_true(time < maxTime );
+			Assert.equals(1, books.size() );
 			Book book = (Book)books.elementAt(0);
-			assertEquals( "book99999", book.getTitle() );
+			Assert.equals("book99999", book.getTitle() );
 		}
 
 		public void testPerfGetBookByTitleAuthor() {
@@ -50,7 +50,7 @@ namespace Library {
 			long endTime = System.currentTimeMillis();
 			long time = endTime-startTime;
 			System.out.println("time="+time);
-			assertTrue( time < maxTime );
+			Assert.is_true(time < maxTime );
 			assertNotNull( book );
 		}
 

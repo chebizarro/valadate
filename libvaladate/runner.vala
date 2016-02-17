@@ -136,6 +136,15 @@ namespace Valadate {
 										throw e;
 									}
 								}
+								/*
+								if(meth->get_prop("key") == "async-test.name") {
+									try {
+										unowned TestMethod method = (TestMethod)load_method(func->get_prop("identifier"));
+										test.add_test(meth->get_prop("value"), ()=> {method(test); });
+									} catch (RunError e) {
+										throw e;
+									}
+								}*/
 								meth = meth->next;
 							}
 						}

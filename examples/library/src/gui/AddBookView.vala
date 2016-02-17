@@ -1,33 +1,46 @@
 namespace Library.Gui {
 
+    [GtkTemplate (ui = "/org/gtk/library/addbookview.ui")]
 	public class AddBookView : BaseView {
 
-		protected JTextField titleField;
-		protected JTextField authorField;
-		protected JButton cancelButton;
-		protected JButton addButton;
+        [GtkChild]
+		public Gtk.Entry title_field;
+        [GtkChild]
+		public Gtk.Entry author_field;
+        [GtkChild]
+		public Gtk.Button cancel_button;
+        [GtkChild]
+		public Gtk.Button add_button;
+
 		private AddBook addBook;
 
-		AddBookView(AddBook ab) {
-			super("Add Book", 300, 140);
+		//[GtkCallback]
+		/*
+		public override void response(int response_id) {
+			
+		}*/
+
+		public AddBookView(AddBook ab) {
+			base("Add Book", 300, 140);
 			addBook = ab;
-			addButton.addActionListener( this );
-			cancelButton.addActionListener( this );
+			//add_button.addActionListener( this );
+			//cancel_button.addActionListener( this );
 		}
 
+		/*
 		public void actionPerformed(ActionEvent e) {
 			string cmd = e.getActionCommand();
 			System.out.println(cmd);
 			if ( cmd.equals("Add") ) {
-				if ( addBook.add(titleField.getText(), 
-									  authorField.getText()) ) {
-					titleField.setText("");
-					authorField.setText("");
+				if ( addBook.add(title_field.get_text(), 
+									  author_field.get_text()) ) {
+					title_field.set_text("");
+					author_field.set_text("");
 					hide();
 				}
 			} else if ( cmd.equals("Cancel") ) {
-				titleField.setText("");
-				authorField.setText("");
+				title_field.set_text("");
+				author_field.set_text("");
 				hide();
 			}
 			else
@@ -45,27 +58,27 @@ namespace Library.Gui {
 			c.gridx = 0;
 			c.gridy = 0;
 			contentPane.add(label1, c);
-			titleField = new JTextField("", 60);
-			titleField.setMinimumSize(new Dimension(180, 30));
+			title_field = new Gtk.Entry("", 60);
+			title_field.setMinimumSize(new Dimension(180, 30));
 			c.gridx = 1;
-			contentPane.add(titleField, c);
+			contentPane.add(title_field, c);
 			JLabel label2 = new JLabel("Author", Label.RIGHT);
 			c.gridx = 0;
 			c.gridy = 1;
 			contentPane.add(label2, c);
-			authorField = new JTextField("", 60);
-			authorField.setMinimumSize(new Dimension(180, 30));
+			author_field = new Gtk.Entry("", 60);
+			author_field.setMinimumSize(new Dimension(180, 30));
 			c.gridx = 1;
-			contentPane.add(authorField, c);
+			contentPane.add(author_field, c);
 			// Add buttons
-			cancelButton = new JButton("Cancel");
+			cancel_button = new Gtk.Button("Cancel");
 			c.gridx = 0;
 			c.gridy = 2;
-			contentPane.add(cancelButton, c);
-			addButton = new JButton("Add");
+			contentPane.add(cancel_button, c);
+			add_button = new Gtk.Button("Add");
 			c.gridx = 1;
-			contentPane.add(addButton, c);
+			contentPane.add(add_button, c);
 		}
-
+		*/
 	}
 }

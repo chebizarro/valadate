@@ -11,34 +11,24 @@ tests_PIE_0_SOURCES =  \
 	testpie.vala
 	
 tests_PIE_0_VALAFLAGS = \
-	-C \
-	$(VALADATE_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
+	$(TESTS_VALAFLAGS) \
+	--pkg gmodule-2.0 \
 	--gir tests_PIE-0.gir \
-	--library tests_PIE \
-	--shared-library tests_PIE \
-	--target-glib=2.40.0 \
-	--pkg gio-2.0 \
-	-g
+	--library tests_PIE
 
-tests_PIE_0_LDFLAGS =  \
-	-fPIE
+#tests_PIE_0_LDFLAGS =  -fPIE
 
 tests_PIE_0_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(TESTS_LIBS) \
+	-lgio-2.0
 
 tests_PIE_0_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS) \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(TESTS_CPPFLAGS) \
 	-fPIE
 	
-tests_PIE_0_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
-	-pie \
-	-fPIE \
-	-shared
+tests_PIE_0_CFLAGS = \
+	$(TESTS_CFLAGS) \
+	-pie
 
 # testload_PIE is a test binary that attempts to load the tests_PIE binary
 
@@ -52,14 +42,7 @@ testload_PIE_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
 	--gir testload_PIE-0.gir \
-	--library testload_PIE \
-	--shared-library testload_PIE \
-	--pkg gmodule-2.0 \
-	--pkg gio-2.0 \
-	--pkg config \
-	--vapidir $(top_builddir)/vapi \
-	--target-glib=2.40.0 \
-	-g
+	--library testload_PIE
 
 testload_PIE_0_LDADD = \
 	$(VALADATE_LIBS) \

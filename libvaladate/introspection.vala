@@ -16,149 +16,216 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+[ CCode ( gir_version = "1.0", gir_namespace = "Valadate") ]
 namespace Valadate.Introspection {
 
-	public class Introspection : Object {
-		
-		public delegate Object CreateTestObject();
-		public delegate void TestMethod(TestCase self);
-		
-		private Module module;
-		private string path;
-		private Test[] _tests;
-		private Xml.Doc* gir;
-		
-		public Test[] tests {
-			get {
-				return _tests;
-			}
-		}
-		
-		public TextRunner(string path) {
-			this.path = path;
-		}
-		
-		~TextRunner() {
-			delete gir;
-		}
-		
-		public void load() throws RunError {
-			try {
-				load_module();
-				load_gir();
-				load_tests();
-			} catch (RunError err) {
-				throw err;
-			}
-		}
-		
-		public void load_module() throws RunError
-			requires(this.path != null)
-		{
-			var modname = path; //.replace(".so","");
-			module = Module.open (modname, ModuleFlags.BIND_LOCAL);
-			if (module == null)
-				throw new RunError.MODULE(Module.error());
-			module.make_resident();
-		}
-		
-		public void load_gir() throws RunError
-			requires(this.path != null)
-			requires(this.module != null)
-		{
-			var girpath = path.replace(".libs/lt-","") + "-0.gir";
-			
-			gir = Xml.Parser.parse_file (girpath);
-			if (gir == null)
-				throw new RunError.GIR("Gir for %s not found", path);
-			
-		}
-
-		private void* load_method(string method_name) throws RunError {
-			void* function;
-			if(module.symbol (method_name, out function))
-				if (function != null)
-					return function;
-			throw new RunError.METHOD(Module.error());
-		}
-		
-		public void load_tests() throws RunError
-			requires(this.module != null)
-		{
-
-			string ns = "'http://www.gtk.org/introspection/core/1.0'";
-			string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.TestCase']";
-			xpath += @"/*[local-name()='constructor' and namespace-uri()=$ns]";
-			Xml.XPath.Context cntx = new Xml.XPath.Context (gir);
-			Xml.XPath.Object* res = cntx.eval_expression (xpath);
-
-			if (res == null ||
-				res->type != Xml.XPath.ObjectType.NODESET ||
-				res->nodesetval == null ||
-				res->nodesetval->length() <= 0 )
-				throw new RunError.TESTS("No TestCases were found");
-
-			for (int i = 0; i < res->nodesetval->length (); i++) {
-				Xml.Node* node = res->nodesetval->item (i);
-				var gtype = node->get_prop("identifier");
-				if(gtype == null)
-					throw new RunError.TESTS("No Constructor found!");
-				unowned CreateTestObject create = (CreateTestObject)load_method(gtype);
-
-				Valadate.TestCase test = create() as Valadate.TestCase;
-				
-				if (test == null)
-					throw new RunError.TESTS("Error creating test");
-				
-				_tests += test;
-				
-				Xml.Node* func = node->parent->children;
-				if (func == null)
-					throw new RunError.TESTS("No Unit Tests were found");
-
-				while(func != null) {
-					if (func->name == "method") {
-						if(func->children != null) {
-							Xml.Node* meth = func->children;
-							while (meth != null) {
-								if(meth->get_prop("key") == "test.name") {
-									try {
-										unowned TestMethod method = (TestMethod)load_method(func->get_prop("identifier"));
-										test.add_test(meth->get_prop("value"), ()=> {method(test); });
-									} catch (RunError e) {
-										throw e;
-									}
-								}
-								meth = meth->next;
-							}
-						}
-					}
-					func = func->next;
-				}
-			}
-			delete res;
-		}
+	public errordomain Error {
+		MODULE,
+		GIR,
+		TESTS,
+		METHOD
 	}
 
-	public int main (string[] args) {
+	private Module[] modules;
 
-		TextRunner runner = new TextRunner(args[0]);
+	private Class[] classes;
 
-		GLib.Test.init (ref args);
+	public static Module[] get_modules() {
+		return modules;
+	}
 
-		try {
-			runner.load();
-		} catch (RunError err) {
-			debug(err.message);
-			return -1;
-		}
+	public static void add_repository(string libpath, string girpath) throws Error {
+		if (modules == null)
+			modules = {};
 
-		foreach (Test test in runner.tests)
-			GLib.TestSuite.get_root().add_suite(((TestCase)test).suite);
+		Module module = new Module(libpath, girpath);
+		module.load_module();
+		module.load_gir();
+		modules += module;
+	}
 
-		GLib.Test.run ();
-		return 0;
+	public static Class get_class_info(Type type) {
+		return null;
+	}
+	
+
+	public class TypeInfo : Object {
+		public string name {get;internal set;}
 		
 	}
+
+
+	public class Class : Object {
+		public string name {get;internal set;}
+		public string type_name {get;internal set;}
+		public string type_struct {get;internal set;}
+		public string parent {get;internal set;}
+		public Method constructor {get;internal set;}
+		//public Method[] methods {get;internal set;}
+		//internal Method method {get;set;}
+
+	}
+	
+	public class Method : Object {
+		public string name {get;internal set;}
+		public string identifier {get;internal set;}
+		public Parameter return_value {get;internal set;}
+		
+	}
+	
+	public class Field : Object {
+		
+	}
+	
+	
+	public class Parameter : Object {
+		public string transfer_ownership {get;internal set;}
+		
+		
+	}
+
+	public class Annotation : Object {
+		public string key {get;internal set;}
+		public string value {get;internal set;}
+	}
+
+
+	internal class Namespace : Object, Json.Serializable {
+		public string name {get;internal set;}
+		public string version {get;internal set;}
+		public string prefix {get;internal set;}
+		internal Annotation annotation {get;set;}
+		public Annotation[] annotations {get;internal set;}
+		internal Class class {get;set;}
+		public Class[] classes {get;internal set;}
+
+		/*
+		static T[] deserialize_array<T>(out GLib.Value value, Json.Node node) {
+			var node_array = node.get_array();
+			var new_array = new T[node_array.get_length()];
+			int i =0;
+			node_array.foreach_element ((a,i,n) => {
+				new_array[i] = (T)Json.gobject_deserialize(typeof(T), n);
+				i++;
+			});
+			value.init_from_instance(new_array[0]);
+			return new_array;
+		}
+*/
+		/**
+		 * Json.Serializable interface implementation
+		 */
+		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
+			return default_serialize_property (property_name, value, pspec);
+		}
+
+		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node) {
+			message(property_name);
+
+			if (pspec.value_type == typeof(string)) {
+				value.init(typeof(string));
+				value.set_string(property_node.get_string());
+				return true;
+			}
+			
+			if (property_name == "annotation") {
+				Annotation[] incl = {};
+				var array = property_node.get_array();
+				array.foreach_element ((a,i,n) => {
+					incl += Json.gobject_deserialize(typeof(Annotation), n) as Annotation;
+				});
+				annotations = incl;
+				value.init_from_instance(incl[0]);
+				return true;
+			}
+
+			if (property_name == "class") {
+				//classes = deserialize_array(out value, property_node);
+				//return true;
+				Class[] incl = {};
+				var array = property_node.get_array();
+				array.foreach_element ((a,i,n) => {
+					incl += Json.gobject_deserialize(typeof(Class), n) as Class;
+				});
+				classes = incl;
+				value.init_from_instance(incl[0]);
+				return true;
+			}
+			
+			return default_deserialize_property (property_name, value, pspec, property_node);
+		}
+
+		public unowned GLib.ParamSpec find_property (string name) {
+			message(name);
+			GLib.Type type = this.get_type();
+			GLib.ObjectClass ocl = (GLib.ObjectClass)type.class_ref();
+			unowned GLib.ParamSpec? spec;
+			if (name == "annotation")
+				spec = ocl.find_property ("annotations"); 
+			else
+				spec = ocl.find_property (name); 
+			return spec;
+		}		
+	}
+
+	public class Repository : Object, Json.Serializable {
+		
+		public class Include : Object {
+			public string name {get;set;}
+			public string version {get;set;}
+		}
+
+		public class Package : Object {
+			public string name {get;set;}
+		}
+		
+		internal Include include {get;set;}
+
+		public Package package {get;internal set;}
+		public Include[] includes {get;internal set;} 
+		internal Namespace namespace {get;internal set;}
+
+		/**
+		 * Json.Serializable interface implementation
+		 */
+		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
+			return default_serialize_property (property_name, value, pspec);
+		}
+
+		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node) {
+			
+			if (property_name == "include") {
+				Include[] incl = {};
+				var array = property_node.get_array();
+				array.foreach_element ((a,i,n) => {
+					incl += Json.gobject_deserialize(typeof(Include), n) as Include;
+				});
+				includes = incl;
+				value.init_from_instance(incl[0]);
+				return true;
+			}
+			
+			if (property_name == "package") {
+				value.init_from_instance(Json.gobject_deserialize(typeof(Package), property_node) as Package);
+				return true;
+			}
+			
+			if (property_name == "namespace") {
+				value.init_from_instance(Json.gobject_deserialize(typeof(Namespace), property_node) as Namespace);
+				return true;
+			}
+		
+			return default_deserialize_property (property_name, value, pspec, property_node);
+		}
+
+		public unowned GLib.ParamSpec find_property (string name) {
+			GLib.Type type = this.get_type();
+			GLib.ObjectClass ocl = (GLib.ObjectClass)type.class_ref();
+			unowned GLib.ParamSpec? spec = ocl.find_property (name); 
+			return spec;
+		}
+		
+	}
+
 
 }

@@ -1,26 +1,72 @@
+VALADATE_LIB_PATHS = \
+	$(top_srcdir) \
+	$(top_builddir)/vapi \
+	$(top_builddir)/libvaladate
+
+VALADATE_VALAFLAGS = \
+	--vapidir $(top_builddir)/vapi \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg libxml-2.0 \
+	--pkg libxslt \
+	--pkg json-glib-1.0 \
+	--pkg gmodule-2.0 \
+	--pkg posix \
+	--pkg config \
+	--target-glib=2.40.0 \
+	-g
+
+VALADATE_CPPFLAGS = \
+	$(addprefix -I ,$(VALADATE_LIBS)) \
+	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
+
+
+TESTS_VALAFLAGS = \
+	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
+	--pkg libvaladate-1.0 \
+	--pkg config \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg json-glib-1.0 \
+	--target-glib=2.40.0 \
+	-g
+
+TESTS_CPPFLAGS = \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(addprefix -I ,$(TEST_LIBS)) \
+	`pkg-config --cflags --libs $(tests_pkg_modules) gio-2.0`
+
+TESTS_CFLAGS = \
+	-I$(top_srcdir)/libvaladate
+
+TESTS_LIBS += \
+	$(top_builddir)/libvaladate/libvaladate.la
+
+# ---- AM FLAGS ----
+
 AM_CFLAGS =	$(VALADATE_CFLAGS)
 
 AM_CPPFLAGS = \
+	$(VALADATE_CPPFLAGS) \
 	$(addprefix -I ,$(VALADATE_LIBS)) \
 	`pkg-config --cflags --libs $(pkg_modules)` \
 	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
-	-w \
-	-g \
-	$(VALADATE_CPPFLAGS)
-
+	-g
 
 AM_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
+	$(addprefix --vapidir ,$(VALADATE_LIB_PATHS)) \
 	--pkg config \
 	-g
+
 
 CLEANFILES = \
 	*.stamp \
 	*.o \
 	*.gcda \
 	*.gcno \
-	*.html \
-	*.xml
+	*.html
 
 DISTCLEANFILES = $(CLEANFILES)
 

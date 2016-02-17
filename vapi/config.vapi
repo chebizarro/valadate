@@ -7,4 +7,5 @@ namespace Config {
 	public const string PACKAGE_URL;
 	public const string VERSION;
 	public const string VALADATE_TESTS_DIR;
+	public const string VALADATE_LIB_DIR;
 }

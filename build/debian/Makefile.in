@@ -206,12 +206,41 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHTOOL = @SHTOOL@
 STRIP = @STRIP@
+TESTS_CFLAGS = \
+	-I$(top_srcdir)/libvaladate
+
+TESTS_LIBS = @TESTS_LIBS@ $(top_builddir)/libvaladate/libvaladate.la
+TESTS_VALAFLAGS = \
+	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
+	--pkg libvaladate-1.0 \
+	--pkg config \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg json-glib-1.0 \
+	--target-glib=2.40.0 \
+	-g
+
 VALAC = @VALAC@
 VALADATE_CFLAGS = @VALADATE_CFLAGS@
 VALADATE_GCOV_CFLAGS = @VALADATE_GCOV_CFLAGS@
 VALADATE_GCOV_LDADD = @VALADATE_GCOV_LDADD@
 VALADATE_LIBS = @VALADATE_LIBS@
+VALADATE_LIB_DIR = @VALADATE_LIB_DIR@
 VALADATE_TESTS_DIR = @VALADATE_TESTS_DIR@
+VALADATE_VALAFLAGS = \
+	--vapidir $(top_builddir)/vapi \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg libxml-2.0 \
+	--pkg libxslt \
+	--pkg json-glib-1.0 \
+	--pkg gmodule-2.0 \
+	--pkg posix \
+	--pkg config \
+	--target-glib=2.40.0 \
+	-g
+
 VALADOC = @VALADOC@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -267,20 +296,37 @@ srcdir = @srcdir@
 subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+tests_pkg_modules = @tests_pkg_modules@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+VALADATE_LIB_PATHS = \
+	$(top_srcdir) \
+	$(top_builddir)/vapi \
+	$(top_builddir)/libvaladate
+
+VALADATE_CPPFLAGS = \
+	$(addprefix -I ,$(VALADATE_LIBS)) \
+	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
+
+TESTS_CPPFLAGS = \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(addprefix -I ,$(TEST_LIBS)) \
+	`pkg-config --cflags --libs $(tests_pkg_modules) gio-2.0`
+
+
+# ---- AM FLAGS ----
 AM_CFLAGS = $(VALADATE_CFLAGS)
 AM_CPPFLAGS = \
+	$(VALADATE_CPPFLAGS) \
 	$(addprefix -I ,$(VALADATE_LIBS)) \
 	`pkg-config --cflags --libs $(pkg_modules)` \
 	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
-	-w \
-	-g \
-	$(VALADATE_CPPFLAGS)
+	-g
 
 AM_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
+	$(addprefix --vapidir ,$(VALADATE_LIB_PATHS)) \
 	--pkg config \
 	-g
 
@@ -289,8 +335,7 @@ CLEANFILES = \
 	*.o \
 	*.gcda \
 	*.gcno \
-	*.html \
-	*.xml
+	*.html
 
 DISTCLEANFILES = $(CLEANFILES)
 NO_DIST = \

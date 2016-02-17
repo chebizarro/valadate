@@ -1,0 +1,394 @@
+{
+  "include" : [
+    {
+      "name" : "Valadate",
+      "version" : "1.0"
+    },
+    {
+      "name" : "Gio",
+      "version" : "2.0"
+    },
+    {
+      "name" : "libvaladate.h"
+    },
+    {
+      "name" : "testexe.h"
+    }
+  ],
+  "namespace" : {
+    "name" : "testexe",
+    "version" : "0",
+    "prefix" : "Valadate",
+    "annotation" : [
+      {
+        "key" : "ccode.gir-version",
+        "value" : "1.0"
+      },
+      {
+        "key" : "ccode.gir-namespace",
+        "value" : "Valadate"
+      }
+    ],
+    "class" : [
+      {
+        "name" : "TestExe",
+        "type" : "ValadateTestExe",
+        "type-name" : "ValadateTestExe",
+        "get-type" : "valadate_test_exe_get_type",
+        "type-struct" : "TestExeClass",
+        "parent" : "Valadate.TestCase",
+        "constructor" : {
+          "name" : "new",
+          "identifier" : "valadate_test_exe_new",
+          "return-value" : {
+            "transfer-ownership" : "full",
+            "type" : {
+              "name" : "Valadate.TestExe",
+              "type" : "ValadateTestExe*"
+            }
+          }
+        },
+        "field" : [
+          {
+            "name" : "parent_instance",
+            "type" : {
+              "name" : "Valadate.TestCase",
+              "type" : "ValadateTestCase"
+            }
+          },
+          {
+            "name" : "priv",
+            "type" : {
+              "name" : "TestExePrivate",
+              "type" : "ValadateTestExePrivate*"
+            }
+          }
+        ],
+        "method" : [
+          {
+            "name" : "test_one",
+            "identifier" : "valadate_test_exe_test_one",
+            "annotation" : {
+              "key" : "test.name",
+              "value" : "test_one"
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_two",
+            "identifier" : "valadate_test_exe_test_two",
+            "annotation" : {
+              "key" : "test.name",
+              "value" : "test_two"
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_async",
+            "identifier" : "valadate_test_exe_test_async",
+            "annotation" : [
+              {
+                "key" : "async-test.timeout",
+                "value" : "100000"
+              },
+              {
+                "key" : "async-test.name",
+                "value" : "test_async"
+              }
+            ],
+            "parameters" : {
+              "parameter" : [
+                {
+                  "name" : "_callback_",
+                  "transfer-ownership" : "none",
+                  "allow-none" : "1",
+                  "closure" : "1",
+                  "scope" : "async",
+                  "type" : {
+                    "name" : "Gio.AsyncReadyCallback",
+                    "type" : "GAsyncReadyCallback"
+                  }
+                },
+                {
+                  "name" : "_callback__target",
+                  "transfer-ownership" : "none",
+                  "allow-none" : "1",
+                  "type" : {
+                    "name" : "gpointer",
+                    "type" : "void*"
+                  }
+                }
+              ]
+            },
+            "return-value" : {
+              "transfer-ownership" : "none",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_finish",
+            "identifier" : "valadate_test_exe_test_finish",
+            "throws" : "1",
+            "annotation" : [
+              {
+                "key" : "async-test.timeout",
+                "value" : "100000"
+              },
+              {
+                "key" : "async-test.name",
+                "value" : "test_async"
+              }
+            ],
+            "parameters" : {
+              "parameter" : {
+                "name" : "_res_",
+                "transfer-ownership" : "none",
+                "type" : {
+                  "name" : "Gio.AsyncResult",
+                  "type" : "GAsyncResult*"
+                }
+              }
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_async_two",
+            "identifier" : "valadate_test_exe_test_async_two",
+            "annotation" : {
+              "key" : "async-test.name",
+              "value" : "test_async_two"
+            },
+            "parameters" : {
+              "parameter" : [
+                {
+                  "name" : "_callback_",
+                  "transfer-ownership" : "none",
+                  "allow-none" : "1",
+                  "closure" : "1",
+                  "scope" : "async",
+                  "type" : {
+                    "name" : "Gio.AsyncReadyCallback",
+                    "type" : "GAsyncReadyCallback"
+                  }
+                },
+                {
+                  "name" : "_callback__target",
+                  "transfer-ownership" : "none",
+                  "allow-none" : "1",
+                  "type" : {
+                    "name" : "gpointer",
+                    "type" : "void*"
+                  }
+                }
+              ]
+            },
+            "return-value" : {
+              "transfer-ownership" : "none",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_async_two_finish",
+            "identifier" : "valadate_test_exe_test_async_two_finish",
+            "throws" : "1",
+            "annotation" : {
+              "key" : "async-test.name",
+              "value" : "test_async_two"
+            },
+            "parameters" : {
+              "parameter" : {
+                "name" : "_res_",
+                "transfer-ownership" : "none",
+                "type" : {
+                  "name" : "Gio.AsyncResult",
+                  "type" : "GAsyncResult*"
+                }
+              }
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name" : "TestExeSubClass",
+        "type" : "ValadateTestExeSubClass",
+        "type-name" : "ValadateTestExeSubClass",
+        "get-type" : "valadate_test_exe_subclass_get_type",
+        "type-struct" : "TestExeSubClassClass",
+        "parent" : "Valadate.TestExe",
+        "constructor" : {
+          "name" : "new",
+          "identifier" : "valadate_test_exe_subclass_new",
+          "return-value" : {
+            "transfer-ownership" : "full",
+            "type" : {
+              "name" : "Valadate.TestExeSubClass",
+              "type" : "ValadateTestExeSubClass*"
+            }
+          }
+        },
+        "field" : [
+          {
+            "name" : "parent_instance",
+            "type" : {
+              "name" : "Valadate.TestExe",
+              "type" : "ValadateTestExe"
+            }
+          },
+          {
+            "name" : "priv",
+            "type" : {
+              "name" : "TestExeSubClassPrivate",
+              "type" : "ValadateTestExeSubClassPrivate*"
+            }
+          }
+        ]
+      },
+      {
+        "name" : "TestExeTwo",
+        "type" : "ValadateTestExeTwo",
+        "type-name" : "ValadateTestExeTwo",
+        "get-type" : "valadate_test_exe_two_get_type",
+        "type-struct" : "TestExeTwoClass",
+        "parent" : "Valadate.TestCase",
+        "constructor" : {
+          "name" : "new",
+          "identifier" : "valadate_test_exe_two_new",
+          "return-value" : {
+            "transfer-ownership" : "full",
+            "type" : {
+              "name" : "Valadate.TestExeTwo",
+              "type" : "ValadateTestExeTwo*"
+            }
+          }
+        },
+        "field" : [
+          {
+            "name" : "parent_instance",
+            "type" : {
+              "name" : "Valadate.TestCase",
+              "type" : "ValadateTestCase"
+            }
+          },
+          {
+            "name" : "priv",
+            "type" : {
+              "name" : "TestExeTwoPrivate",
+              "type" : "ValadateTestExeTwoPrivate*"
+            }
+          }
+        ],
+        "method" : [
+          {
+            "name" : "test_one",
+            "identifier" : "valadate_test_exe_two_test_one",
+            "annotation" : {
+              "key" : "test.name",
+              "value" : "test_one"
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          },
+          {
+            "name" : "test_two",
+            "identifier" : "valadate_test_exe_two_test_two",
+            "annotation" : {
+              "key" : "test.name",
+              "value" : "test_two"
+            },
+            "return-value" : {
+              "transfer-ownership" : "full",
+              "type" : {
+                "name" : "none"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "record" : [
+      {
+        "name" : "TestExeClass",
+        "type" : "ValadateTestExeClass",
+        "is-gtype-struct-for" : "TestExe",
+        "field" : {
+          "name" : "parent_class",
+          "type" : {
+            "name" : "Valadate.TestCaseClass",
+            "type" : "ValadateTestCaseClass"
+          }
+        }
+      },
+      {
+        "name" : "TestExePrivate",
+        "type" : "ValadateTestExePrivate",
+        "disguised" : "1"
+      },
+      {
+        "name" : "TestExeSubClassClass",
+        "type" : "ValadateTestExeSubClassClass",
+        "is-gtype-struct-for" : "TestExeSubClass",
+        "field" : {
+          "name" : "parent_class",
+          "type" : {
+            "name" : "Valadate.TestExeClass",
+            "type" : "ValadateTestExeClass"
+          }
+        }
+      },
+      {
+        "name" : "TestExeSubClassPrivate",
+        "type" : "ValadateTestExeSubClassPrivate",
+        "disguised" : "1"
+      },
+      {
+        "name" : "TestExeTwoClass",
+        "type" : "ValadateTestExeTwoClass",
+        "is-gtype-struct-for" : "TestExeTwo",
+        "field" : {
+          "name" : "parent_class",
+          "type" : {
+            "name" : "Valadate.TestCaseClass",
+            "type" : "ValadateTestCaseClass"
+          }
+        }
+      },
+      {
+        "name" : "TestExeTwoPrivate",
+        "type" : "ValadateTestExeTwoPrivate",
+        "disguised" : "1"
+      }
+    ]
+  },
+  "package" : {
+    "name" : "testexe"
+  }
+}

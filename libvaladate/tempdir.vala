@@ -17,6 +17,7 @@
  */
 using GLib;
 
+[ CCode ( gir_version = "1.0", gir_namespace = "Valadate") ]
 namespace Valadate.Utils {
     /**
      * Class to provide a temporary test directory to unit tests.

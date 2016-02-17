@@ -13,7 +13,7 @@ namespace Library.Gui {
 		public bool add(string title, string author) {
 			Book book = new Book( title, author );
 			try {
-				library.addBook( book );
+				library.add_book( book );
 				return true;
 			} catch (Exception e) {
 				return false;

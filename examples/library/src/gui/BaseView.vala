@@ -3,15 +3,17 @@
 
 namespace Library.Gui {
 
-	public abstract class BaseView : JFrame, ActionListener {
+	public abstract class BaseView : Gtk.Window {
 
-		BaseView(string title, int width, int height) {
-			super(title);
-			addControls();
-			setSize(width, height);
+		//string title;
+
+		public BaseView(string title, int width, int height) {
+			this.title = title;
+			//addControls();
+			set_default_size(width, height);
 		}
 
-		public abstract void actionPerformed(ActionEvent e);
-		protected abstract void addControls();
+		//public abstract void actionPerformed(ActionEvent e);
+		//protected abstract void addControls();
 	}
 }

@@ -10,26 +10,16 @@ tests_libvaladate_utils_SOURCES =  \
 	main.vala
 	
 tests_libvaladate_utils_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
-	--pkg config \
-	--vapidir $(top_builddir)/vapi \
-	--pkg gio-2.0 \
-	-g
+	$(TESTS_VALAFLAGS)
 
 tests_libvaladate_utils_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la \
-	-lgio-2.0
-
+	$(TESTS_LIBS)
 
 tests_libvaladate_utils_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS)
+	$(TESTS_CPPFLAGS)
 	
-tests_libvaladate_utils_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\"
+tests_libvaladate_utils_CFLAGS = \
+	$(TESTS_CFLAGS)
 
 CLEANFILES += \
 	$(tests_libvaladate_utils_SOURCES:.vala=.c) \

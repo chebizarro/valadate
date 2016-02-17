@@ -9,20 +9,19 @@ test_programs = testlibrary-0
 bad_sources = \
 	LibraryPerfTest.vala \
 	LibraryTests.vala \
-	LibraryDBTest.vala \
 	PerfTestSetup.vala \
-	gui/AddBookViewTest.vala \
 	gui/FindBookByTitleViewTest.vala \
-	gui/BaseViewTestCase.vala \
 	gui/LibraryFrameTest.vala \
 	gui/FindBookByTitleTest.vala \
 	gui/BookViewTest.vala \
-	gui/AddBookTest.vala \
 	gui/LibraryFrameViewTest.vala \
 	xml/XMLElementTest.vala \
 	xml/LibraryXMLDocTest.vala
 
 testlibrary_0_SOURCES =  \
+	gui/AddBookTest.vala \
+	gui/AddBookViewTest.vala \
+	gui/BaseViewTestCase.vala \
 	BookTest.vala \
 	MockLibraryDB.vala \
 	LibraryDBTest.vala \
@@ -39,6 +38,7 @@ testlibrary_0_VALAFLAGS = \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
+	--pkg gtk+-3.0 \
 	-g
 
 

@@ -10,30 +10,23 @@ testgenie.c: testgenie.gs
 testgenie_0_SOURCES = testgenie.c
 	
 testgenie_0_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	--pkg gio-2.0 \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
+	$(TESTS_VALAFLAGS) \
 	--gir testgenie-0.gir \
 	--shared-library testgenie \
-	--library testgenie \
-	--target-glib=2.40.0 \
-	-g
+	--library testgenie
 
 testgenie_0_LDFLAGS =  \
 	-fPIE
 
 testgenie_0_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(TESTS_LIBS)
 	
 testgenie_0_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS) \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(TESTS_CPPFLAGS) \
 	-fPIE
 	
-testgenie_0_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
+testgenie_0_CFLAGS = \
+	$(TESTS_CFLAGS) \
 	-pie
 	
 CLEANFILES += \

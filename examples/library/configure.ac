@@ -26,7 +26,7 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 LIBRARY_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(LIBRARY_TESTS_DIR)
 
-pkg_modules="glib-2.0 gee-0.8"
+pkg_modules="glib-2.0 gee-0.8 gtk+-3.0"
 AC_SUBST(pkg_modules)
 
 PKG_CHECK_MODULES([LIBRARY], [$pkg_modules])
