@@ -18,7 +18,6 @@
 
 using GLib;
 
-[ CCode ( gir_version = "1.0", gir_namespace = "Valadate") ]
 namespace Valadate.Utils {
 
 	public delegate bool Predicate();

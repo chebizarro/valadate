@@ -3,7 +3,7 @@ namespace Library {
 	using Valadate;
 	using Gee;
 	
-	public class LibraryDBTest : Valadate.TestCase {
+	public class LibraryDBTest : Framework.TestCase {
 
 		private LibraryDB db;
 

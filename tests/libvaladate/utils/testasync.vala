@@ -1,8 +1,8 @@
-namespace Valadate.Tests.Utils {
+namespace Valadate.Utils.Tests {
 	
 	using Valadate;
 
-	public class TestAsync : TestCase {
+	public class TestAsync : Framework.TestCase {
 
 		public TestAsync() {
 			add_async_test( "AsyncWithTimeout",

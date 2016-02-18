@@ -18,57 +18,37 @@
 
 namespace Valadate.Introspection {
 
+	using Valadate.Framework;
+
 	public class Module : Object {
 		
 		private string lib_path;
-		private string gir_path;
 		private GLib.Module module;
 
-		public Module (string libpath, string girpath) {
+		public Module (string libpath) {
 			lib_path = libpath;
-			gir_path = girpath;
 		} 
 		
 		public void load_module() throws Error
 			requires(lib_path != null)
 		{
+			if (!File.new_for_path(lib_path).query_exists())
+				throw new Error.MODULE("Module: %s does not exist", lib_path);
+			
 			module = GLib.Module.open (lib_path, ModuleFlags.BIND_LOCAL);
 			if (module == null)
-				throw new RunError.MODULE(GLib.Module.error());
+				throw new Error.MODULE(GLib.Module.error());
 			module.make_resident();
 		}
-
-		public void load_gir() throws Error
-			requires(this.gir_path != null)
-			requires(this.module != null)
-		{
-
-			var output = parse_gir();
-			var repo = Json.gobject_from_data(typeof(Repository), output) as Repository;
-			
+		
+		internal void* get_method(string method_name) throws Error {
+			void* function;
+			if(module.symbol (method_name, out function))
+				if (function != null)
+					return function;
+			throw new Error.METHOD(GLib.Module.error());
 		}
 
-		internal string parse_gir() throws Error {
-			var gir = Xml.Parser.parse_file (gir_path);
-			if (gir == null)
-				throw new RunError.GIR("Gir for %s not found", gir_path);
-				
-			File xslfile = File.new_for_uri("resource:///org/valadate/lib/data/gir.xsl");
-			uint8[] contents;
-			xslfile.load_contents (null, out contents, null);
-			var xsl = Xml.Parser.parse_doc((string)contents);
-
-			var stylesheet = Xslt.parse_stylesheet_doc(xsl);
-			var result = stylesheet->apply(gir, {});
-			string output;
-			int length;
-			int res = stylesheet->save_result_to_string(out output, out length, result);
-			delete gir;
-			delete xsl;
-			delete result;
-			
-			return output;
-		}
 		
 	}
 

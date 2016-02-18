@@ -1,14 +1,16 @@
 libvaladate_sources = \
+	framework/test.vala \
+	framework/testcase.vala \
+	framework/testfixture.vala \
+	framework/testsuite.vala \
+	framework/testresult.vala \
+	framework/testrunner.vala \
+	introspection/introspection.vala \
+	introspection/module.vala \
+	introspection/namespace.vala \
+	introspection/repository.vala \
+	utils/tempdir.vala \
+	utils/wait.vala \
+	utils/signalwaiter.vala \
 	assert.vala \
-	test.vala \
-	testcase.vala \
-	testfixture.vala \
-	testsuite.vala \
-	testresult.vala \
-	testrunner.vala \
-	tempdir.vala \
-	wait.vala \
-	runner.vala \
-	signalwaiter.vala \
-	introspection.vala \
-	introspection/module.vala
+	runner.vala

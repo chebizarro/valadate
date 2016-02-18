@@ -21,7 +21,7 @@
  * 	Julien Peeters <contact@julienpeeters.fr>
  */
 
-namespace Valadate {
+namespace Valadate.Framework {
 	
 	using Valadate.Utils;
 	

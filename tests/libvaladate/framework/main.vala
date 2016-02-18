@@ -1,4 +1,4 @@
-namespace Valadate.Tests {
+namespace Valadate.Framework.Tests {
 
 	public class TestTestCase : TestCase {
 		
@@ -63,8 +63,8 @@ namespace Valadate.Tests {
 				assert_not_reached();
 			}
 			assert(runner.tests.length == 2);
-			assert(((TestCase)runner.tests[0]).name == "ValadateTestsTestExe");
-			assert(((TestCase)runner.tests[1]).name == "ValadateTestsTestExeTwo");
+			assert(((TestCase)runner.tests[0]).name == "ValadateFrameworkTestsTestExe");
+			assert(((TestCase)runner.tests[1]).name == "ValadateFrameworkTestsTestExeTwo");
 		});
 
 		GLib.Test.add_func ("/textrunner/load", () => {
@@ -78,8 +78,8 @@ namespace Valadate.Tests {
 				assert_not_reached();
 			}
 			assert(runner.tests.length == 2);
-			assert(((TestCase)runner.tests[0]).name == "ValadateTestsTestExe");
-			assert(((TestCase)runner.tests[1]).name == "ValadateTestsTestExeTwo");
+			assert(((TestCase)runner.tests[0]).name == "ValadateFrameworkTestsTestExe");
+			assert(((TestCase)runner.tests[1]).name == "ValadateFrameworkTestsTestExeTwo");
 		});
 
 		GLib.Test.add_func ("/assert/equals/string", () => {

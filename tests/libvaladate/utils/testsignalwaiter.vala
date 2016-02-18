@@ -17,7 +17,7 @@
  *
  */
 
-namespace Valadate.Tests.Utils {
+namespace Valadate.Utils.Tests {
 	
 	using Valadate;
 	using Valadate.Utils;
@@ -38,7 +38,7 @@ namespace Valadate.Tests.Utils {
 		public signal void s1();
 	}
 
-	public class TestSignalWaiter : TestCase {
+	public class TestSignalWaiter : Framework.TestCase {
 
 		public TestSignalWaiter() {
 			add_test("NoSignal", test_multi_signal_waiter_no_signal);

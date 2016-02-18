@@ -4,7 +4,7 @@ namespace Library.Gui {
 
 	using Valadate;
 
-	public class AddBookTest : Valadate.TestCase {
+	public class AddBookTest : Framework.TestCase {
 
 		private AddBook addBook;
 		private Library library;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Valadate {
+namespace Valadate.Framework {
 
 	/**
 	 * TestResult is a class used to collect unit test results. The

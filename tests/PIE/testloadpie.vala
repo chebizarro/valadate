@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate {
+namespace Valadate.Framework.Tests {
 
 	public class TestLoadPIE : TestCase {
 		
@@ -32,7 +32,7 @@ namespace Valadate {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE-0";
 			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			void* function;
-			assert(mod.symbol ("valadate_test_pie_test_pie_fail", out function));
+			assert(mod.symbol ("valadate_framework_tests_test_pie_test_pie_fail", out function));
 			assert(function != null);
 		}
 	}

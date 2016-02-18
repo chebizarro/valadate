@@ -1,4 +1,4 @@
-namespace Valadate.Tests.Utils {
+namespace Valadate.Utils.Tests {
 
 	static void main (string[] args) {
 

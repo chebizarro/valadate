@@ -178,6 +178,7 @@ CLEANFILES += \
 	$(tests_test_example_0_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \
+	tests/*.gir \
 	*.o \
 	*.gir \
 	*.gcda \

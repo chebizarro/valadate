@@ -20,9 +20,9 @@
 uses
 	Valadate
  
-namespace Valadate.Tests
+namespace Valadate.Framework.Tests
 
-	class TestGenie : Valadate.TestCase
+	class TestGenie : TestCase
 		
 		[Test (name="test_one")]
 		def test_one ()

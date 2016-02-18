@@ -24,79 +24,37 @@ namespace Valadate.Introspection.Tests {
 
 	private const string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 	private const string GIRPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/testexe-0.gir";
-	private const string XSLPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/gir.xsl";
-	private const string JSONPATH = GIRPATH + ".json";
 	
-	public class IntrospectionTest : TestCase {
+	public class IntrospectionTest : Framework.TestCase {
 		
 		public IntrospectionTest() {
-			add_test("add_repository", test_add_repository);
-			add_test("get_class", test_get_class);
+			add_test("add_package", test_add_package);
+			add_test("get_class_by_type", test_get_class_by_type);
+			add_test("get_class_by_name", test_get_class_by_name);
 		}
 		
-		public void test_add_repository() {
-			add_repository(LIBPATH, GIRPATH);
-			assert(get_modules() != null);
+		public void test_add_package() {
+			Repository.add_package(LIBPATH, GIRPATH);
 		}
 
-		public void test_get_class() {
-			add_repository(LIBPATH, GIRPATH);
-			Class class = get_class_info(typeof(TestCase));
-			//assert(class != null);
-			//assert(class is Class);
+		public void test_get_class_by_type() {
+			Repository.add_package(LIBPATH, GIRPATH);
+			Class[] class = Repository.get_class_by_type(typeof(Framework.Test));
+			message(class.length.to_string());
+			assert(class.length == 3);
+			assert(class[0].class_type.is_a(typeof(Framework.TestCase)));
+		}
+
+		public void test_get_class_by_name() {
+			Repository.add_package(LIBPATH, GIRPATH);
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExeTwo");
+			assert(class.class_type.is_a(typeof(Framework.TestCase)));
 		}
 		
 	}
-	
-    public class RepositoryTest : TestCase {
 
-		public RepositoryTest() {
-			add_test("new", test_new);
-			add_test("load_xml", test_load_xml);
-		}
 
-        public void test_new() {
-			Repository repo = new Repository();
-			assert(repo != null);
-			assert(repo is Repository);
-        }
-        
-        public void test_load_xml() {
-			var document = Xml.Parser.parse_file (GIRPATH);
-			var stylesheet = Xslt.parse_stylesheet_file(XSLPATH);
-			var result = stylesheet->apply(document, {});
-			assert(result != null);
-			//result->save_file(GIRPATH + ".json");
-
-			string output;
-			int length;
-			int res = stylesheet->save_result_to_string(out output, out length, result);
-
-			var repo = Json.gobject_from_data(typeof(Repository), output) as Repository;
-
-			assert (repo is Repository);
-			assert (repo.package.name == "testexe");
-			assert (repo.includes[0].name == "Valadate");
-			assert (repo.includes != null);
-			
-			/*
-			Json.Parser parser = new Json.Parser ();
-			parser.load_from_data (output);
-
-			Json.Generator generator = new Json.Generator ();
-			generator.pretty = true;
-			Json.Node root = parser.get_root ();
-			generator.set_root (root);
-			generator.to_file(JSONPATH);
-			*/
-			
-			delete document;
-			delete stylesheet;
-			delete result;
-		}
-    }
-
-    public class ModuleTest : TestCase {
+    public class ModuleTest : Framework.TestCase {
 
 		public ModuleTest() {
 			add_test("new", test_new);
@@ -104,13 +62,13 @@ namespace Valadate.Introspection.Tests {
 		}
 
         public void test_new() {
-			Module module = new Module(LIBPATH, GIRPATH);
+			Module module = new Module(LIBPATH);
 			assert(module != null);
 			assert(module is Module);
         }
 
         public void test_load_module() {
-			Module module = new Module(LIBPATH, GIRPATH);
+			Module module = new Module(LIBPATH);
 			module.load_module();
 			assert(module != null);
         }

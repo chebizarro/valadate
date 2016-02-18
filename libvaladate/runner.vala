@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Valadate {
+namespace Valadate.Framework {
 
 	public errordomain RunError {
 		MODULE,
@@ -94,7 +94,7 @@ namespace Valadate {
 		{
 
 			string ns = "'http://www.gtk.org/introspection/core/1.0'";
-			string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.TestCase']";
+			string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.FrameworkTestCase']";
 			xpath += @"/*[local-name()='constructor' and namespace-uri()=$ns]";
 			Xml.XPath.Context cntx = new Xml.XPath.Context (gir);
 			Xml.XPath.Object* res = cntx.eval_expression (xpath);
@@ -112,7 +112,7 @@ namespace Valadate {
 					throw new RunError.TESTS("No Constructor found!");
 				unowned CreateTestObject create = (CreateTestObject)load_method(gtype);
 
-				Valadate.TestCase test = create() as Valadate.TestCase;
+				TestCase test = create() as TestCase;
 				
 				if (test == null)
 					throw new RunError.TESTS("Error creating test");

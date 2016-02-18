@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Valadate.Tests {
+namespace Valadate.Utils.Tests {
 	
 	using Valadate;
 	using Valadate.Utils;
 	
-    public class TempDirTest : TestCase {
+    public class TempDirTest : Framework.TestCase {
 
 		public TempDirTest() {
 			add_test("store", test_store);

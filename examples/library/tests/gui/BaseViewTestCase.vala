@@ -2,7 +2,7 @@ namespace Library.Gui {
 
 	using Valadate;
 
-	public abstract class BaseViewTestCase : Valadate.TestCase {
+	public abstract class BaseViewTestCase : Framework.TestCase {
 
 		public abstract BaseView getBaseView();
 

@@ -2,7 +2,7 @@ using Valadate;
 
 namespace Library {
 
-	public class BookTest : Valadate.TestCase {
+	public class BookTest : Framework.TestCase {
 
 		[Test (name="construct_book")]
 		public void testConstructBook() {
