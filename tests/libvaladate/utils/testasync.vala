@@ -19,15 +19,16 @@ namespace Valadate.Utils.Tests {
 			var dir = File.new_for_path (Environment.get_current_dir());
 			var e = yield dir.enumerate_children_async(
 				FileAttribute.STANDARD_NAME, 0, Priority.DEFAULT, null);
+			bool found = false; 
 			while (true) {
 				var files = yield e.next_files_async(10, Priority.DEFAULT, null);
-				if (files == null) {
+				if (files == null)
 					break;
-				}
-				foreach (var info in files) {
-					message("%s\n", info.get_name());
-				}
+				foreach (var info in files)
+					if (info.get_name() == "testasync.vala")
+						found = true;
 			}
+			assert(found);
 		}
 		
 		public async void do_calc_in_bg() throws ThreadError {

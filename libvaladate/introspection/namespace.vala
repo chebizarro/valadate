@@ -26,7 +26,7 @@ namespace Valadate.Introspection.Repository {
 		public string parent {get;internal set;}
 		public Method constructor {get;internal set;}
 		public Method[] methods {get;internal set;}
-		public Method method {get;set;}
+		internal Method method {get;set;}
 
 		public string get_type_method {get;set;}
 		
@@ -46,12 +46,20 @@ namespace Valadate.Introspection.Repository {
 				value.init_from_instance(Json.gobject_deserialize(typeof(Method), property_node) as Method);
 			} else if (property_name == "method") {
 				Method[] incl = {};
-				var array = property_node.get_array();
-				array.foreach_element ((a,i,n) => {
-					incl += Json.gobject_deserialize(typeof(Method), n) as Method;
-				});
+				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
+					var meth = Json.gobject_deserialize(typeof(Method), property_node) as Method;
+					meth.class = this;
+					incl += meth;
+				} else {
+					var array = property_node.get_array();
+					array.foreach_element ((a,i,n) => {
+						var meth = Json.gobject_deserialize(typeof(Method), n) as Method;
+						meth.class = this;
+						incl += meth;
+					});
+				}
 				methods = incl;
-				value.init_from_instance(incl[0]);
+				value.init(typeof(Method));
 			} else {
 				return default_deserialize_property (property_name, value, pspec, property_node);
 			}

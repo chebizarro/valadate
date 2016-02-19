@@ -36,6 +36,7 @@ namespace Valadate.Introspection {
 	public class Class : Object {
 		
 		internal delegate Type GetClassType(); 
+		internal delegate void* Constructor(); 
 		
 		public string name {get;internal set;}
 
@@ -49,7 +50,9 @@ namespace Valadate.Introspection {
 
 		internal Repository.ClassDef classdef {get;set;}
 
-		internal Module module {get{return classdef.module;}}
+		internal weak Module module {get{return classdef.module;}}
+
+		private Class() {}
 
 		internal Class.from_class_def(Repository.ClassDef def) {
 			name = def.name;
@@ -61,12 +64,42 @@ namespace Valadate.Introspection {
 			_class_type = meth();
 		}
 
+		[Experimental]
+		public Method[] get_methods() {
+			return classdef.methods;
+		} 
+
+		[Experimental]
+		public void* get_method(string methodname) {
+			return module.get_method(methodname);
+		}
+
+		[Experimental]
+		public void* get_instance() {
+			unowned Constructor meth = (Constructor)module.get_method(classdef.constructor.identifier);
+			return meth();
+		}
+
 	}
 	
 	public class Method : Object {
 		public string name {get;internal set;}
 		public string identifier {get;internal set;}
 		public Parameter return_value {get;internal set;}
+		internal weak Repository.ClassDef class {get;set;}
+		
+		internal weak Module module {get{return class.module;}}
+
+		
+		[CCode ( has_target = "false" )]
+		internal delegate void* Method(void* object, ...);
+		
+		[Experimental]
+		public void* call(void* object, ...) {
+			unowned Method meth = (Method)module.get_method(identifier);
+			//var l = va_list();
+			return meth(object);
+		}
 		
 	}
 	

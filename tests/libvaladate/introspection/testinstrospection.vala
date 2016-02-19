@@ -24,35 +24,6 @@ namespace Valadate.Introspection.Tests {
 
 	private const string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
 	private const string GIRPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/testexe-0.gir";
-	
-	public class IntrospectionTest : Framework.TestCase {
-		
-		public IntrospectionTest() {
-			add_test("add_package", test_add_package);
-			add_test("get_class_by_type", test_get_class_by_type);
-			add_test("get_class_by_name", test_get_class_by_name);
-		}
-		
-		public void test_add_package() {
-			Repository.add_package(LIBPATH, GIRPATH);
-		}
-
-		public void test_get_class_by_type() {
-			Repository.add_package(LIBPATH, GIRPATH);
-			Class[] class = Repository.get_class_by_type(typeof(Framework.Test));
-			message(class.length.to_string());
-			assert(class.length == 3);
-			assert(class[0].class_type.is_a(typeof(Framework.TestCase)));
-		}
-
-		public void test_get_class_by_name() {
-			Repository.add_package(LIBPATH, GIRPATH);
-			Class class = Repository.get_class_by_name("FrameworkTestsTestExeTwo");
-			assert(class.class_type.is_a(typeof(Framework.TestCase)));
-		}
-		
-	}
-
 
     public class ModuleTest : Framework.TestCase {
 
@@ -63,14 +34,107 @@ namespace Valadate.Introspection.Tests {
 
         public void test_new() {
 			Module module = new Module(LIBPATH);
-			assert(module != null);
+
 			assert(module is Module);
         }
 
         public void test_load_module() {
 			Module module = new Module(LIBPATH);
+
 			module.load_module();
+
 			assert(module != null);
         }
     }
+
+	public class IntrospectionTest : Framework.TestCase {
+		
+		public IntrospectionTest() {
+			add_test("get_class_by_type", test_get_class_by_type);
+			add_test("get_class_by_name", test_get_class_by_name);
+			add_test("get_class_instance", test_get_class_instance);
+			add_test("get_methods", test_get_methods);
+			add_test("get_method", test_get_method);
+			add_test("call_method_one", test_call_method_one);
+			//add_test("call_method_one_with_param", test_call_method_one_with_param);
+			add_test("call_method_two", test_call_method_two);
+		}
+		
+		public override void set_up() {
+			Repository.add_package(LIBPATH, GIRPATH);
+		}
+
+		public void test_get_class_by_type() {
+			Class[] class = Repository.get_class_by_type(typeof(Framework.Test));
+			
+			assert(class.length == 3);
+			assert(class[0].class_type.is_a(typeof(Framework.TestCase)));
+		}
+
+		public void test_get_class_by_name() {
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExeTwo");
+			
+			assert(class.class_type.is_a(typeof(Framework.TestCase)));
+		}
+
+		public void test_get_methods() {
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExe");
+
+			var methods = class.get_methods();
+
+			assert(methods.length == 6);
+		}
+
+		public void test_get_method() {
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExe");
+
+			void* method = class.get_method("valadate_framework_tests_test_exe_test_one");
+			
+			assert(method != null);
+		}
+
+		public void test_get_class_instance() {
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExe");
+
+			var instance = class.get_instance() as Framework.TestCase;
+			
+			assert(instance is Framework.TestCase);
+		}
+		
+		
+		public void test_call_method_one () {
+			Class cls = Repository.get_class_by_name("FrameworkTestsTestExe");
+			var instance = cls.get_instance() as Framework.TestCase;
+			var methods = cls.get_methods();
+
+			methods[0].call(instance);
+			
+		}
+
+		public void test_call_method_one_with_param () {
+			Class cls = Repository.get_class_by_name("FrameworkTestsTestExeSubClass");
+			var instance = cls.get_instance() as Framework.TestCase;
+			var methods = cls.get_methods();
+			
+			void* i = methods[0].call(instance, 10);
+			
+			message(((int)i).to_string());
+			
+			assert((int)i == 10);
+			
+		}
+
+		internal delegate void TestMethod(Framework.TestCase self);
+
+		public void test_call_method_two () {
+			Class cls = Repository.get_class_by_name("FrameworkTestsTestExe");
+			var instance = cls.get_instance() as Framework.TestCase;
+			unowned TestMethod testmethod = (TestMethod)cls.get_method("valadate_framework_tests_test_exe_test_one");
+			
+			testmethod(instance);
+		}
+		
+	}
+
+
 }

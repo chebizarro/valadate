@@ -30,6 +30,7 @@ namespace Valadate {
 
 	public class Assert : GLib.Object {
 		
+		[Assert]
 		public static inline void equals<T>(T expected, T actual, string message = "" ) {
 			if (typeof(T) == typeof (string) &&
 				str_equal ((string) expected, (string) actual))
@@ -40,6 +41,7 @@ namespace Valadate {
 			GLib.error(@"Actual value is not the same as the expected one: $(msg)", message);
 		}
 		
+		[Assert]
 		public static void not_null<T>(T value, string message = "") {
 			if (value == null) {
 				//GLib.Test.fail();
@@ -47,6 +49,7 @@ namespace Valadate {
 			}
 		}
 
+		[Assert]
 		public static void null<T>(T value, string message = "") {
 			if (value != null) {
 				//GLib.Test.fail();
@@ -96,6 +99,7 @@ namespace Valadate {
 		 * @param actual Actual value to compare with the expected one
 		 * @param message Extra description message if both values are different
 		 **/
+		[Assert]
 		public static void are_equal<T>( T expected, T actual, string message = "" ) throws AssertError
 		{
 			if ( expected != actual )
@@ -113,6 +117,7 @@ namespace Valadate {
 		 * @param actual Actual value to compare with the not expected one
 		 * @param message Extra description message if both values are not different
 		 **/
+		[Assert]
 		public static void are_not_equal<T>( T not_expected, T actual, string message = "" ) throws AssertError
 		{
 			if ( not_expected == actual )
@@ -128,6 +133,7 @@ namespace Valadate {
 		 * @param actual Value to check if it's true or not
 		 * @param message Text message to append to error message when assert failed
 		 **/
+		[Assert]
 		public static void is_true( bool actual, string message = "" ) throws AssertError
 		{
 			if ( !actual )
@@ -140,6 +146,7 @@ namespace Valadate {
 		 * @param actual Value to check if it's false or not
 		 * @param message Text message to append to error message when assert failed
 		 **/
+		[Assert]
 		public static void is_false( bool actual, string message = "" ) throws AssertError
 		{
 			if ( actual )
@@ -151,6 +158,7 @@ namespace Valadate {
 		 *
 		 * @param message Text to append to error message
 		 **/
+		[Assert]
 		public static void fail( string message ) throws AssertError
 		{
 			throw new AssertError.UNEXPECTED_STATE( message );
@@ -166,6 +174,7 @@ namespace Valadate {
 		 * @param message Text message to append to error message when specific exception
 		 *                is not thrown.
 		 **/
+		[Assert]
 		public static void should_throw_async( AsyncBegin fbegin, AsyncFinish ffinish, string domain, string message = "" ) throws AssertError
 		{
 			try

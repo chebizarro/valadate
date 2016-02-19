@@ -15,40 +15,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-namespace Valadate.Framework.Tests {
-	
-	public class TestExe : TestCase {
-		
-		[Test (name="test_one")]
-		public void test_one () {
-			Assert.is_true(true);
-		}
 
-		[Test (name="test_two")]
-		public void test_two () {
-			assert_true(true);
-		}
-
-		[AsyncTest (name="test_async", timeout=100000)]
-		public async void test_async () throws ThreadError {
-			assert_true(true);
-		}
-
-		[AsyncTest (name="test_async_two")]
-		public async void test_async_two () throws ThreadError {
-			assert_true(true);
-		}
-		
-	}
-
-	public class TestExeSubClass : TestExe {
-
-		public void* test_method(int val) {
-			message(val.to_string());
-			return val.to_pointer();
-		}
-
-	}
-	
-}
+#define call_method(object, ...) \
+    do { \
+        fprintf(stderr, "Calling printf with fmt %s\n", format); \
+        some_other_variadac_function(format, ##__VA_ARGS__); \
+    } while(0)
