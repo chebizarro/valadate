@@ -5,15 +5,15 @@
 # Library version
 #
 # This should be incremented with every release.  See semver.org.
-set (EXAMPLE_VERSION_MAJOR    0)
-set (EXAMPLE_VERSION_MINOR    1)
-set (EXAMPLE_VERSION_REVISION 0)
+set (PARSIMONY_VERSION_MAJOR    1)
+set (PARSIMONY_VERSION_MINOR    0)
+set (PARSIMONY_VERSION_REVISION 0)
 
 # API version.
 #
 # This will go in the pkg-config and shared library names.  Should
 # only be changed if the API breaks backwards compatibility.
-set (EXAMPLE_VERSION_API      "0.8")
+set (PARSIMONY_VERSION      "1.0")
 
 # ABI version
 #
@@ -39,9 +39,9 @@ set (EXAMPLE_VERSION_API      "0.8")
 # part (API changes are a bit more complicated since we change the
 # library and pkg-config names and can reset these to whatever we
 # want, but we don't *have* to.
-set (EXAMPLE_SOVERSION_CURRENT  ${EXAMPLE_VERSION_MAJOR})
-set (EXAMPLE_SOVERSION_REVISION ${EXAMPLE_VERSION_MINOR})
-set (EXAMPLE_SOVERSION_AGE      ${EXAMPLE_VERSION_REVISION})
+set (PARSIMONY_SOVERSION_CURRENT  ${PARSIMONY_VERSION_MAJOR})
+set (PARSIMONY_SOVERSION_REVISION ${PARSIMONY_VERSION_MINOR})
+set (PARSIMONY_SOVERSION_AGE      ${PARSIMONY_VERSION_REVISION})
 
 cmake_minimum_required (VERSION 2.8.7)
 
@@ -55,7 +55,7 @@ endif ()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-project (example)
+project (parmsimony)
 
 include (GNUInstallDirs)
 include (ExtraWarningFlags)
@@ -75,19 +75,19 @@ if (MSVC)
   add_definitions (-D_CRT_SECURE_NO_WARNINGS)
 endif (MSVC)
 
-set (PACKAGE_NAME Example)
-set (EXAMPLE_TOP_SRCDIR "${PROJECT_SOURCE_DIR}")
-set (EXAMPLE_TOP_BUILDDIR "${PROJECT_BINARY_DIR}")
+set (PACKAGE_NAME Parsimony)
+set (PARSIMONY_TOP_SRCDIR "${PROJECT_SOURCE_DIR}")
+set (PARSIMONY_TOP_BUILDDIR "${PROJECT_BINARY_DIR}")
 
-set (EXAMPLE_VERSION_MAJOR 0)
-set (EXAMPLE_VERSION_MINOR 8)
-set (EXAMPLE_VERSION_REVISION 0)
-set (EXAMPLE_VERSION_API "0.8")
-set (PACKAGE_VERSION ${EXAMPLE_VERSION_MAJOR}.${EXAMPLE_VERSION_MINOR}.${EXAMPLE_VERSION_REVISION})
+set (PARSIMONY_VERSION_MAJOR 1)
+set (PARSIMONY_VERSION_MINOR 0)
+set (PARSIMONY_VERSION_REVISION 0)
+set (PARSIMONY_VERSION "1.0")
+set (PACKAGE_VERSION ${PARSIMONY_VERSION_MAJOR}.${PARSIMONY_VERSION_MINOR}.${PARSIMONY_VERSION_REVISION})
 
-set(CPACK_PACKAGE_VERSION_MAJOR ${EXAMPLE_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${EXAMPLE_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${EXAMPLE_VERSION_REVISION})
+set(CPACK_PACKAGE_VERSION_MAJOR ${PARSIMONY_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PARSIMONY_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PARSIMONY_VERSION_REVISION})
 set(CPACK_SOURCE_GENERATOR "TBZ2")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME
   "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
@@ -100,16 +100,16 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 include_directories ("${PROJECT_BINARY_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}")
 
-set (EXAMPLE_SEARCH_PATH "${SEARCH_PATH}")
+set (PARSIMONY_SEARCH_PATH "${SEARCH_PATH}")
 
 configure_file (
-    "${PROJECT_SOURCE_DIR}/example.pc.in"
-    "${PROJECT_BINARY_DIR}/example-${EXAMPLE_VERSION_API}.pc"
+    "${PROJECT_SOURCE_DIR}/parmsimony.pc.in"
+    "${PROJECT_BINARY_DIR}/parmsimony-${PARSIMONY_VERSION}.pc"
     @ONLY)
 
 
 # This only works with gcc/clang at the moment.
-function (example_set_target_visibility target visibility)
+function (parmsimony_set_target_visibility target visibility)
   set (flag "-fvisibility=${visibility}")
   string (REGEX REPLACE "[-=]+" "_" abbrev_test_name "${flag}")
 
@@ -123,7 +123,7 @@ function (example_set_target_visibility target visibility)
 
   unset (flag)
   unset (abbrev_test_name)
-endfunction (example_set_target_visibility)
+endfunction (parmsimony_set_target_visibility)
 
 if (CMAKE_BUILD_TYPE MATCHES "Release")
   global_add_compiler_flags (-O3 -flto -DNDEBUG)
@@ -153,19 +153,20 @@ if (ENABLE_COVERAGE STREQUAL "yes")
   endif ()
 endif ()
 
-function (example_target_add_coverage target)
+function (parmsimony_target_add_coverage target)
   if (ENABLE_COVERAGE STREQUAL "yes")
     set_property (TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS " -fprofile-arcs")
     set_property (TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS " -ftest-coverage")
     set_property (TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " -fprofile-arcs")
     set_property (TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " -ftest-coverage")
   endif ()
-endfunction (example_target_add_coverage)
+endfunction (parmsimony_target_add_coverage)
 
-add_subdirectory (example)
+add_subdirectory (libparmsimony)
+add_subdirectory (src)
 add_subdirectory (tests)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/example-${EXAMPLE_VERSION_API}.pc
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/parmsimony-${PARSIMONY_VERSION}.pc
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 if (ENABLE_COVERAGE STREQUAL "yes")

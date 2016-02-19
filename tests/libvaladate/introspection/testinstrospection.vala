@@ -55,6 +55,7 @@ namespace Valadate.Introspection.Tests {
 			add_test("get_class_instance", test_get_class_instance);
 			add_test("get_methods", test_get_methods);
 			add_test("get_method", test_get_method);
+			add_test("get_method_attributes", test_get_method_attributes);
 			add_test("call_method_one", test_call_method_one);
 			//add_test("call_method_one_with_param", test_call_method_one_with_param);
 			add_test("call_method_two", test_call_method_two);
@@ -66,7 +67,6 @@ namespace Valadate.Introspection.Tests {
 
 		public void test_get_class_by_type() {
 			Class[] class = Repository.get_class_by_type(typeof(Framework.Test));
-			
 			assert(class.length == 3);
 			assert(class[0].class_type.is_a(typeof(Framework.TestCase)));
 		}
@@ -91,6 +91,16 @@ namespace Valadate.Introspection.Tests {
 			void* method = class.get_method("valadate_framework_tests_test_exe_test_one");
 			
 			assert(method != null);
+		}
+
+		public void test_get_method_attributes () {
+			Class class = Repository.get_class_by_name("FrameworkTestsTestExe");
+
+			var methods = class.get_methods();
+			
+			assert(methods[0].annotations[0].key.has_prefix("test."));
+			assert(methods[2].annotations[0].key.has_prefix("async-test."));
+			assert(methods[2].annotations[1].value == "test_async");
 		}
 
 		public void test_get_class_instance() {

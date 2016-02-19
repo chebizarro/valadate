@@ -90,6 +90,7 @@ namespace Valadate.Introspection {
 		
 		internal weak Module module {get{return class.module;}}
 
+		public Annotation[] annotations {get;internal set;}
 		
 		[CCode ( has_target = "false" )]
 		internal delegate void* Method(void* object, ...);
@@ -97,8 +98,14 @@ namespace Valadate.Introspection {
 		[Experimental]
 		public void* call(void* object, ...) {
 			unowned Method meth = (Method)module.get_method(identifier);
-			//var l = va_list();
 			return meth(object);
+		}
+		
+		internal Method.from_def(Repository.MethodDef def) {
+			name = def.name;
+			identifier = def.identifier;
+			return_value = def.return_value;
+			annotations = def.annotations;
 		}
 		
 	}

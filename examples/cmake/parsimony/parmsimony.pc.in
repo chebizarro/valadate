@@ -8,5 +8,5 @@ datadir=@CMAKE_INSTALL_FULL_DATADIR@
 Name: @PACKAGE_NAME@
 Description: CMake example for the Valadate Testing Framework
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -lsquash@SQUASH_VERSION_API@
-Cflags: -I${includedir}/squash-@SQUASH_VERSION_API@
+Libs: -L${libdir} -lparmsimony@PARSIMONY_VERSION@
+Cflags: -I${includedir}/parmsimony-@PARSIMONY_VERSION@

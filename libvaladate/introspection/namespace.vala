@@ -19,6 +19,52 @@
 namespace Valadate.Introspection.Repository {
 
 
+	public class MethodDef : Object, Json.Serializable {
+		public string name {get;internal set;}
+		public string identifier {get;internal set;}
+		public Parameter return_value {get;internal set;}
+		public Annotation annotation {get;internal set;}
+		public Annotation[] annotations {get;internal set;}
+		
+		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
+			return default_serialize_property (property_name, value, pspec);
+		}
+
+		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node) {
+
+			if (pspec.value_type == typeof(string)) {
+				value.init(typeof(string));
+				value.set_string(property_node.get_string());
+			} else if (property_name == "annotation") {
+				Annotation[] incl = {};
+				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
+					incl += Json.gobject_deserialize(typeof(Annotation), property_node) as Annotation;
+				} else {
+					var array = property_node.get_array();
+					array.foreach_element ((a,i,n) => {
+						incl += Json.gobject_deserialize(typeof(Annotation), n) as Annotation;
+					});
+				}
+				annotations = incl;
+				value.init_from_instance(incl[0]);
+			} else if (property_name == "return-value") {
+				value.init_from_instance(Json.gobject_deserialize(typeof(Parameter), property_node) as Parameter);
+			} else {
+				return default_deserialize_property (property_name, value, pspec, property_node);
+			}
+			return true;
+		}
+
+		public unowned GLib.ParamSpec find_property (string name) {
+			GLib.Type type = this.get_type();
+			GLib.ObjectClass ocl = (GLib.ObjectClass)type.class_ref();
+			unowned GLib.ParamSpec? spec = ocl.find_property (name); 
+			return spec;
+		}		
+		
+	}
+
+
 	internal class ClassDef : Object, Json.Serializable {
 		public string name {get;internal set;}
 		public string type_name {get;internal set;}
@@ -26,7 +72,7 @@ namespace Valadate.Introspection.Repository {
 		public string parent {get;internal set;}
 		public Method constructor {get;internal set;}
 		public Method[] methods {get;internal set;}
-		internal Method method {get;set;}
+		internal MethodDef method {get;set;}
 
 		public string get_type_method {get;set;}
 		
@@ -47,13 +93,13 @@ namespace Valadate.Introspection.Repository {
 			} else if (property_name == "method") {
 				Method[] incl = {};
 				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
-					var meth = Json.gobject_deserialize(typeof(Method), property_node) as Method;
+					var meth = new Method.from_def(Json.gobject_deserialize(typeof(MethodDef), property_node) as MethodDef);
 					meth.class = this;
 					incl += meth;
 				} else {
 					var array = property_node.get_array();
 					array.foreach_element ((a,i,n) => {
-						var meth = Json.gobject_deserialize(typeof(Method), n) as Method;
+						var meth = new Method.from_def(Json.gobject_deserialize(typeof(MethodDef), n) as MethodDef);
 						meth.class = this;
 						incl += meth;
 					});
