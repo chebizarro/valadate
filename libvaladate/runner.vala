@@ -18,7 +18,7 @@
 
 namespace Valadate.Framework {
 
-	//using Valadate.Introspection;
+	using Valadate.Introspection;
 
 
 	public errordomain RunError {
@@ -33,10 +33,8 @@ namespace Valadate.Framework {
 		public delegate Object CreateTestObject();
 		public delegate void TestMethod(TestCase self);
 		
-		private Module module;
 		private string path;
 		private Test[] _tests;
-		private Xml.Doc* gir;
 		
 		public Test[] tests {
 			get {
@@ -48,114 +46,37 @@ namespace Valadate.Framework {
 			this.path = path;
 		}
 		
-		~TextRunner() {
-			delete gir;
-		}
 		
 		public void load() throws RunError {
 			try {
-				load_module();
-				load_gir();
+				Repository.add_package(path, path.replace(".libs/lt-","") + ".gir");
 				load_tests();
-			} catch (RunError err) {
-				throw err;
+			} catch (Valadate.Introspection.Error e) {
+				throw new RunError.MODULE(e.message);
 			}
 		}
 		
-		public void load_module() throws RunError
-			requires(this.path != null)
-		{
-			var modname = path; //.replace(".so","");
-			module = Module.open (modname, ModuleFlags.BIND_LOCAL);
-			if (module == null)
-				throw new RunError.MODULE(Module.error());
-			module.make_resident();
-		}
-		
-		public void load_gir() throws RunError
-			requires(this.path != null)
-			requires(this.module != null)
-		{
-			var girpath = path.replace(".libs/lt-","") + ".gir";
-			
-			gir = Xml.Parser.parse_file (girpath);
-			if (gir == null)
-				throw new RunError.GIR("Gir for %s not found", path);
-			
-		}
+		public void load_tests() throws RunError {
+			Class[] tests = Repository.get_class_by_type(typeof(Framework.Test));
 
-		private void* load_method(string method_name) throws RunError {
-			void* function;
-			if(module.symbol (method_name, out function))
-				if (function != null)
-					return function;
-			throw new RunError.METHOD(Module.error());
-		}
-		
-		public void load_tests() throws RunError
-			requires(this.module != null)
-		{
+			foreach (Class testcls in tests) {
+				if (testcls.abstract)
+					continue;
 
-			string ns = "'http://www.gtk.org/introspection/core/1.0'";
-			string xpath = @"//*[local-name()='class' and namespace-uri()=$ns and @parent='Valadate.FrameworkTestCase']";
-			xpath += @"/*[local-name()='constructor' and namespace-uri()=$ns]";
-			Xml.XPath.Context cntx = new Xml.XPath.Context (gir);
-			Xml.XPath.Object* res = cntx.eval_expression (xpath);
+				TestCase test = testcls.get_instance() as Framework.TestCase; 
 
-			if (res == null ||
-				res->type != Xml.XPath.ObjectType.NODESET ||
-				res->nodesetval == null ||
-				res->nodesetval->length() <= 0 )
-				throw new RunError.TESTS("No TestCases were found");
-
-			for (int i = 0; i < res->nodesetval->length (); i++) {
-				Xml.Node* node = res->nodesetval->item (i);
-				var gtype = node->get_prop("identifier");
-				if(gtype == null)
-					throw new RunError.TESTS("No Constructor found!");
-				unowned CreateTestObject create = (CreateTestObject)load_method(gtype);
-
-				TestCase test = create() as TestCase;
-				
-				if (test == null)
-					throw new RunError.TESTS("Error creating test");
-				
 				_tests += test;
-				
-				Xml.Node* func = node->parent->children;
-				if (func == null)
-					throw new RunError.TESTS("No Unit Tests were found");
 
-				while(func != null) {
-					if (func->name == "method") {
-						if(func->children != null) {
-							Xml.Node* meth = func->children;
-							while (meth != null) {
-								if(meth->get_prop("key") == "test.name") {
-									try {
-										unowned TestMethod method = (TestMethod)load_method(func->get_prop("identifier"));
-										test.add_test(meth->get_prop("value"), ()=> {method(test); });
-									} catch (RunError e) {
-										throw e;
-									}
-								}
-								/*
-								if(meth->get_prop("key") == "async-test.name") {
-									try {
-										unowned TestMethod method = (TestMethod)load_method(func->get_prop("identifier"));
-										test.add_test(meth->get_prop("value"), ()=> {method(test); });
-									} catch (RunError e) {
-										throw e;
-									}
-								}*/
-								meth = meth->next;
-							}
+				foreach (Method method in testcls.get_methods()) {
+					foreach (Annotation ano in method.annotations)
+						if (ano.key.has_prefix("test.")) {
+							unowned TestMethod testmethod = 
+								(TestMethod)testcls.get_method(method.identifier);
+							test.add_test(method.name, ()=> {testmethod(test); });
 						}
-					}
-					func = func->next;
 				}
 			}
-			delete res;
+
 		}
 	}
 

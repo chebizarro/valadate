@@ -467,7 +467,6 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(srcdir)/src_exampleapp_vala.stamp \
-	$(srcdir)/test_example-0.gir \
 	$(srcdir)/tests_test_example_0_vala.stamp \
 	$(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
@@ -779,9 +778,7 @@ tests_test_example_0_SOURCES = \
 tests_test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../libvaladate \
-	--gir test_example-0.gir \
-	--library test_example \
-	--shared-library test_example \
+	--gir=tests/test_example-0.gir \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	-g
@@ -1207,6 +1204,15 @@ tests/tests_test_example_0-example.obj: tests/example.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tests/example.c' object='tests/tests_test_example_0-example.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_test_example_0_CPPFLAGS) $(CPPFLAGS) $(tests_test_example_0_CFLAGS) $(CFLAGS) -c -o tests/tests_test_example_0-example.obj `if test -f 'tests/example.c'; then $(CYGPATH_W) 'tests/example.c'; else $(CYGPATH_W) '$(srcdir)/tests/example.c'; fi`
+$(srcdir)/tests/example.c: $(srcdir)/tests_test_example_0_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_0_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_0_vala.stamp; \
+	fi
+$(srcdir)/tests_test_example_0_vala.stamp: tests/example.vala
+	$(AM_V_at)rm -f $@ && echo stamp > $@-t
+	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(tests_test_example_0_VALAFLAGS) $(VALAFLAGS) -C tests/example.vala
+	$(AM_V_at)mv -f $@-t $@
 $(srcdir)/src/application.c: $(srcdir)/src_exampleapp_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/src_exampleapp_vala.stamp; fi
 	@if test -f $@; then :; else \
@@ -1230,20 +1236,6 @@ $(srcdir)/src/main.c: $(srcdir)/src_exampleapp_vala.stamp
 $(srcdir)/src_exampleapp_vala.stamp: src/application.vala src/application-preferences.vala src/application-window.vala src/main.vala
 	$(AM_V_at)rm -f $@ && echo stamp > $@-t
 	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(src_exampleapp_VALAFLAGS) $(VALAFLAGS) -C src/application.vala src/application-preferences.vala src/application-window.vala src/main.vala
-	$(AM_V_at)mv -f $@-t $@
-$(srcdir)/tests/example.c: $(srcdir)/tests_test_example_0_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_0_vala.stamp; fi
-	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_0_vala.stamp; \
-	fi
-$(srcdir)/test_example-0.gir: $(srcdir)/tests_test_example_0_vala.stamp
-	@if test -f $@; then :; else rm -f $(srcdir)/tests_test_example_0_vala.stamp; fi
-	@if test -f $@; then :; else \
-	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/tests_test_example_0_vala.stamp; \
-	fi
-$(srcdir)/tests_test_example_0_vala.stamp: tests/example.vala
-	$(AM_V_at)rm -f $@ && echo stamp > $@-t
-	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(tests_test_example_0_VALAFLAGS) $(VALAFLAGS) -C tests/example.vala
 	$(AM_V_at)mv -f $@-t $@
 
 mostlyclean-libtool:
@@ -1784,7 +1776,6 @@ maintainer-clean-generic:
 	-rm -f $(srcdir)/src/application.c
 	-rm -f $(srcdir)/src/main.c
 	-rm -f $(srcdir)/src_exampleapp_vala.stamp
-	-rm -f $(srcdir)/test_example-0.gir
 	-rm -f $(srcdir)/tests/example.c
 	-rm -f $(srcdir)/tests_test_example_0_vala.stamp
 	-rm -f src/application-preferences.c

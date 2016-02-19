@@ -40,6 +40,8 @@ namespace Valadate.Introspection {
 		
 		public string name {get;internal set;}
 
+		public bool abstract {get{return classdef.abstract;}}
+
 		private Type _class_type;
 
 		public Type class_type {get {

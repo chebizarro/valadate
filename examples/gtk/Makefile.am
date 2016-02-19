@@ -148,9 +148,7 @@ tests_test_example_0_SOURCES =  \
 tests_test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../libvaladate \
-	--gir test_example-0.gir \
-	--library test_example \
-	--shared-library test_example \
+	--gir=tests/test_example-0.gir \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	-g

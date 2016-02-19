@@ -19,7 +19,7 @@
 namespace Valadate.Introspection.Repository {
 
 
-	public class MethodDef : Object, Json.Serializable {
+	internal class MethodDef : Object, Json.Serializable {
 		public string name {get;internal set;}
 		public string identifier {get;internal set;}
 		public Parameter return_value {get;internal set;}
@@ -70,6 +70,7 @@ namespace Valadate.Introspection.Repository {
 		public string type_name {get;internal set;}
 		public string type_struct {get;internal set;}
 		public string parent {get;internal set;}
+		public bool abstract {get;internal set;}
 		public Method constructor {get;internal set;}
 		public Method[] methods {get;internal set;}
 		internal MethodDef method {get;set;}
@@ -90,6 +91,9 @@ namespace Valadate.Introspection.Repository {
 				value.set_string(property_node.get_string());
 			} else if (property_name == "constructor") {
 				value.init_from_instance(Json.gobject_deserialize(typeof(Method), property_node) as Method);
+			} else if (property_name == "abstract") {
+				value.init(typeof(bool));
+				value.set_boolean((property_node.get_string() == "1") ? true : false);
 			} else if (property_name == "method") {
 				Method[] incl = {};
 				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
@@ -154,9 +158,8 @@ namespace Valadate.Introspection.Repository {
 				annotations = incl;
 				value.init_from_instance(incl[0]);
 			} else if (property_name == "class") {
-				var array = property_node.get_array();
-				array.foreach_element ((a,i,n) => {
-					var cls = Json.gobject_deserialize(typeof(ClassDef), n) as ClassDef;
+				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
+					var cls = Json.gobject_deserialize(typeof(ClassDef), property_node) as ClassDef;
 					if(cls != null) {
 						if(!classes.contains(cls.name)) {
 							cls.namespace = this;
@@ -164,7 +167,19 @@ namespace Valadate.Introspection.Repository {
 							classes.insert(class.name, class);
 						}
 					}
-				});
+				} else {
+					var array = property_node.get_array();
+					array.foreach_element ((a,i,n) => {
+						var cls = Json.gobject_deserialize(typeof(ClassDef), n) as ClassDef;
+						if(cls != null) {
+							if(!classes.contains(cls.name)) {
+								cls.namespace = this;
+								var class = new Class.from_class_def(cls);
+								classes.insert(class.name, class);
+							}
+						}
+					});
+				}
 				value.init(typeof(ClassDef));
 			} else {
 				return default_deserialize_property (property_name, value, pspec, property_node);
