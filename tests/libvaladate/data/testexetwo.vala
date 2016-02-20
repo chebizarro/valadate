@@ -31,7 +31,7 @@ namespace Valadate.Framework.Tests {
 			assert_true(true);
 		}
 
-		[AsyncTest (name="test_async_with_timeout", timeout="3")]
+		[AsyncTest (name="test_async_with_timeout", timeout="25")]
 		public async void test_async_with_timeout()
 			throws GLib.Error, AssertError {
 			var dir = File.new_for_path ("/usr/bin");
