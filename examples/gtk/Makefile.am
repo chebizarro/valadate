@@ -4,7 +4,7 @@ include $(top_srcdir)/build-aux/glib-tap.mk
 ACLOCAL_AMFLAGS  = -I build-aux ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
-#SUBDIRS = . tests 
+SUBDIRS = tests 
 
 bin_PROGRAMS = src/exampleapp
 
@@ -139,38 +139,6 @@ CLEANFILES +=					\
 	$(NULL)
 endif
 
-
-test_programs = tests/test_example-0
-
-tests_test_example_0_SOURCES =  \
-	tests/example.vala
-	
-tests_test_example_0_VALAFLAGS = \
-	--pkg libvaladate-1.0 \
-	--vapidir $(abs_builddir)/../../libvaladate \
-	--gir=tests/test_example-0.gir \
-	--target-glib=2.40.0 \
-	--pkg gio-2.0 \
-	-g
-
-tests_test_example_0_LDFLAGS =  \
-	-fPIE \
-	-rdynamic
-
-tests_test_example_0_LDADD = \
-	$(EXAMPLE_LIBS) \
-	$(abs_builddir)/../../libvaladate/libvaladate.la \
-	-lgio-2.0
-
-tests_test_example_0_CPPFLAGS = \
-	$(EXAMPLE_CPPFLAGS) \
-	-fPIE
-	
-tests_test_example_0_CFLAGS = $(EXAMPLE_CFLAGS) \
-	-I$(abs_builddir)/../../libvaladate \
-	-pie \
-	-fPIE \
-	-shared
 
 CLEANFILES += \
 	$(tests_test_example_0_SOURCES:.vala=.c) \

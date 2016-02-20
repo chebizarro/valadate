@@ -10,7 +10,6 @@ test_example_0_VALAFLAGS = \
 	--vapidir $(abs_builddir)/../../../libvaladate \
 	--gir test_example-0.gir \
 	--library test_example \
-	--shared-library test_example \
 	--target-glib=2.40.0 \
 	--pkg gio-2.0 \
 	-g
@@ -33,7 +32,6 @@ test_example_0_CFLAGS = $(EXAMPLE_CFLAGS) \
 	-pie \
 	-fPIE \
 	-shared
-
 
 CLEANFILES += \
 	$(test_example_0_SOURCES:.vala=.c) \

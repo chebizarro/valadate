@@ -87,14 +87,14 @@ namespace Valadate.Framework {
 
 		public void add_async_test (
 			string name,
-			AsyncBegin async_begin,
-			AsyncFinish async_finish,
+			owned AsyncBegin async_begin,
+			owned AsyncFinish async_finish,
 			int timeout = 200)
 		{
 			var adaptor = new Adaptor (name, () => { }, this);
 			adaptor.is_async = true;
-			adaptor.async_begin = async_begin;
-			adaptor.async_finish = async_finish;
+			adaptor.async_begin = (owned)async_begin;
+			adaptor.async_finish = (owned)async_finish;
 			adaptor.async_timeout = timeout;
 			this.adaptors += adaptor;
 
@@ -104,6 +104,7 @@ namespace Valadate.Framework {
 				adaptor.run,
 				adaptor.tear_down,
 				sizeof(Adaptor)));
+
 		}
 
 
@@ -129,8 +130,8 @@ namespace Valadate.Framework {
 			private TestCase test_case;
 
 			public bool is_async = false;
-			public unowned AsyncBegin async_begin;
-			public unowned AsyncFinish async_finish;
+			public AsyncBegin async_begin;
+			public AsyncFinish async_finish;
 
 			public Adaptor (string name,
 							owned Test.TestMethod test,

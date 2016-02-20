@@ -20,9 +20,10 @@
 namespace Valadate.Introspection.Tests {
 	
 	using Valadate;
+	using Valadate.Utils;
 	using Valadate.Introspection;
 
-	private const string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
+	private const string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
 	private const string GIRPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/testexe-0.gir";
 
     public class ModuleTest : Framework.TestCase {
@@ -59,6 +60,7 @@ namespace Valadate.Introspection.Tests {
 			add_test("call_method_one", test_call_method_one);
 			//add_test("call_method_one_with_param", test_call_method_one_with_param);
 			add_test("call_method_two", test_call_method_two);
+			add_test("async_method", test_async_method);
 		}
 		
 		public override void set_up() {
@@ -142,6 +144,48 @@ namespace Valadate.Introspection.Tests {
 			unowned TestMethod testmethod = (TestMethod)cls.get_method("valadate_framework_tests_test_exe_test_one");
 			
 			testmethod(instance);
+		}
+
+		internal delegate void AsyncTestMethod(Framework.TestCase self, AsyncReadyCallback cb, void* target);
+		internal delegate void AsyncTestMethodResult(Framework.TestCase self, AsyncResult res);
+
+		public void test_async_method () {
+			Class testcls = Repository.get_class_by_name("FrameworkTestsTestExe");
+			var test = testcls.get_instance() as Framework.TestCase;
+
+			Method[] methods = new Method[2];
+			
+			foreach (Method method in testcls.get_methods()) {
+				
+				foreach (Annotation ano in method.annotations)
+					if (ano.key.has_prefix("async-test.name")) {
+						
+						if(method.parameters[0].name == "_res_")
+							methods[1] = method;
+						else
+							methods[0] = method;
+					
+						if (methods[0] != null && methods[1] != null) {
+							
+							unowned AsyncTestMethod testmethod = 
+								(AsyncTestMethod)testcls.get_method(methods[0].identifier);
+
+							unowned AsyncTestMethodResult testmethodresult = 
+								(AsyncTestMethodResult)testcls.get_method(methods[1].identifier);
+							
+							//testmethod(test, (s,r)=>{debug("Async called!");}, null);							
+							
+							assert( wait_for_async (
+								200,
+								(cb) => { testmethod(test, cb, null); },
+								(res) => { testmethodresult(test, res); }
+							));
+
+						}
+					}
+			}			
+		
+			//assert_not_reached();
 		}
 		
 	}

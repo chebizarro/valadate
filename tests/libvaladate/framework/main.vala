@@ -22,7 +22,7 @@ namespace Valadate.Framework.Tests {
 		});
 
 		GLib.Test.add_func ("/textrunner/new", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			assert(runner is TextRunner);
 		});
@@ -69,7 +69,7 @@ namespace Valadate.Framework.Tests {
 		});*/
 
 		GLib.Test.add_func ("/textrunner/load", () => {
-			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/lt-testexe-0";
+			string testexe = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
 			TextRunner runner = new TextRunner(testexe);
 			assert(runner.tests.length == 0);
 			try {

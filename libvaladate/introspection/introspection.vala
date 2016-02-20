@@ -90,6 +90,8 @@ namespace Valadate.Introspection {
 		public Parameter return_value {get;internal set;}
 		internal weak Repository.ClassDef class {get;set;}
 		
+		public Parameter[] parameters {get;internal set;}
+		
 		internal weak Module module {get{return class.module;}}
 
 		public Annotation[] annotations {get;internal set;}
@@ -108,6 +110,9 @@ namespace Valadate.Introspection {
 			identifier = def.identifier;
 			return_value = def.return_value;
 			annotations = def.annotations;
+			foreach(var annotation in annotations)
+				annotation.method = this;
+			parameters = def.params;
 		}
 		
 	}
@@ -118,6 +123,7 @@ namespace Valadate.Introspection {
 	
 	
 	public class Parameter : Object {
+		public string name {get;internal set;}
 		public string transfer_ownership {get;internal set;}
 		
 		
@@ -126,6 +132,7 @@ namespace Valadate.Introspection {
 	public class Annotation : Object {
 		public string key {get;internal set;}
 		public string value {get;internal set;}
+		internal weak Method method {get;set;}
 	}
 
 

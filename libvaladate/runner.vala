@@ -31,7 +31,9 @@ namespace Valadate.Framework {
 	public class TextRunner : Object, TestRunner {
 		
 		public delegate Object CreateTestObject();
-		public delegate void TestMethod(TestCase self);
+		public delegate void TestMethod(Framework.TestCase self);
+		public delegate void AsyncTestMethod(Framework.TestCase self, AsyncReadyCallback cb);
+		public delegate void AsyncTestMethodResult(Framework.TestCase self, AsyncResult res);
 		
 		private string path;
 		private Test[] _tests;
@@ -48,32 +50,81 @@ namespace Valadate.Framework {
 		
 		
 		public void load() throws RunError {
+			string girdir = Path.get_dirname(path).replace(".libs", "");
+			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + 
+				Path.get_basename(path).replace("lt-","") + ".gir";
+			
 			try {
-				Repository.add_package(path, path.replace(".libs/lt-","") + ".gir");
+				Repository.add_package(path, girfile);
 				load_tests();
 			} catch (Valadate.Introspection.Error e) {
 				throw new RunError.MODULE(e.message);
 			}
 		}
 		
+		
+		internal class AsyncMethod {
+			public Method begin;
+			public Method end;
+		}
+		
 		public void load_tests() throws RunError {
-			Class[] tests = Repository.get_class_by_type(typeof(Framework.Test));
+			Class[] testclasses = Repository.get_class_by_type(typeof(Framework.Test));
 
-			foreach (Class testcls in tests) {
+			foreach (Class testcls in testclasses) {
 				if (testcls.abstract)
 					continue;
 
-				TestCase test = testcls.get_instance() as Framework.TestCase; 
+				var test = testcls.get_instance() as Framework.TestCase; 
 
 				_tests += test;
 
+				HashTable<string,AsyncMethod> async_tests = 
+					new HashTable<string,AsyncMethod>(str_hash, str_equal);
+
 				foreach (Method method in testcls.get_methods()) {
-					foreach (Annotation ano in method.annotations)
-						if (ano.key.has_prefix("test.")) {
+					foreach (Annotation ano in method.annotations) {
+						int timeout = 200;
+						if (ano.key.has_prefix("test.name")) {
 							unowned TestMethod testmethod = 
 								(TestMethod)testcls.get_method(method.identifier);
 							test.add_test(method.name, ()=> {testmethod(test); });
+							continue;
+						} else if (ano.key.has_prefix("async-test.timeout")) {
+							timeout = int.parse(ano.value);
+						} else if (ano.key.has_prefix("async-test.name")) {
+							if(!async_tests.contains(ano.value))
+								async_tests.set(ano.value, new AsyncMethod());
+							
+							AsyncMethod methods = async_tests.get(ano.value);
+							
+							if(method.parameters[0].name == "_res_") {
+								methods.end = method;
+							} else {
+								methods.begin = method;
+							}
+							
+							if (methods.begin != null && methods.end != null) {
+								
+								unowned AsyncTestMethod testmethod = 
+									(AsyncTestMethod)testcls.get_method(methods.begin.identifier);
+
+								unowned AsyncTestMethodResult testmethodresult = 
+									(AsyncTestMethodResult)testcls.get_method(methods.end.identifier);
+								
+								test.add_async_test(
+									ano.value,
+									(cb) => {
+										testmethod(test, cb);
+									},
+									(res) => {
+										testmethodresult(test, res);
+									},
+									timeout
+								);
+							}
 						}
+					}
 				}
 			}
 

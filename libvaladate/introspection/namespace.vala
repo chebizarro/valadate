@@ -19,12 +19,52 @@
 namespace Valadate.Introspection.Repository {
 
 
+	internal class ParamDef : Object, Json.Serializable {
+		internal Parameter parameter {get;set;}
+		internal Parameter[] parameters {get;set;}
+
+		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
+			return default_serialize_property (property_name, value, pspec);
+		}
+
+		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node) {
+
+			if (property_name == "parameter") {
+				Parameter[] incl = {};
+				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
+					incl += Json.gobject_deserialize(typeof(Parameter), property_node) as Parameter;
+				} else {
+					var array = property_node.get_array();
+					array.foreach_element ((a,i,n) => {
+						incl += Json.gobject_deserialize(typeof(Parameter), n) as Parameter;
+					});
+				}
+				parameters = incl;
+				value.init_from_instance(incl[0]);
+			} else {
+				return default_deserialize_property (property_name, value, pspec, property_node);
+			}
+			return true;
+		}
+
+		public unowned GLib.ParamSpec find_property (string name) {
+			GLib.Type type = this.get_type();
+			GLib.ObjectClass ocl = (GLib.ObjectClass)type.class_ref();
+			unowned GLib.ParamSpec? spec = ocl.find_property (name); 
+			return spec;
+		}		
+		
+		
+	}
+
 	internal class MethodDef : Object, Json.Serializable {
-		public string name {get;internal set;}
-		public string identifier {get;internal set;}
-		public Parameter return_value {get;internal set;}
-		public Annotation annotation {get;internal set;}
-		public Annotation[] annotations {get;internal set;}
+		public string name {get;set;}
+		public string identifier {get;set;}
+		public Parameter return_value {get;set;}
+		public Parameter parameters {get;set;}
+		public Parameter[] params {get;set;}
+		public Annotation annotation {get;set;}
+		public Annotation[] annotations {get;set;}
 		
 		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
 			return default_serialize_property (property_name, value, pspec);
@@ -35,6 +75,10 @@ namespace Valadate.Introspection.Repository {
 			if (pspec.value_type == typeof(string)) {
 				value.init(typeof(string));
 				value.set_string(property_node.get_string());
+			} else if (property_name == "parameters") {
+				ParamDef param = Json.gobject_deserialize(typeof(ParamDef), property_node) as ParamDef;
+				params = param.parameters;
+				value.init_from_instance(params[0]);
 			} else if (property_name == "annotation") {
 				Annotation[] incl = {};
 				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
