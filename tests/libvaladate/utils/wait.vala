@@ -16,10 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using GLib;
 using Valadate;
 
-namespace Test {
+namespace Valadate.Utils.Tests {
     internal class Changer : Object {
         private uint timer = 0;
 
@@ -72,10 +71,20 @@ namespace Test {
     }
 
     /* Here we test the wait_* functions. */
-    public class TestWait : Object, Fixture {
+    public class TestWait : Framework.TestCase {
+		
         Changer changer = new Changer();
 
-        private void tear_down() {
+		public TestWait() {
+			add_test("wait_signal_normal", test_wait_signal_normal);
+			//add_test("wait_signal_immediate", test_wait_signal_immediate);
+			//add_test("wait_signal_fail", test_wait_signal_fail);
+			//add_test("wait_condition_normal", test_wait_condition_normal);
+			//add_test("wait_condition_immediate", test_wait_condition_immediate);
+			//add_test("wait_condition_fail", test_wait_condition_fail);
+		}
+
+        public override void tear_down() {
             // The timeout is added owned, so the object won't be
             // destroyed before it's stopped. So we have to do it
             // manually.

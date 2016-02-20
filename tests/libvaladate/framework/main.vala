@@ -90,6 +90,13 @@ namespace Valadate.Framework.Tests {
 			Assert.equals(t1, t2, "Values must be equal");
 		});
 
+		GLib.Test.add_func ("/assert/equals/int", () => {
+			int t1 = 45678;
+			int t2 = 45678;
+			
+			Assert.equals(t1, t2, "Values must be equal");
+		});
+
 		GLib.Test.add_func ("/assert/equals", () => {
 			GLib.Test.trap_subprocess("/assert/equals/subprocess", 0,0);
 			GLib.Test.trap_assert_failed();

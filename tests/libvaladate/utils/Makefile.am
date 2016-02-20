@@ -7,6 +7,7 @@ tests_libvaladate_utils_SOURCES =  \
 	testsignalwaiter.vala \
 	testtempdir.vala \
 	testasync.vala \
+	wait.vala \
 	main.vala
 	
 tests_libvaladate_utils_VALAFLAGS = \

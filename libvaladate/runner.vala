@@ -90,6 +90,9 @@ namespace Valadate.Framework {
 								(TestMethod)testcls.get_method(method.identifier);
 							test.add_test(method.name, ()=> {testmethod(test); });
 							continue;
+						} else if (ano.key.has_prefix("skip-test.name")) {
+							test.add_test(method.name, ()=> { GLib.Test.skip(@"Skipping Test $(method.name)"); });
+							continue;
 						} else if (ano.key.has_prefix("async-test.timeout")) {
 							timeout = int.parse(ano.value);
 						} else if (ano.key.has_prefix("async-test.name")) {
