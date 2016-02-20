@@ -83,8 +83,8 @@ namespace Valadate.Framework {
 					new HashTable<string,AsyncMethod>(str_hash, str_equal);
 
 				foreach (Method method in testcls.get_methods()) {
+					int timeout = 200;
 					foreach (Annotation ano in method.annotations) {
-						int timeout = 200;
 						if (ano.key.has_prefix("test.name")) {
 							unowned TestMethod testmethod = 
 								(TestMethod)testcls.get_method(method.identifier);
