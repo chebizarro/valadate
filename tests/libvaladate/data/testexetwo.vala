@@ -34,7 +34,7 @@ namespace Valadate.Framework.Tests {
 		[AsyncTest (name="test_async_with_timeout", timeout="20000")]
 		public async void test_async_with_timeout()
 			throws GLib.Error, AssertError {
-			var dir = File.new_for_path ("/usr/bin");
+			var dir = File.new_for_path (GLib.Environment.get_current_dir());
 			var e = yield dir.enumerate_children_async(
 				FileAttribute.STANDARD_NAME, 0, Priority.DEFAULT, null);
 			bool found = false; 
@@ -43,7 +43,7 @@ namespace Valadate.Framework.Tests {
 				if (files == null)
 					break;
 				foreach (var info in files)
-					if (info.get_name() == "rm")
+					if (info.get_name() == "testexetwo.vala")
 						found = true;
 			}
 			assert(found);
