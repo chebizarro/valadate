@@ -11,7 +11,7 @@ Valadate is undergoing active development, the current stable version is 1.0.0.
 | --- | --- |
 | Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
 
-### Current Features
+### Current Features ([Version 1.0](https://github.com/chebizarro/valadate/milestones/Version%201.0.0))
 
   * Automatic test discovery like JUnit or .NET testing framework.
 
@@ -23,17 +23,29 @@ Valadate is undergoing active development, the current stable version is 1.0.0.
   * Utility functions providing temporary directory to tests.
 
   * Skipped tests and expected failures.
+  
+### Planned Features ([Version 1.1](https://github.com/chebizarro/valadate/milestones/Version%201.1.0))
+
+  * Gherkin/Cucumber integration
+  
+  * GUI and CLI Test Runner
+  
+  * IDE Plugins
+  
+  * Events and notifications
+  
+  * Project Wizard
 
 ### Usage
 
-Valadate makes writing tests as simple as:
+Once correctly installed and configured, Valadate makes writing tests as simple as:
 
 ```vala
 public class TestExe : TestCase {
 	
 	[Test (name="test_one")]
 	public void test_one () {
-		Assert.is_true(true);
+		assert_true(true);
 	}
 
 	[AsyncTest (name="test_async", timeout=1000)]
@@ -43,7 +55,12 @@ public class TestExe : TestCase {
 	
 }
 ```
+
+### Documentation
+
 See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instructions on installing and setting up your toolchain with Valadate.
+
+There are a number of sample projects in the [Examples](examples) directory which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
 
 ### Follow
 
