@@ -47,14 +47,21 @@ See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instruc
 
 ### Follow
 
-* [blog](http://bit.ly/1UDpayV)
-* Waffle - [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
-* GitHub [Issues](https://github.com/chebizarro/valadate/issues)
+* [Blog](http://bit.ly/1UDpayV)
+* Waffle backlog - [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
+* GitHub [Issues](https://github.com/chebizarro/valadate/issues) - for bug/feature requests
+* IRC - #vala on GIMPnet (irc.gimp.org) - look for @bizarro
 
 ### Code of Conduct
 
 This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
 [code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
+
+### Acknowledgements
+
+Valadate was originally developed by [Jan Hudec](bulb@ucw.cz) with significant contributions from [Julien Peeters](contact@julienpeeters.fr), [Simon Busch](morphis@gravedo.de) and was most recently maintained by the [Yorba Foundation](http://yorba.org/).
+
+Special thanks to Al Thomas and Mario Daniel for feedback and inspiration, the Vala mailing list and IRC channel for help and advice and the Vala developers and maintainers for their fantastic work. Oh and to you, for reading this far and for taking an interest in our little project. I hope you find it useful!
 
 ### Copyright
 
