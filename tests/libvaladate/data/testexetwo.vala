@@ -17,7 +17,6 @@
  */
  
 namespace Valadate.Framework.Tests {
-	
 
 	public class TestExeTwo : TestCase {
 		
@@ -28,12 +27,13 @@ namespace Valadate.Framework.Tests {
 
 		[SkipTest (name="test_two")]
 		public void test_two () {
-			assert_true(true);
+			assert_true(false);
 		}
 
 		[AsyncTest (name="test_async_with_timeout", timeout="200")]
 		public async void test_async_with_timeout()
 			throws GLib.Error, AssertError {
+
 			var dir = File.new_for_path (GLib.Environment.get_current_dir());
 			var e = yield dir.enumerate_children_async(
 				FileAttribute.STANDARD_NAME, 0, Priority.DEFAULT, null);
@@ -48,8 +48,5 @@ namespace Valadate.Framework.Tests {
 			}
 			assert(found);
 		}
-
-		
 	}
-	
 }

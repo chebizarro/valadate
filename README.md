@@ -1,35 +1,19 @@
-Valadate
-========
+## Arrange >> Act >> Assert with Valadate
 
-> For Vala developers who need to test their code, Valadate is a powerful testing framework that provides behavioral, functional and unit testing features to help them write great Open Source software. Unlike other testing frameworks, Valadate is designed especially for Vala while integrating seamlessly into existing toolchains.
+For Vala developers who need to test their code, Valadate is a powerful testing framework that provides behavioral, functional and unit testing features to help them write great Open Source software. Unlike other testing frameworks, Valadate is designed especially for Vala while integrating seamlessly into existing toolchains.
 
-[![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
+[![Real example](https://github.com/chebizarro/valadate/wiki/images/valadate_screenshot.png)]()
 
-[![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/)
+## Status
+Valadate is undergoing active development, the current stable version is 1.0.0.
 
-This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
-[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
+| Platform | Status |
+| --- | --- |
+| Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
 
-You can follow Valadate's development [here](http://bit.ly/1UDpayV).
+## Current Features
 
-To build
-```
-./autogen.sh
-make
-```
-
-To run the unit tests
-```
-make check
-```
-
-## Planned Features
-
-  * Extensive documentation and sample projects
-  
   * Automatic test discovery like JUnit or .NET testing framework.
-
-  * Running tests for all parameters from specific set.
 
   * Utility functions for waiting in a main loop until specified event or
     timeout occurs.
@@ -38,23 +22,39 @@ make check
 
   * Utility functions providing temporary directory to tests.
 
-  * Automatically running each test in a separate child process.
-
-  * Running next tests even after failure.
-
   * Skipped tests and expected failures.
 
-  * Initializing test directories by extracting zip and/or tar.gz
-    archives.
+### Usage
 
-  * Generic tests.
+Valadate makes writing tests as simple as:
 
-## Dependencies
+```vala
+public class TestExe : TestCase {
+	
+	[Test (name="test_one")]
+	public void test_one () {
+		Assert.is_true(true);
+	}
 
+	[AsyncTest (name="test_async", timeout=1000)]
+	public async void test_async () throws ThreadError {
+		assert_true(true);
+	}
+	
+}
+```
+See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instructions on installing and setting up your toolchain with Valadate.
 
-  * [GLib][glib] 2.40.0 or later
-  * [Vala][vala] 0.30.0 or later
-  * [GOjbect-introspection][gir] 1.0.0 or later
+## Follow
+
+* [blog](http://bit.ly/1UDpayV)
+* Waffle - [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
+* GitHub [Issues](https://github.com/chebizarro/valadate/issues)
+
+## Code of Conduct
+
+This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
 
 ## Copyright
 
@@ -71,8 +71,4 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program in the file COPYING.  You should have received
 a copy of the GNU General Public License refered therein along with this
-program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
-
-[vala]: https://wiki.gnome.org/Projects/Vala
-[gir]: https://wiki.gnome.org/Projects/GObjectIntrospection
-[glib]: https://wiki.gnome.org/Projects/GLib
+program in the file GPL-3.  If not, see <[http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)>.
