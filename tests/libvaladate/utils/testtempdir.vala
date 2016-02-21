@@ -42,7 +42,7 @@ namespace Valadate.Utils.Tests {
         public void test_copy_file() {
             tmp.copy("readme", Config.VALADATE_TESTS_DIR + "/../README.md");
             var readme = tmp.contents("readme");
-            assert(readme.has_prefix("Valadate"));
+            assert(readme.has_prefix("## Arrange >> Act >> Assert with Valadate"));
         }
 
         public void test_shell() {

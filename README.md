@@ -4,14 +4,14 @@ For Vala developers who need to test their code, Valadate is a powerful testing 
 
 [![Real example](https://github.com/chebizarro/valadate/wiki/images/valadate_screenshot.png)]()
 
-## Status
+### Status
 Valadate is undergoing active development, the current stable version is 1.0.0.
 
 | Platform | Status |
 | --- | --- |
 | Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
 
-## Current Features
+### Current Features
 
   * Automatic test discovery like JUnit or .NET testing framework.
 
@@ -45,18 +45,18 @@ public class TestExe : TestCase {
 ```
 See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instructions on installing and setting up your toolchain with Valadate.
 
-## Follow
+### Follow
 
 * [blog](http://bit.ly/1UDpayV)
 * Waffle - [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
 * GitHub [Issues](https://github.com/chebizarro/valadate/issues)
 
-## Code of Conduct
+### Code of Conduct
 
 This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
 [code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
 
-## Copyright
+### Copyright
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published
