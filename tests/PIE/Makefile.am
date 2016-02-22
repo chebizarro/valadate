@@ -16,8 +16,6 @@ tests_PIE_0_VALAFLAGS = \
 	--gir tests_PIE-0.gir \
 	--library tests_PIE
 
-#tests_PIE_0_LDFLAGS =  -fPIE
-
 tests_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
 	-lgio-2.0
@@ -46,7 +44,7 @@ testload_PIE_0_VALAFLAGS = \
 
 testload_PIE_0_LDADD = \
 	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate.la
+	$(top_builddir)/libvaladate/libvaladate-1.0.la
 
 testload_PIE_0_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \
@@ -65,14 +63,6 @@ testload_PIE_0_LDFLAGS =  \
 CLEANFILES += \
 	$(tests_PIE_0_SOURCES:.vala=.c) \
 	$(testload_PIE_0_SOURCES:.vala=.c) \
-	*.stamp \
-	*.vapi \
-	*.o \
-	*.html \
-	*.xml \
-	*.gcda \
-	*.h \
-	*.gcno \
 	*.gir
 
 DISTCLEANFILES += $(CLEANFILES)

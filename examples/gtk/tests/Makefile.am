@@ -21,7 +21,7 @@ test_example_0_LDFLAGS =  \
 
 test_example_0_LDADD = \
 	$(EXAMPLE_LIBS) \
-	$(abs_builddir)/../../../libvaladate/libvaladate.la \
+	$(abs_builddir)/../../../libvaladate/libvaladate-1.0.la \
 	-lgio-2.0
 
 test_example_0_CPPFLAGS = \

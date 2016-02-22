@@ -31,18 +31,18 @@ libvaladate_1_0_la_LIBADD = \
 	-lgio-2.0
 
 if PLATFORM_WIN32
-libvaladate_1_0_laLDFLAGS += -no-undefined
+libvaladate_1_0_la_LDFLAGS = -no-undefined
 endif
 
 if NATIVE_WIN32
-libvaladate_1_0_laLDFLAGS += -export-dynamic
+libvaladate_1_0_la_LDFLAGS = -export-dynamic
 endif
 
-libvaladate_1_0includedir = \
-	$(includedir)/libvspec-1.0
+libvaladate_1_0_includedir = \
+	$(includedir)/libvaladate-1.0
 
-libvaladate_1_0include_HEADERS = \
-	libvspec.h
+libvaladate_1_0_include_HEADERS = \
+	libvaladate-1.0.h
 
 vapidir = \
 	$(datadir)/vala/vapi

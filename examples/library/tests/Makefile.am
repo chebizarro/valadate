@@ -49,7 +49,7 @@ testlibrary_0_LDFLAGS =  \
 
 testlibrary_0_LDADD = \
 	$(LIBRARY_LIBS) \
-	$(abs_builddir)/../../../libvaladate/libvaladate.la \
+	$(abs_builddir)/../../../libvaladate/libvaladate-1.0.la \
 	$(top_builddir)/src/liblibrary.la
 
 testlibrary_0_CPPFLAGS = \

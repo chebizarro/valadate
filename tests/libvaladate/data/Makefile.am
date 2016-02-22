@@ -16,8 +16,6 @@ testexe_0_VALAFLAGS = \
 	--library Tests \
 	--shared-library Tests
 
-#testexe_0_LDFLAGS = 
-
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
 	-lgio-2.0

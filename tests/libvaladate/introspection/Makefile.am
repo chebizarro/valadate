@@ -17,7 +17,6 @@ tests_libvaladate_introspection_VALAFLAGS = \
 tests_libvaladate_introspection_LDADD = \
 	$(TESTS_LIBS)
 
-
 tests_libvaladate_introspection_CPPFLAGS = \
 	$(TESTS_CPPFLAGS)
 	
@@ -25,12 +24,7 @@ tests_libvaladate_introspection_CFLAGS = \
 	$(TESTS_CFLAGS)
 
 CLEANFILES += \
-	$(tests_libvaladate_introspection_SOURCES:.vala=.c) \
-	*.stamp \
-	*.html \
-	*.xml \
-	*.gcda \
-	*.gcno
+	$(tests_libvaladate_introspection_SOURCES:.vala=.c)
 
 DISTCLEANFILES += $(CLEANFILES)
 
