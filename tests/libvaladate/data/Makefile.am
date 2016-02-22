@@ -13,8 +13,7 @@ testexe_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
-	--library Tests \
-	--shared-library Tests
+	--library Tests
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \

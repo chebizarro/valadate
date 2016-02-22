@@ -1,0 +1,40 @@
+Source: libvaladate-1.0
+Priority: optional
+Maintainer: Chris Daley <chebizarro@gmail.com>
+Build-Depends:
+ debhelper (>= 9),
+ dh-autoreconf,
+ autoconf,
+ autotools-dev,
+ libtool,
+ libglib2.0-dev (>= 2.40.0),
+ valac,
+ libxml2-dev,
+ libjson-glib-dev,
+ libxslt1-dev
+Standards-Version: 3.9.6
+Section: devel
+Homepage: https://github.com/chebizarro/valadate
+#Vcs-Git: git@github.com:chebizarro/valadate.git
+#Vcs-Browser: https://anonscm.debian.org/gitweb/?p=collab-maint/valadate.git;a=summary
+
+Package: libvaladate-1.0-dev
+Section: libdevel
+Architecture: any
+Depends: valadate-1.0-0 (= ${binary:Version}), ${misc:Depends}
+Description: Development files for Unit testing framework for GObject-based code - library
+ Valadate is a unit testing framework based on GLib Testing. It is primarily
+ intended for testing code written in Vala, but can be used with any
+ GObject-based code.
+
+Package: libvaladate-1.0-0
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libglib2.0-0 (>= 2.40.0),
+ libjson-glib-1.0-0,
+ libxml2,
+ libxslt1.1
+Description: Unit testing framework for GObject-based code - library
+ Valadate is a unit testing framework based on GLib Testing. It is primarily
+ intended for testing code written in Vala, but can be used with any
+ GObject-based code.
