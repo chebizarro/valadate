@@ -1,6 +1,6 @@
 include $(top_srcdir)/base.am
 
-SUBDIRS = autotools debian
+SUBDIRS = autotools
 
 NO_DIST = \
 	test-driver \

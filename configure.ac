@@ -221,7 +221,6 @@ AC_CONFIG_FILES([
 	Makefile
 	build/Makefile
 	build/autotools/Makefile
-	build/debian/Makefile
 	docs/Makefile
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
