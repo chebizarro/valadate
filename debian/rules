@@ -18,4 +18,4 @@ override_dh_autoreconf:
 #autotools-dev,
 
 %:
-	dh $@  --with autoreconf
+	dh $@  --with autotools-dev,autoreconf
