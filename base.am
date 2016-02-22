@@ -45,7 +45,11 @@ TESTS_LIBS += \
 
 # ---- AM FLAGS ----
 
-AM_CFLAGS =	$(VALADATE_CFLAGS)
+AM_CFLAGS =	\
+	$(VALADATE_CFLAGS)
+	-Wall\
+	-g
+
 
 AM_CPPFLAGS = \
 	$(VALADATE_CPPFLAGS) \

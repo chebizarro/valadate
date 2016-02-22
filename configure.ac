@@ -1,5 +1,5 @@
 AC_PREREQ(2.63)
-AC_INIT([valadate],
+AC_INIT([valadate-1.0],
         [1.0.0],
         [https://github.com/chebizarro/valadate/issues],
         [valadate],
@@ -23,7 +23,7 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 dnl ***************************************************************************
-dnl Check for Windows
+dnl Check for OS
 dnl ***************************************************************************
 AC_CANONICAL_HOST
 
@@ -31,21 +31,38 @@ case $host_os in
   *mingw*)
     platform_win32=yes
     native_win32=yes
+    platform_darwin=no
+    platform_linux=no
+    ;;
+  *darwin*)
+    platform_win32=no
+    native_win32=no
+    platform_darwin=yes
+    platform_linux=no
+    ;;
+  *linux*)
+    platform_win32=no
+    native_win32=no
+    platform_darwin=no
+    platform_linux=yes
     ;;
   pw32* | *cygwin*)
     platform_win32=yes
     native_win32=no
+    platform_darwin=no
+    platform_linux=no
     ;;
   *)
-    platform_win32=no
-    native_win32=no
+    AC_MSG_ERROR([OS $host_os is currently not supported])
     ;;
 esac
 AM_CONDITIONAL(PLATFORM_WIN32, test x"$platform_win32" = "xyes")
 AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
+AM_CONDITIONAL(PLATFORM_DARWIN, test x"$platform_darwin" = "xyes")
+AM_CONDITIONAL(PLATFORM_LINUX, test x"$platform_linux" = "xyes")
 
 LT_PREREQ([2.2.6])
-LT_INIT([disable-static])
+LT_INIT([disable-static win32-dll])
 
 GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 

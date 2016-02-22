@@ -31,6 +31,7 @@ testlibrary_0_VALAFLAGS = \
 	$(LIBRARY_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
+	--vapidir $(abs_builddir)/../../../vapi \
 	--pkg liblibrary-1.0 \
 	--vapidir $(top_srcdir)/src \
 	--gir testlibrary-0.gir \

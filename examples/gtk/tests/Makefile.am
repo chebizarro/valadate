@@ -8,6 +8,7 @@ test_example_0_SOURCES =  \
 test_example_0_VALAFLAGS = \
 	--pkg libvaladate-1.0 \
 	--vapidir $(abs_builddir)/../../../libvaladate \
+	--vapidir $(abs_builddir)/../../../vapi \
 	--gir test_example-0.gir \
 	--library test_example \
 	--target-glib=2.40.0 \
