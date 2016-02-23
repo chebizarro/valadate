@@ -5,7 +5,7 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # tests_PIE is a test binary compiled as a PIE
 
-test_programs = tests_PIE-0
+test_programs = tests_PIE-0 testload_PIE-0
 
 tests_PIE_0_SOURCES =  \
 	testpie.vala
@@ -30,35 +30,29 @@ tests_PIE_0_CFLAGS = \
 
 # testload_PIE is a test binary that attempts to load the tests_PIE binary
 
-test_programs += testload_PIE-0
-
 testload_PIE_0_SOURCES =  \
 	testloadpie.vala
 	
 testload_PIE_0_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
+	$(TESTS_VALAFLAGS) \
+	--pkg gmodule-2.0 \
 	--gir testload_PIE-0.gir \
 	--library testload_PIE
 
 testload_PIE_0_LDADD = \
-	$(VALADATE_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate-1.0.la
-
+	$(TESTS_LIBS) \
+	-lgio-2.0
+	
 testload_PIE_0_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS) \
+	$(TESTS_CPPFLAGS) \
+	-fPIE \
 	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\"
 	
-testload_PIE_0_CFLAGS = $(VALADATE_CFLAGS) \
-	-I$(top_srcdir)/libvaladate \
-	-I$(top_srcdir) \
-	-pie \
-	-fPIE \
-	-shared
+testload_PIE_0_CFLAGS = \
+	$(TESTS_CFLAGS) \
+	-pie
 
-testload_PIE_0_LDFLAGS =  \
-	-fPIE
+#testload_PIE_0_LDFLAGS =  \ -fPIE
 
 CLEANFILES += \
 	$(tests_PIE_0_SOURCES:.vala=.c) \
