@@ -12,4 +12,7 @@ RUN apt-get update && apt-get install -y \
 	gtk-doc-tools \
 	packaging-dev \
 	libjson-glib-dev \
-	libxslt1-dev
+	libxslt1-dev \
+	git-buildpackage
+
+ADD ./jenkins /etc/sudoers.d/jenkins/
