@@ -29,9 +29,8 @@ RUN chown jenkins /srv/repository
 RUN git config --global user.email "jenkins@example.org"
 RUN git config --global user.name "Jenkins User"
 
+ADD ./jenkins-debian.list /etc/apt/sources.list.d/
 
-RUN deb     http://jenkins.grml.org/debian jenkins-debian-glue main
-RUN deb-src http://jenkins.grml.org/debian jenkins-debian-glue main
 RUN wget -O - http://jenkins.grml.org/debian/C525F56752D4A654.asc | sudo apt-key add -
 
 RUN sudo apt-get update && sudo apt-get install -y \
