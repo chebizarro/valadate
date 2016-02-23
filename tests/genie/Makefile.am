@@ -14,9 +14,6 @@ testgenie_0_VALAFLAGS = \
 	--gir testgenie-0.gir \
 	--library testgenie
 
-testgenie_0_LDFLAGS =  \
-	-fPIE
-
 testgenie_0_LDADD = \
 	$(TESTS_LIBS)
 	

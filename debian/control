@@ -29,7 +29,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  libjson-glib-1.0-0,
  libxml2,
  libxslt1.1
-Description: Unit testing framework for GObject-based code - library
+Description: Unit testing framework for GObject-based code
  For Vala developers who need to test their code, Valadate is a powerful
  testing framework that provides behavioral, functional and unit testing
  features to help them write great Open Source software. Unlike other testing

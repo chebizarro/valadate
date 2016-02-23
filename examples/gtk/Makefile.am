@@ -141,6 +141,7 @@ endif
 
 
 CLEANFILES += \
+	$(src_exampleapp_SOURCES:.vala=.c) \
 	$(tests_test_example_0_SOURCES:.vala=.c) \
 	*.stamp \
 	*.vapi \

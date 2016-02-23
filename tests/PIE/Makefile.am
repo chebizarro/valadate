@@ -40,7 +40,7 @@ testload_PIE_0_VALAFLAGS = \
 	--library testload_PIE
 
 if PLATFORM_DARWIN
-testload_PIE_0_VALAFLAGS += -D MACOSX \
+testload_PIE_0_VALAFLAGS += -D MACOSX
 endif
 
 testload_PIE_0_LDADD = \

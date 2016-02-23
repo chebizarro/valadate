@@ -8,10 +8,14 @@ EXTRA_DIST = \
 	$(INTLTOOL_FILES) \
 	autogen.sh
 
-SUBDIRS = build libvaladate docs tests vapi
+SUBDIRS = build libvaladate tests vapi
 
 if ENABLE_EXAMPLES
 SUBDIRS += examples
+endif
+
+if ENABLE_DOCS
+SUBDIRS += docs
 endif
 
 -include $(top_srcdir)/git.mk

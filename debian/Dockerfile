@@ -23,7 +23,7 @@ ADD ./jenkins-debian.list /etc/apt/sources.list.d/
 RUN wget -O - http://jenkins.grml.org/debian/C525F56752D4A654.asc | sudo apt-key add -
 
 RUN apt-get update && apt-get install -y \
-	jenkins-debian-glue
+	jenkins-debian-glue jenkins-debian-glue-buildenv-lintian
 
 RUN adduser --quiet jenkins
 RUN echo "jenkins:jenkins" | chpasswd && adduser jenkins sudo

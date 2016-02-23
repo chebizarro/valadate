@@ -675,6 +675,7 @@ NULL =
 BUILT_SOURCES = 
 BUILT_EXTRA_DIST = 
 CLEANFILES = *.log *.trs $(am__append_13) $(am__append_14) \
+	$(src_exampleapp_SOURCES:.vala=.c) \
 	$(tests_test_example_0_SOURCES:.vala=.c) *.stamp *.vapi \
 	tests/*.gir *.o *.gir *.gcda *.gcno
 DISTCLEANFILES = $(data_desktop_DATA) $(NULL) $(CLEANFILES)

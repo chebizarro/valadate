@@ -64,7 +64,7 @@ AM_CONDITIONAL(PLATFORM_LINUX, test x"$platform_linux" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static win32-dll])
 
-GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
+dnl GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
@@ -86,7 +86,7 @@ AC_SUBST(VALADATE_CFLAGS)
 AC_SUBST(VALADATE_VALAFLAGS)
 AC_SUBST(VALADATE_LIBS)
 
-dnl === Valadate Tests =======================================================
+dnl === Valadate Tests ======================================================
 
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)
@@ -101,24 +101,18 @@ AC_SUBST(TESTS_CFLAGS)
 AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
 
-dnl === Valadoc ==============================================================
+dnl === Build Docs ============================================================
 
 AC_ARG_ENABLE(valadoc,
-	AS_HELP_STRING([--enable-valadoc[=@<:@no/auto/yes@:>@]], [Enable valadoc support]),,
-		[enable_valadoc=auto])
+	AS_HELP_STRING([--enable-build-docs[=@<:@no/auto/yes@:>@]], [Enable building docs]),,
+		[enable_docs=auto])
 
-found_valadoc=no
-AS_IF([test "x$enable_valadoc" != "xno"], [
-		AC_PATH_PROG(VALADOC, valadoc, :)
-		AS_IF([test -x "$VALADOC"], [
-		found_valadoc=yes
-		AC_SUBST(VALADOC)
-		], [
-		AS_IF([test "x$enable_valadoc" == "xyes"], AC_MSG_ERROR([Unable to find valadoc]))
-		])
+AM_CONDITIONAL(ENABLE_DOCS, test x$enable_docs = xyes)
+
+AS_IF([test "x$enable_docs" != "xno"], [
+	AC_CONFIG_SUBDIRS([docs])
 	])
 
-AM_CONDITIONAL(ENABLE_VALADOC, test x$found_valadoc = xyes)
 
 dnl === Test suite ============================================================
 
@@ -203,6 +197,7 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
 
+dnl === Examples ============================================================
 
 AC_ARG_ENABLE([build-examples],
               [AS_HELP_STRING([--enable-build-examples], [Enable building examples])],
@@ -216,6 +211,9 @@ AS_IF([test "x$build_examples" != "xno"], [
 AM_CONDITIONAL(ENABLE_EXAMPLES, test x$build_examples = xyes)
 
 dnl GOBJECT_INTROSPECTION_CHECK([1.30.0])
+
+
+dnl === Makefiles ============================================================
 
 AC_CONFIG_FILES([
 	Makefile
@@ -255,6 +253,6 @@ echo " • Vala flags: ${VALADATE_VALAFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
-echo " • Enable valadoc: ${found_valadoc}"
+echo " • Build docs: ${enable_docs}"
 echo " • Build examples: ${build_examples}"
 echo ""

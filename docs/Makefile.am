@@ -1,10 +1,10 @@
-include $(top_srcdir)/base.am
-include $(top_srcdir)/libvaladate/libvaladate.am
+#include $(top_srcdir)/../base.am
+include $(abs_top_srcdir)/../libvaladate/libvaladate.am
 
 #man_MANS = valadate.1
 #EXTRA_DIST = valadate.1
 
-if ENABLE_VALADOC
+#if ENABLE_VALADOC
 
 VALADOC_FLAGS = --force \
 		--pkg gio-2.0 \
@@ -14,11 +14,11 @@ VALADOC_FLAGS = --force \
 		--pkg json-glib-1.0 \
 		--pkg libxslt \
 		--pkg posix \
-		--vapidir $(top_srcdir)/vapi \
+		--vapidir $(top_srcdir)/../vapi \
 		--package-name Valadate \
 		--package-version $(VERSION) \
 		--target-glib=2.40.0 \
-		$(addprefix $(top_srcdir)/libvaladate/,$(libvaladate_sources))
+		$(addprefix $(top_srcdir)/../libvaladate/,$(libvaladate_sources))
 
 valadoc:
 	$(VALADOC) \
@@ -33,9 +33,9 @@ devhelp:
 
 gtkdoc:
 	$(VALADOC) \
-		-X $(top_srcdir)/libvaladate/libvaladate-1.0.h \
-		-X $(top_srcdir)/config.h \
-		-X -l -X $(top_srcdir)/libvaladate/.libs/libvaladate-1.0.so \
+		-X $(top_srcdir)/../libvaladate/libvaladate-1.0.h \
+		-X $(top_srcdir)/../config.h \
+		-X -l -X $(top_srcdir)/../libvaladate/.libs/libvaladate-1.0.so \
 		-o gtkdoc \
 		--doclet gtkdoc \
 		$(VALADOC_FLAGS)
@@ -56,6 +56,6 @@ install-data-hook: devhelp gtkdoc
 
 html: valadoc devhelp gtkdoc
 
-endif
+#endif
 
 -include $(top_srcdir)/git.mk
