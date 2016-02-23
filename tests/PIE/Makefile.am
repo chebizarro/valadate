@@ -39,6 +39,10 @@ testload_PIE_0_VALAFLAGS = \
 	--gir testload_PIE-0.gir \
 	--library testload_PIE
 
+if PLATFORM_DARWIN
+testload_PIE_0_VALAFLAGS += -D MACOSX \
+endif
+
 testload_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
 	-lgio-2.0

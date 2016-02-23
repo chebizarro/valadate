@@ -18,21 +18,22 @@ RUN apt-get update && apt-get install -y \
 	cowbuilder \
 	reprepro
 
+ADD ./jenkins-debian.list /etc/apt/sources.list.d/
+
+RUN wget -O - http://jenkins.grml.org/debian/C525F56752D4A654.asc | sudo apt-key add -
+
+RUN apt-get update && apt-get install -y \
+	jenkins-debian-glue
+
 RUN adduser --quiet jenkins
 RUN echo "jenkins:jenkins" | chpasswd && adduser jenkins sudo
 
 ADD ./jenkins /etc/sudoers.d/jenkins/
 
-RUN mkdir /srv/repository
-RUN chown jenkins /srv/repository
-
 USER jenkins
+
 RUN git config --global user.email "jenkins@example.org"
 RUN git config --global user.name "Jenkins User"
 
-ADD ./jenkins-debian.list /etc/apt/sources.list.d/
-
-RUN wget -O - http://jenkins.grml.org/debian/C525F56752D4A654.asc | sudo apt-key add -
-
-RUN sudo apt-get update && sudo apt-get install -y \
-	jenkins-debian-glue
+RUN mkdir /srv/repository
+RUN chown jenkins /srv/repository

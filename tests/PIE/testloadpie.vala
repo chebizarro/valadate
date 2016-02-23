@@ -18,18 +18,24 @@
  
 namespace Valadate.Framework.Tests {
 
+#if MACOSX
+	const string TESTEXE = "lt-tests_PIE-0";
+#else
+	const string TESTEXE = "tests_PIE-0";
+#endif
+
 	public class TestLoadPIE : TestCase {
 		
 		[Test (name="load_pie")]
 		public void load_pie () {
-			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE-0";
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
 			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			assert (mod != null);
 		}
 		
 		[Test (name="has_test_method")]
 		public void has_test_method() {
-			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/lt-tests_PIE-0";
+			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
 			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
 			void* function;
 			assert(mod.symbol ("valadate_framework_tests_test_pie_test_pie_fail", out function));
