@@ -34,4 +34,4 @@ ADD ./jenkins-debian.list /etc/apt/sources.list.d/
 RUN wget -O - http://jenkins.grml.org/debian/C525F56752D4A654.asc | sudo apt-key add -
 
 RUN sudo apt-get update && sudo apt-get install -y \
-	jenkins-debian-glue-binaries
+	jenkins-debian-glue
