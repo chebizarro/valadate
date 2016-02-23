@@ -12,11 +12,4 @@ RUN apt-get update && apt-get install -y \
 	gtk-doc-tools \
 	packaging-dev \
 	libjson-glib-dev \
-	libxslt1-dev \
-	git-buildpackage \
-	sudo
-
-RUN adduser --quiet jenkins
-RUN echo "jenkins:jenkins" | chpasswd && adduser jenkins sudo
-
-ADD ./jenkins /etc/sudoers.d/jenkins/
+	libxslt1-dev
