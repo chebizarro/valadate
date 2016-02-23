@@ -30,10 +30,10 @@ RUN echo "jenkins:jenkins" | chpasswd && adduser jenkins sudo
 
 ADD ./jenkins /etc/sudoers.d/jenkins/
 
+RUN mkdir /srv/repository
+RUN chown jenkins /srv/repository
+
 USER jenkins
 
 RUN git config --global user.email "jenkins@example.org"
 RUN git config --global user.name "Jenkins User"
-
-RUN mkdir /srv/repository
-RUN chown jenkins /srv/repository

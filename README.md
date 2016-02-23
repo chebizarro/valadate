@@ -10,6 +10,7 @@ Valadate is undergoing active development, the current stable version is 1.0.0.
 | Platform | Status |
 | --- | --- |
 | Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
+| Mac OS X | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Mac OSX))](http://jenkins.valadate.org:8080/job/Valadate-1.0.0%20(Mac%20OSX)/) |
 
 ### Current Features ([Version 1.0](https://github.com/chebizarro/valadate/milestones/Version%201.0.0))
 
