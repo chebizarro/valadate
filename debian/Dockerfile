@@ -26,6 +26,7 @@ ADD ./jenkins /etc/sudoers.d/jenkins/
 RUN mkdir /srv/repository
 RUN chown jenkins /srv/repository
 
+RUN su jenkins
 RUN git config --global user.email "jenkins@example.org"
 RUN git config --global user.name "Jenkins User"
 

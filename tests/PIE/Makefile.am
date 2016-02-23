@@ -52,8 +52,6 @@ testload_PIE_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
 	-pie
 
-#testload_PIE_0_LDFLAGS =  \ -fPIE
-
 CLEANFILES += \
 	$(tests_PIE_0_SOURCES:.vala=.c) \
 	$(testload_PIE_0_SOURCES:.vala=.c) \
