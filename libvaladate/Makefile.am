@@ -20,7 +20,6 @@ libvaladate_1_0_la_CPPLAGS = \
 libvaladate_1_0_la_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--gresources $(top_srcdir)/libvaladate/data/valadate.gresource.xml \
-	--shared-library libvaladate-1.0 \
 	--library libvaladate-1.0 \
 	--vapi libvaladate-1.0.vapi \
 	-H libvaladate-1.0.h \
@@ -38,10 +37,10 @@ if NATIVE_WIN32
 libvaladate_1_0_la_LDFLAGS = -export-dynamic
 endif
 
-libvaladate_1_0_includedir = \
+libvaladate_1_0includedir = \
 	$(includedir)/libvaladate-1.0
 
-libvaladate_1_0_include_HEADERS = \
+libvaladate_1_0include_HEADERS = \
 	libvaladate-1.0.h
 
 vapidir = \

@@ -1,0 +1,5 @@
+usr/share/vala/vapi
+usr/include
+usr/lib/*/libvaladate-1.0.so.0*
+usr/lib/*/libvaladate-1.0.so
+usr/lib/*/pkgconfig

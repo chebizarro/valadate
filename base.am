@@ -47,21 +47,14 @@ TESTS_LIBS += \
 # ---- AM FLAGS ----
 
 AM_CFLAGS =	\
-	$(VALADATE_CFLAGS)
 	-Wall \
 	-g
 
-
 AM_CPPFLAGS = \
-	$(VALADATE_CPPFLAGS) \
-	$(addprefix -I ,$(VALADATE_LIBS)) \
-	`pkg-config --cflags --libs $(pkg_modules)` \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
-	-g
-
-AM_VALAFLAGS = \
-	$(VALADATE_VALAFLAGS) \
-	-g
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
+	$(VALADATE_CFLAGS)
 
 
 CLEANFILES = \

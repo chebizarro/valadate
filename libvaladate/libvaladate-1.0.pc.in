@@ -5,9 +5,9 @@ datarootdir=@datarootdir@
 datadir=@datadir@
 includedir=@includedir@/libvaladate-1.0
 
-Name: libvaladate
+Name: libvaladate-1.0
 Description: Unit testing framework for GObject
 Version: @VERSION@
 Requires: @pkg_modules@
-Libs: -L${libdir} -llibvaladate
+Libs: -L${libdir} -lvaladate-1.0
 Cflags: -I${includedir}

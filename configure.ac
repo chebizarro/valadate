@@ -12,9 +12,9 @@ AC_CONFIG_MACRO_DIR([build/autotools])
 
 AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 
-dnl AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE([enable])
 
-dnl AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 
 AM_PATH_GLIB_2_0
 AM_PROG_CC_C_O
@@ -221,7 +221,6 @@ AC_CONFIG_FILES([
 	Makefile
 	build/Makefile
 	build/autotools/Makefile
-	build/debian/Makefile
 	docs/Makefile
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc

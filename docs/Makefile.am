@@ -11,7 +11,10 @@ VALADOC_FLAGS = --force \
 		--pkg glib-2.0 \
 		--pkg libxml-2.0 \
 		--pkg gmodule-2.0 \
+		--pkg json-glib-1.0 \
+		--pkg libxslt \
 		--pkg posix \
+		--vapidir $(top_srcdir)/vapi \
 		--package-name Valadate \
 		--package-version $(VERSION) \
 		--target-glib=2.40.0 \
@@ -30,9 +33,9 @@ devhelp:
 
 gtkdoc:
 	$(VALADOC) \
-		-X $(top_srcdir)/libvaladate/libvaladate.h \
+		-X $(top_srcdir)/libvaladate/libvaladate-1.0.h \
 		-X $(top_srcdir)/config.h \
-		-X -l -X $(top_srcdir)/libvaladate/.libs/libvaladate.so \
+		-X -l -X $(top_srcdir)/libvaladate/.libs/libvaladate-1.0.so \
 		-o gtkdoc \
 		--doclet gtkdoc \
 		$(VALADOC_FLAGS)
@@ -49,7 +52,7 @@ install-data-hook: devhelp gtkdoc
 	$(INSTALL_DATA) -t $(DESTDIR)$(datadir)/devhelp/books/Valadate devhelp/Valadate/*.*
 	$(INSTALL_DATA) -t $(DESTDIR)$(datadir)/devhelp/books/Valadate/img devhelp/Valadate/img/*
 	$(MKDIR_P) $(DESTDIR)$(datadir)/gtk-doc/html/Valadate
-	cp -R docs/gtkdoc/html $(DESTDIR)$(datadir)/gtk-doc/html/Valadate
+	cp -R gtkdoc/html $(DESTDIR)$(datadir)/gtk-doc/html/Valadate
 
 html: valadoc devhelp gtkdoc
 

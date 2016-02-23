@@ -12,7 +12,6 @@ testgenie_0_SOURCES = testgenie.c
 testgenie_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
 	--gir testgenie-0.gir \
-	--shared-library testgenie \
 	--library testgenie
 
 testgenie_0_LDFLAGS =  \
