@@ -8,10 +8,14 @@ Build-Depends:
  autoconf,
  autotools-dev,
  libtool,
+ libtool-bin,
  libglib2.0-dev (>= 2.40.0),
  libxml2-dev,
  libjson-glib-dev,
- libxslt1-dev
+ libxslt1-dev,
+ gtk-doc-tools,
+ valac,
+ valadoc
 Standards-Version: 3.9.6
 Homepage: https://github.com/chebizarro/valadate
 #Vcs-Git: git@github.com:chebizarro/valadate.git
@@ -26,6 +30,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
  libxml2,
  libxslt1.1
 Description: Unit testing framework for GObject-based code - library
- Valadate is a unit testing framework based on GLib Testing. It is primarily
- intended for testing code written in Vala, but can be used with any
- GObject-based code.
+ For Vala developers who need to test their code, Valadate is a powerful
+ testing framework that provides behavioral, functional and unit testing
+ features to help them write great Open Source software. Unlike other testing
+ frameworks, Valadate is designed especially for Vala while integrating
+ seamlessly into existing toolchains.
