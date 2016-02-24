@@ -101,19 +101,6 @@ AC_SUBST(TESTS_CFLAGS)
 AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
 
-dnl === Build Docs ============================================================
-
-AC_ARG_ENABLE([build-docs],
-              [AS_HELP_STRING([--enable-build-docs], [Enable building docs])],
-              [build_docs=$enableval],
-              [build_docs=no])
-
-AS_IF([test "x$build_docs" = "xyes"], [
-	AC_CONFIG_SUBDIRS([docs])
-	])
-
-AM_CONDITIONAL(ENABLE_DOCS, test x$build_docs = xyes)
-
 dnl === Test suite ============================================================
 
 GLIB_TESTS
@@ -237,11 +224,6 @@ AM_COND_IF([ENABLE_EXAMPLES],
 		examples/Makefile
 	])])
 
-AM_COND_IF([ENABLE_DOCS],
-	[AC_CONFIG_FILES([
-		docs/Makefile
-	])])
-
 AC_OUTPUT
 
 dnl === Summary ===============================================================
@@ -257,6 +239,5 @@ echo " • Vala flags: ${VALADATE_VALAFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
-echo " • Build docs: ${build_docs}"
 echo " • Build examples: ${build_examples}"
 echo ""

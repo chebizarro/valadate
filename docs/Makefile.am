@@ -1,4 +1,3 @@
-#include $(top_srcdir)/../base.am
 include $(abs_top_srcdir)/../libvaladate/libvaladate.am
 
 #man_MANS = valadate.1
@@ -56,6 +55,8 @@ install-data-hook: devhelp gtkdoc
 
 html: valadoc devhelp gtkdoc
 
+all: html
+
 #endif
 
--include $(top_srcdir)/git.mk
+-include $(abs_top_srcdir)/../git.mk

@@ -14,12 +14,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 
 if ENABLE_EXAMPLES
 SUBDIRS += examples
-DIST_SUBDIRS = $(SUBDIRS)
-endif
-
-if ENABLE_DOCS
-SUBDIRS += docs
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS += examples
 endif
 
 -include $(top_srcdir)/git.mk

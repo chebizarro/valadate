@@ -5,6 +5,6 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 CLEANFILES = *.stamp
 
-SUBDIRS = src tests 
+SUBDIRS = src tests build
 
 -include $(top_srcdir)/git.mk
