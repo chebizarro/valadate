@@ -20,7 +20,7 @@ fi
 touch ChangeLog
 mkdir -p build
 
-rm -f .version
+#rm -f .version
 autoreconf -v --install || exit 1
 cd $ORIGDIR || exit $?
 
