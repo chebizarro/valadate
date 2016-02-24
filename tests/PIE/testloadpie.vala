@@ -19,9 +19,9 @@
 namespace Valadate.Framework.Tests {
 
 #if MACOSX
-	const string TESTEXE = "lt-tests_PIE-0";
-#else
 	const string TESTEXE = "tests_PIE-0";
+#else
+	const string TESTEXE = "lt-tests_PIE-0";
 #endif
 
 	public class TestLoadPIE : TestCase {
