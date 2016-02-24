@@ -59,7 +59,8 @@ testload_PIE_0_CFLAGS = \
 CLEANFILES += \
 	$(tests_PIE_0_SOURCES:.vala=.c) \
 	$(testload_PIE_0_SOURCES:.vala=.c) \
-	*.gir
+	*.gir \
+	*.vapi
 
 DISTCLEANFILES += $(CLEANFILES)
 
