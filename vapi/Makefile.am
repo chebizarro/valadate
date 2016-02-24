@@ -1,7 +1,9 @@
 include $(top_srcdir)/base.am
 
 noinst_DATA = \
-	config.vapi
+	config.vapi \
+	libxslt.deps \
+	libxslt.vapi
 
 EXTRA_DIST = \
 	$(noinst_DATA)

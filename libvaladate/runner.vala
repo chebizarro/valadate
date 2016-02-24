@@ -117,12 +117,8 @@ namespace Valadate.Framework {
 								
 								test.add_async_test(
 									ano.value,
-									(cb) => {
-										testmethod(test, cb);
-									},
-									(res) => {
-										testmethodresult(test, res);
-									},
+									(cb) => {testmethod(test, cb);},
+									(res) => {testmethodresult(test, res);},
 									timeout
 								);
 							}

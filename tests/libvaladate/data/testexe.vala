@@ -47,9 +47,8 @@ namespace Valadate.Framework.Tests {
 
 	public class TestExeSubClass : TestExe {
 
-		public void* test_method(int val) {
-			message(val.to_string());
-			return val.to_pointer();
+		public void test_method() {
+			assert_true(true);
 		}
 
 	}
