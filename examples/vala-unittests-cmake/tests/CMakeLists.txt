@@ -6,15 +6,28 @@
 # makes it easier to reuse them, and helps explain what each command
 # needs to include.
 
+#set(libvaladate-1.0_DIR  ${CMAKE_BINARY_DIR}/../../libvaladate/)
+
+include(ExternalProject)
+ExternalProject_Add(libvaladate
+    SOURCE_DIR ${CMAKE_BINARY_DIR}/../../libvaladate/
+    CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/../../configure --prefix=<INSTALL_DIR>
+    BUILD_COMMAND ${MAKE})
+
+#find_package(libvaladate-1.0)
 # These are the Vala sources you want to build your library out of.
 set(MY_PROJECT_UNIT_TESTS_VALA_SOURCES
-    test_case.vala
-    test_main.vala
     test_my_class.vala)
 
 # Any custom vapis.
 set(MY_PROJECT_VALA_CUSTOM_VAPIS
-  ${CMAKE_BINARY_DIR}/${LIBRARY_PATH}/${MY_PROJECT_PKG_NAME}.vapi)
+  ${CMAKE_BINARY_DIR}/${LIBRARY_PATH}/${MY_PROJECT_PKG_NAME}.vapi
+  ${CMAKE_BINARY_DIR}/../../libvaladate/libvaladate-1.0.vapi)
+
+global_add_compiler_flags(-I${CMAKE_BINARY_DIR}/../../libvaladate/)
+
+include_directories(${CMAKE_BINARY_DIR}/../../libvaladate/)
+set(HEADER_FILES ${CMAKE_BINARY_DIR}/../../libvaladate/libvaladate-1.0.h)
 
 # Compile Vala -> C
 vala_precompile_target(
@@ -22,6 +35,7 @@ vala_precompile_target(
   MY_PROJECT_C_TEST_SOURCES
   ${MY_PROJECT_VALA_CUSTOM_VAPIS}
   ${MY_PROJECT_UNIT_TESTS_VALA_SOURCES}
+  PACKAGES "gio-2.0"
   DEPENDS "${MY_PROJECT_LIBRARY_NAME}-vala")
 
 set (TEST_EXECUTABLE_NAME ${PROJECT_NAME}_unit_tests)
@@ -32,7 +46,9 @@ add_executable(${PROJECT_NAME}_unit_tests
 set_target_properties(${TEST_EXECUTABLE_NAME} PROPERTIES
 	INCLUDE_DIRECTORIES ${CMAKE_BINARY_DIR}/${LIBRARY_PATH})
 
-target_link_libraries(${TEST_EXECUTABLE_NAME} ${MY_PROJECT_LIBRARY_NAME} -lm)
+target_link_libraries(${TEST_EXECUTABLE_NAME} ${MY_PROJECT_LIBRARY_NAME} ${GIO_PKG_LIBRARY_DIRS} -lm)
+
+set(CMAKE_POSITION_INDEPENDANT_CODE ON)
 
 # List of tests in the test executable that you want to execute.  Note
 # that this is a list; to add additional tests you don't need to quote

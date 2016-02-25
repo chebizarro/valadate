@@ -1,8 +1,10 @@
-public class MyClassTest : TestCase {
+using Valadate;
+
+public class MyClassTest : Framework.TestCase {
     private MyProject.MyClass cut;
 
     public MyClassTest () {
-        base ("my_class");
+        //base ("my_class");
         add_test ("foo", test_foo);
     }
 
