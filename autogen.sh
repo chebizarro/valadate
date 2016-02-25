@@ -3,6 +3,8 @@
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
+mkdir -p build
+
 DIE=0
 
 (test -f $srcdir/configure.ac) || {
