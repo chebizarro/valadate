@@ -22,7 +22,7 @@ Vcs-Git: git@github.com:chebizarro/valadate.git
 Vcs-Browser: https://github.com/chebizarro/valadate
 
 Package: libvaladate-1.0-0
-Architecture: all
+Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends},
  libglib2.0-0 (>= 2.40.0),
  libjson-glib-1.0-0,
