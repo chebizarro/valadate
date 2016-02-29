@@ -18,12 +18,11 @@ Build-Depends:
  valadoc
 Standards-Version: 3.9.6
 Homepage: https://github.com/chebizarro/valadate
-#Vcs-Git: git@github.com:chebizarro/valadate.git
-#Vcs-Browser: https://anonscm.debian.org/gitweb/?p=collab-maint/valadate.git;a=summary
+Vcs-Git: git@github.com:chebizarro/valadate.git
+Vcs-Browser: https://github.com/chebizarro/valadate
 
 Package: libvaladate-1.0-0
-Architecture: any
-Multi-Arch: same
+Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends},
  libglib2.0-0 (>= 2.40.0),
  libjson-glib-1.0-0,
