@@ -1,4 +1,4 @@
-Source: libvaladate-1.0
+Source: valadate
 Section: devel
 Priority: optional
 Maintainer: Chris Daley <chebizarro@gmail.com>
@@ -18,12 +18,14 @@ Build-Depends:
  valadoc
 Standards-Version: 3.9.6
 Homepage: https://github.com/chebizarro/valadate
-Vcs-Git: git@github.com:chebizarro/valadate.git
-Vcs-Browser: https://github.com/chebizarro/valadate
+#Vcs-Git: git@github.com:chebizarro/valadate.git
+#Vcs-Browser: https://github.com/chebizarro/valadate
 
-Package: libvaladate-1.0-0
+Package: valadate
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends},
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
  libglib2.0-0 (>= 2.40.0),
  libjson-glib-1.0-0,
  libxml2,
