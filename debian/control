@@ -22,7 +22,7 @@ Homepage: https://github.com/chebizarro/valadate
 #Vcs-Browser: https://github.com/chebizarro/valadate
 
 Package: valadate
-Architecture: amd64
+Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
