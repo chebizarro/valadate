@@ -1,7 +1,7 @@
 Source: valadate
 Section: devel
 Priority: optional
-Maintainer: Chris Daley <chebizarro@gmail.com>
+Maintainer: Jenkins User <jenkins@valadate.org>
 Build-Depends:
  debhelper (>= 9),
  dh-autoreconf,
