@@ -13,8 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
-#include $(top_srcdir)/base.am
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -89,7 +87,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = build
+subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/build/autotools/glibtests.m4 \
 	$(top_srcdir)/build/autotools/libtool.m4 \
@@ -160,8 +158,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in compile config.guess \
-	config.sub depcomp install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/base.am
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 am__relativize = \
   dir0=`pwd`; \
@@ -192,6 +189,7 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -228,11 +226,6 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBRARY_CFLAGS = @LIBRARY_CFLAGS@
-LIBRARY_GCOV_CFLAGS = @LIBRARY_GCOV_CFLAGS@
-LIBRARY_GCOV_LDADD = @LIBRARY_GCOV_LDADD@
-LIBRARY_LIBS = @LIBRARY_LIBS@
-LIBRARY_TESTS_DIR = @LIBRARY_TESTS_DIR@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
@@ -240,6 +233,7 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 LTP = @LTP@
 LTP_GENHTML = @LTP_GENHTML@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -266,7 +260,42 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SHTOOL = @SHTOOL@
 STRIP = @STRIP@
+TESTS_CFLAGS = \
+	-Wall \
+	-I$(top_srcdir)/libvaladate
+
+TESTS_LIBS = @TESTS_LIBS@ \
+	$(top_builddir)/libvaladate/libvaladate-1.0.la
+TESTS_VALAFLAGS = \
+	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
+	--pkg libvaladate-1.0 \
+	--pkg config \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--target-glib=2.40.0 \
+	-g
+
 VALAC = @VALAC@
+VALADATE_CFLAGS = @VALADATE_CFLAGS@
+VALADATE_GCOV_CFLAGS = @VALADATE_GCOV_CFLAGS@
+VALADATE_GCOV_LDADD = @VALADATE_GCOV_LDADD@
+VALADATE_LIBS = @VALADATE_LIBS@
+VALADATE_LIB_DIR = @VALADATE_LIB_DIR@
+VALADATE_TESTS_DIR = @VALADATE_TESTS_DIR@
+VALADATE_VALAFLAGS = \
+	--vapidir $(top_builddir)/vapi \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg libxml-2.0 \
+	--pkg libxslt \
+	--pkg json-glib-1.0 \
+	--pkg gmodule-2.0 \
+	--pkg posix \
+	--pkg config \
+	--target-glib=2.40.0 \
+	-g
+
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -318,19 +347,55 @@ psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
+subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+tests_pkg_modules = @tests_pkg_modules@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = autotools
-NO_DIST = \
-	test-driver
+VALADATE_LIB_PATHS = \
+	$(top_srcdir) \
+	$(top_builddir)/vapi \
+	$(top_builddir)/libvaladate
 
+VALADATE_CPPFLAGS = \
+	$(addprefix -I ,$(VALADATE_LIBS)) \
+	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
+
+TESTS_CPPFLAGS = \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(addprefix -I ,$(TEST_LIBS)) \
+	`pkg-config --cflags --libs $(tests_pkg_modules) gio-2.0`
+
+
+# ---- AM FLAGS ----
+AM_CFLAGS = \
+	-Wall \
+	-g
+
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
+	$(VALADATE_CFLAGS)
+
+CLEANFILES = \
+	*.stamp \
+	*.o \
+	*.gcda \
+	*.gcno \
+	*.html
+
+DISTCLEANFILES = \
+	$(CLEANFILES) \
+	*.log
+
+SUBDIRS = . library gtk
 all: all-recursive
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/base.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -339,9 +404,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign build/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign examples/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign build/Makefile
+	  $(AUTOMAKE) --foreign examples/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -350,13 +415,14 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
 	esac;
+$(top_srcdir)/base.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
@@ -547,10 +613,12 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -638,6 +706,30 @@ uninstall-am:
 
 .PRECIOUS: Makefile
 
+
+#DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+
+# use recursive makes in order to ignore errors during check/perf
+@ENABLE_GCOV_TRUE@lcov:
+@ENABLE_GCOV_TRUE@	-$(MAKE) $(AM_MAKEFLAGS) check
+@ENABLE_GCOV_TRUE@	$(MAKE) $(AM_MAKEFLAGS) genlcov
+
+# we have to massage the lcov.info file slightly to hide the effect of libtool
+# placing the objects files in the .libs/ directory separate from the *.c
+@ENABLE_GCOV_TRUE@genlcov:
+@ENABLE_GCOV_TRUE@	$(LTP) --directory $(top_builddir) --capture --output-file $(top_builddir)/tests/results/valadate-lcov.info --test-name VALADATE_TEST --no-checksum
+@ENABLE_GCOV_TRUE@	$(SED) -e 's#.libs/##' < $(top_builddir)/tests/results/valadate-lcov.info > $(top_builddir)/tests/results/valadate-lcov.info.tmp
+@ENABLE_GCOV_TRUE@	LANG=C $(LTP_GENHTML) --prefix $(top_builddir) --output-directory $(top_builddir)/tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details $(top_builddir)/tests/results/valadate-lcov.info.tmp
+@ENABLE_GCOV_TRUE@	rm -f $(top_builddir)/tests/results/valadate-lcov.info.tmp
+
+@ENABLE_GCOV_TRUE@lcov-clean:
+@ENABLE_GCOV_TRUE@	-$(LTP) --directory $(top_builddir) -z
+@ENABLE_GCOV_TRUE@	-$(RM) -rf $(top_builddir)/tests/results/valadate-lcov.info $(top_builddir)/tests/results/valadate-lcov
+@ENABLE_GCOV_FALSE@lcov genlcov lcov-clean:
+@ENABLE_GCOV_FALSE@	@echo You need to configure Valadate with support for gcov enabled.
+@ENABLE_GCOV_FALSE@	@echo e.g., ./configure --enable-gcov
+
+.PHONY: lcov genlcov lcov-clean
 
 -include $(top_srcdir)/git.mk
 
