@@ -37,8 +37,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %doc README.md COPYING
-%{_bindir}/*
-%{_sbindir}/*
+%{_libdir}/*
 
 
 %changelog
