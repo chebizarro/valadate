@@ -5,7 +5,7 @@ Summary:        Unit testing framework for GObject-based code
 
 License:        LGPL-3.0+
 URL:            https://github.com/chebizarro/valadate
-Source0:        https://codeload.github.com/chebizarro/valadate/tar.gz/version-1.0.0
+Source0:        valadate.tar.gz
 
 BuildRequires:  libtool
 
