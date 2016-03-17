@@ -1,7 +1,7 @@
 Name:           valadate
 Version:        1.0.0
 Release:        1%{?dist}
-Summary:        Unit testing framework for GObject-based code
+Summary:        Valadate
 
 License:        LGPL-3.0+
 URL:            https://github.com/chebizarro/valadate
