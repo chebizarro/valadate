@@ -38,7 +38,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %doc README.md COPYING
 %{_libdir}/*
-
+%{_datadir}/*
+%{_includedir}/*
 
 %changelog
 * Tue Feb 23 2016 Chris Daley <chebizarro@gmail.com> - 1.0.0-1
