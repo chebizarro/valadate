@@ -20,9 +20,9 @@ libvaladate_1_0_la_CPPLAGS = \
 libvaladate_1_0_la_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--gresources $(top_srcdir)/libvaladate/data/valadate.gresource.xml \
-	--library libvaladate-1.0 \
-	--vapi libvaladate-1.0.vapi \
-	-H libvaladate-1.0.h \
+	--library valadate-1.0 \
+	--vapi valadate-1.0.vapi \
+	-H valadate-1.0.h \
 	--gir=Valadate-1.0.gir
 
 libvaladate_1_0_la_LIBADD = \
@@ -38,26 +38,26 @@ libvaladate_1_0_la_LDFLAGS = -export-dynamic
 endif
 
 libvaladate_1_0includedir = \
-	$(includedir)/libvaladate-1.0
+	$(includedir)/valadate-1.0
 
 libvaladate_1_0include_HEADERS = \
-	libvaladate-1.0.h
+	valadate-1.0.h
 
 vapidir = \
 	$(datadir)/vala/vapi
 
 dist_vapi_DATA = \
-	libvaladate-1.0.vapi \
-	libvaladate-1.0.deps
+	valadate-1.0.vapi \
+	valadate-1.0.deps
 
 pkgconfigdir = \
 	$(libdir)/pkgconfig
 
 pkgconfig_DATA = \
-	libvaladate-1.0.pc
+	valadate-1.0.pc
 
 EXTRA_DIST = \
-	libvaladate-1.0.pc.in
+	valadate-1.0.pc.in
 
 noinst_DATA =
 	$(gresource_file)
