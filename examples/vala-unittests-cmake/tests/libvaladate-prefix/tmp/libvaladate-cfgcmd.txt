@@ -1,1 +1,0 @@
-cmd='/home/bizarro/Documents/projects/valadate/examples/vala-unittests-cmake/../../configure;--prefix=<INSTALL_DIR>'

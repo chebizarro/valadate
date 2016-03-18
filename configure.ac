@@ -22,9 +22,8 @@ AM_PROG_AR
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
-dnl ***************************************************************************
-dnl Check for OS
-dnl ***************************************************************************
+dnl === OS Check =======================================================
+
 AC_CANONICAL_HOST
 
 case $host_os in
@@ -71,7 +70,7 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
-dnl === Valadate =============================================================
+dnl === Valadate =======================================================
 
 VALADATE_LIB_DIR=[${PWD}/libvaladate]
 AC_SUBST(VALADATE_LIB_DIR)
@@ -86,7 +85,7 @@ AC_SUBST(VALADATE_CFLAGS)
 AC_SUBST(VALADATE_VALAFLAGS)
 AC_SUBST(VALADATE_LIBS)
 
-dnl === Valadate Tests ======================================================
+dnl === Valadate Tests =================================================
 
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)
@@ -101,11 +100,11 @@ AC_SUBST(TESTS_CFLAGS)
 AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
 
-dnl === Test suite ============================================================
+dnl === Test suite =====================================================
 
 GLIB_TESTS
 
-dnl === Test coverage =========================================================
+dnl === Test coverage ==================================================
 
 AC_ARG_ENABLE([gcov],
               [AS_HELP_STRING([--enable-gcov], [Enable gcov])],
@@ -184,23 +183,10 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
 
-dnl === Examples ============================================================
-
-AC_ARG_ENABLE([build-examples],
-              [AS_HELP_STRING([--enable-build-examples], [Enable building examples])],
-              [build_examples=$enableval],
-              [build_examples=no])
-
-AS_IF([test "x$build_examples" != "xno"], [
-	AC_CONFIG_SUBDIRS([examples/gtk examples/library])
-	])
-
-AM_CONDITIONAL(ENABLE_EXAMPLES, test x$build_examples = xyes)
-
 dnl GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 
-dnl === Makefiles ============================================================
+dnl === Makefiles ======================================================
 
 AC_CONFIG_FILES([
 	Makefile
@@ -219,14 +205,9 @@ AC_CONFIG_FILES([
 	vapi/Makefile
 ])
 
-AM_COND_IF([ENABLE_EXAMPLES],
-	[AC_CONFIG_FILES([
-		examples/Makefile
-	])])
-
 AC_OUTPUT
 
-dnl === Summary ===============================================================
+dnl === Summary ========================================================
 
 echo ""
 echo " Valadate - $VERSION"
@@ -239,7 +220,6 @@ echo " • Vala flags: ${VALADATE_VALAFLAGS}"
 echo ""
 echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
-echo " • Build examples: ${build_examples}"
 echo ""
 echo " • Building on: ${host_os}"
 echo ""

@@ -12,9 +12,4 @@ SUBDIRS = build libvaladate tests vapi
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-if ENABLE_EXAMPLES
-SUBDIRS += examples
-DIST_SUBDIRS += examples
-endif
-
 -include $(top_srcdir)/git.mk

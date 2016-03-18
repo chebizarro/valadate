@@ -1,7 +1,0 @@
-Vala example application using HeaderBar, SearchBar, Stack, and
-other new features of Gtk+.
-
-Adapted from chapter 1 section 5 of the GTK+ 3 library
-documentation[1].
-
-[1] https://developer.gnome.org/gtk3/3.12/ch01s05.html
