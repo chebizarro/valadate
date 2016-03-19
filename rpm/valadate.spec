@@ -7,7 +7,7 @@ License:        LGPL-3.0+
 URL:            https://github.com/chebizarro/valadate
 Source0:        valadate.tar.gz
 
-BuildRequires:  libtool gobject-2.0 glib-2.0 gmodule-2.0 libxml-2.0 libxslt json-glib-1.0
+BuildRequires:  libtool
 
 %description
 For Vala developers who need to test their code, Valadate is a powerful
