@@ -40,6 +40,37 @@ Valadate is undergoing active development, the current stable version is 1.0.0.
   
   * Project Wizard
 
+### Installation
+
+#### From Source
+
+```bash
+./autogen.sh
+make
+# as root
+make install
+```
+
+#### Debian
+
+Add the repository's key
+```
+curl https://www.valadate.org/jenkins@valadate.org.gpg.key | sudo apt-key add -
+```
+Create a file named  /etc/apt/sources.list.d/valadate.list with the following:
+```
+deb	https://www.valadate.org/repos/debian valadate main
+```
+Then you can install with:
+```
+apt-get update
+apt-get install valadate
+```
+
+#### Fedora
+
+
+
 ### Usage
 
 Once correctly installed and configured, Valadate makes writing tests as simple as:
@@ -58,6 +89,10 @@ public class TestExe : TestCase {
 	}
 	
 }
+
+valac -g --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
+./mtest-0
+
 ```
 
 ### Documentation

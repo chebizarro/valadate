@@ -1,9 +1,12 @@
-AC_PREREQ(2.63)
-AC_INIT([valadate-1.0],
+AC_INIT([Valadate],
         [1.0.0],
         [https://github.com/chebizarro/valadate/issues],
         [valadate],
         [https://github.com/chebizarro/valadate])
+
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
+AC_PREREQ([2.65])
 
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -14,11 +17,10 @@ AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 
 AM_MAINTAINER_MODE([enable])
 
-AM_SILENT_RULES([yes])
-
 AM_PATH_GLIB_2_0
+AC_PROG_CC
 AM_PROG_CC_C_O
-AM_PROG_AR
+#AM_PROG_AR
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
@@ -183,7 +185,29 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
 
-dnl GOBJECT_INTROSPECTION_CHECK([1.30.0])
+dnl === Docs ===========================================================
+
+# Documentation with Valadoc
+AC_ARG_ENABLE([docs],
+              AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
+        [enable_docs=$enableval], [enable_docs=no])
+AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
+
+have_valadoc=no
+if test x$enable_docs = xyes; then
+  # make sure the library is new enough and the program exists
+  AC_PATH_PROG([VALADOC], [valadoc], [no])
+  if test "x$VALADOC" = "xno";
+  then
+      AC_MSG_RESULT([valadoc documentation not built because not found])
+  else
+      have_valadoc="yes"
+      AC_SUBST(VALADOC)
+      PKG_CHECK_MODULES([GTKDOC], gtk-doc)
+      have_gtkdoc=yes
+  fi
+fi
+AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
 
 dnl === Makefiles ======================================================
@@ -203,6 +227,7 @@ AC_CONFIG_FILES([
 	tests/libvaladate/introspection/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
+	docs/Makefile
 ])
 
 AC_OUTPUT
@@ -216,10 +241,10 @@ echo " • Prefix: ${prefix}"
 echo ""
 echo " • Debug level: ${enable_debug}"
 echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
-echo " • Vala flags: ${VALADATE_VALAFLAGS}"
 echo ""
-echo " • Install tests: ${ENABLE_INSTALLED_TESTS}"
 echo " • Enable test coverage: ${use_gcov}"
 echo ""
 echo " • Building on: ${host_os}"
+echo ""
+echo " • Documentation: ${enable_docs}"
 echo ""
