@@ -17,7 +17,7 @@ include /usr/share/dpkg/default.mk
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 override_dh_autoreconf:
-	dh_autoreconf ./autogen.sh --prefix /usr
+	dh_autoreconf ./autogen.sh
 
 # main packaging script based on dh7 syntax
 %:
