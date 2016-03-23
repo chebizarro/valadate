@@ -105,7 +105,7 @@ public class BookTest : Valadate.Framework.TestCase {
 	}
 }
 
-$ valac -g --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
+$ valac --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
 $ ./mtest-0
 /LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
 OK

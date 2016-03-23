@@ -20,24 +20,24 @@ namespace Valadate.Framework.Tests {
 	
 	public class TestExe : TestCase {
 		
-		[Test (name="test_one")]
+		[Test (name="First Test")]
 		public void test_one () {
 			Assert.is_true(true);
 		}
 
-		[Test (name="test_two")]
+		[Test (name="Second Test")]
 		public void test_two () {
 			assert_true(true);
 		}
 
-		[AsyncTest (name="test_async", timeout=1000)]
+		[AsyncTest (name="Asynchronous Test", timeout=1000)]
 		public async void test_async () throws ThreadError {
 			debug("Async Test called");
 			assert_true(true);
 			//throw new ThreadError.AGAIN("Test error");
 		}
 
-		[AsyncTest (name="test_async_two")]
+		[AsyncTest (name="Second Asynchronous Test")]
 		public async void test_async_finish () throws ThreadError {
 			debug("Async Test called");
 			assert_true(true);

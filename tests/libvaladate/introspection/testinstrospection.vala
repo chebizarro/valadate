@@ -102,7 +102,7 @@ namespace Valadate.Introspection.Tests {
 			
 			assert(methods[0].annotations[0].key.has_prefix("test."));
 			assert(methods[2].annotations[0].key.has_prefix("async-test."));
-			assert(methods[2].annotations[1].value == "test_async");
+			assert(methods[2].annotations[1].value == "Asynchronous Test");
 		}
 
 		public void test_get_class_instance() {
