@@ -67,32 +67,60 @@ apt-get update
 apt-get install valadate
 ```
 
-#### Fedora
+#### Fedora 23
 
+Add the following to /etc/yum.repos.d/valadate.repo
 
+```
+[valadate]
+name=valadate
+baseurl=http://www.valadate.org/repos/fedora/$releasever/$basearch
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=http://www.valadate.org/jenkins@valadate.org.gpg.key
+```
+
+Then run with root privileges:
+
+```
+dnf update
+dnf install valadate
+```
 
 ### Usage
 
 Once correctly installed and configured, Valadate makes writing tests as simple as:
 
 ```vala
-public class TestExe : TestCase {
-	
-	[Test (name="test_one")]
-	public void test_one () {
-		assert_true(true);
-	}
+public class BookTest : Valadate.Framework.TestCase {
 
-	[AsyncTest (name="test_async", timeout=1000)]
-	public async void test_async () throws ThreadError {
-		assert_true(true);
+	public void test_construct_book() {
+		
+		// Arrange ...
+		
+		// Act ...
+		
+		// Assert ...
 	}
-	
 }
 
-valac -g --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
-./mtest-0
+$ valac -g --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
+$ ./mtest-0
+/LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
+OK
+```
 
+To run with [TAP](https://testanything.org/) output:
+
+```
+$ ./mtest-0 --tap
+# random seed: R02Sddf35dad90ff6d1b6603ccb68028a4f0
+1..1
+# Start of LibraryBookTest tests
+** Message: mytest-0.vala:15: running
+ok 1 /LibraryBookTest/test_construct_book
+# End of LibraryBookTest tests
 ```
 
 ### Documentation

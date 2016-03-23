@@ -30,7 +30,7 @@ namespace Valadate.Framework.Tests {
 			assert_true(true);
 		}
 
-		[AsyncTest (name="test_async", timeout=100000)]
+		[AsyncTest (name="test_async", timeout=1000)]
 		public async void test_async () throws ThreadError {
 			debug("Async Test called");
 			assert_true(true);
