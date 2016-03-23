@@ -9,7 +9,7 @@ VALADOC_FLAGS = --force \
 		--pkg json-glib-1.0 \
 		--pkg libxslt \
 		--pkg posix \
-		--vapidir $(top_srcdir)/../vapi \
+		--vapidir $(top_srcdir)/vapi \
 		--package-name valadate \
 		--package-version $(VERSION) \
 		--target-glib=2.40.0 \
