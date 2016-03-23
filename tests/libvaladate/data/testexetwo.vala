@@ -27,7 +27,7 @@ namespace Valadate.Framework.Tests {
 
 		[SkipTest (name="test_two")]
 		public void test_two () {
-			assert_true(false);
+			assert_true(true);
 		}
 
 		[AsyncTest (name="test_async_with_timeout", timeout="200")]

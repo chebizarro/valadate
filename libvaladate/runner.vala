@@ -84,6 +84,16 @@ namespace Valadate.Framework {
 
 				foreach (Method method in testcls.get_methods()) {
 					int timeout = 200;
+
+					if (method.annotations == null &&
+						method.parameters == null &&
+						method.name.has_prefix("test_")) {
+						unowned TestMethod testmethod = 
+							(TestMethod)testcls.get_method(method.identifier);
+						test.add_test(method.name, ()=> {testmethod(test); });
+						continue;
+					}
+
 					foreach (Annotation ano in method.annotations) {
 						if (ano.key.has_prefix("test.name")) {
 							unowned TestMethod testmethod = 
