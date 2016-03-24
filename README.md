@@ -112,9 +112,11 @@ $ ./mtest-0
 /LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
 
 OK
+```
 
-// To run with [TAP](https://testanything.org/) output:
+To run with [TAP](https://testanything.org/) output:
 
+```
 $ ./mtest-0 --tap
 
 # random seed: R02Sddf35dad90ff6d1b6603ccb68028a4f0
@@ -128,6 +130,26 @@ $ ./mtest-0 --tap
 ok 1 /LibraryBookTest/test_construct_book
 
 # End of LibraryBookTest tests
+```
+
+The ```[Test]``` annotation and parameters are also available for giving tests more readable names and asynchronous tests.
+
+```vala
+[Test (name="Annotated Test With Name")]
+public void annotated_test_with_name () {
+	assert_true(true);
+}
+
+
+[Test (name="Asynchronous Test", timeout=1000)]
+public async void test_async () {
+	assert_true(true);
+}
+
+[Test (skip="yes")]
+public void skip_test () {
+	assert_true(false);
+}
 ```
 
 ### Documentation
