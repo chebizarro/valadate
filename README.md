@@ -106,20 +106,27 @@ public class BookTest : Valadate.Framework.TestCase {
 }
 
 $ valac --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
+
 $ ./mtest-0
+
 /LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
+
 OK
-```
 
-To run with [TAP](https://testanything.org/) output:
+// To run with [TAP](https://testanything.org/) output:
 
-```
 $ ./mtest-0 --tap
+
 # random seed: R02Sddf35dad90ff6d1b6603ccb68028a4f0
+
 1..1
+
 # Start of LibraryBookTest tests
+
 ** Message: mytest-0.vala:15: running
+
 ok 1 /LibraryBookTest/test_construct_book
+
 # End of LibraryBookTest tests
 ```
 
@@ -127,7 +134,11 @@ ok 1 /LibraryBookTest/test_construct_book
 
 See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instructions on installing and setting up your toolchain with Valadate.
 
-There are a number of sample projects in the [Examples](examples) directory which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
+There are a number of sample projects available [here](https://github.com/chebizarro/valadate-examples) which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
+
+The Valadoc Reference Manual for the Vala API can be found [here](http://www.valadate.org/docs/valadoc/valadate/index.htm).
+
+The Gtk-Doc Reference Manual for the C API can be found [here](http://www.valadate.org/docs/gtkdoc/html/).
 
 ### Follow
 
