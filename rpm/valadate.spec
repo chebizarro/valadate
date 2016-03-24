@@ -1,10 +1,14 @@
+%define build_timestamp %(date +"%Y%m%d")
+
 Name:           valadate
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0
+Release:        1%{?dist}.%{build_timestamp}
 Summary:        Valadate
 
 License:        LGPL-3.0+
 URL:            https://github.com/chebizarro/valadate
+Group:          Development/Tools
+Packager:       Jenkins User <jenkins@valadate.org>
 Source0:        valadate.tar.gz
 
 BuildRequires:  libtool
@@ -23,7 +27,7 @@ make check
 
 %prep
 %setup -q
-
+./autogen.sh
 
 %build
 %configure
