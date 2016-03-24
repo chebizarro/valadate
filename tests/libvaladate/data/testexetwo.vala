@@ -20,17 +20,17 @@ namespace Valadate.Framework.Tests {
 
 	public class TestExeTwo : TestCase {
 		
-		[Test (name="test_one")]
+		[Test (name="Test One")]
 		public void test_one () {
 			assert_true(true);
 		}
 
-		[SkipTest (name="test_two")]
+		[Test (name="Test Two")]
 		public void test_two () {
 			assert_true(true);
 		}
 
-		[AsyncTest (name="test_async_with_timeout", timeout="200")]
+		[Test (name="Test Async with Timeout", timeout="200")]
 		public async void test_async_with_timeout()
 			throws GLib.Error, AssertError {
 

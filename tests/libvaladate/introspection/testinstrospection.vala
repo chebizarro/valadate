@@ -90,7 +90,7 @@ namespace Valadate.Introspection.Tests {
 		public void test_get_method() {
 			Class class = Repository.get_class_by_name("FrameworkTestsTestExe");
 
-			void* method = class.get_method("valadate_framework_tests_test_exe_test_one");
+			void* method = class.get_method("valadate_framework_tests_test_exe_test_simple");
 			
 			assert(method != null);
 		}
@@ -100,9 +100,9 @@ namespace Valadate.Introspection.Tests {
 
 			var methods = class.get_methods();
 			
-			assert(methods[0].annotations[0].key.has_prefix("test."));
-			assert(methods[2].annotations[0].key.has_prefix("async-test."));
-			assert(methods[2].annotations[1].value == "Asynchronous Test");
+			assert(methods[2].annotations[0].key.has_prefix("test."));
+			assert(methods[3].annotations[0].key.has_prefix("test."));
+			//assert(methods[2].annotations[1].value == "Asynchronous Test");
 		}
 
 		public void test_get_class_instance() {
@@ -141,7 +141,7 @@ namespace Valadate.Introspection.Tests {
 		public void test_call_method_two () {
 			Class cls = Repository.get_class_by_name("FrameworkTestsTestExe");
 			var instance = cls.get_instance() as Framework.TestCase;
-			unowned TestMethod testmethod = (TestMethod)cls.get_method("valadate_framework_tests_test_exe_test_one");
+			unowned TestMethod testmethod = (TestMethod)cls.get_method("valadate_framework_tests_test_exe_test_simple");
 			
 			testmethod(instance);
 		}

@@ -69,14 +69,13 @@ namespace Valadate.Framework {
 		}
 		
 		public void load_tests() throws RunError {
-			Class[] testclasses = Repository.get_class_by_type(typeof(Framework.Test));
+			Class[] testclasses = Repository.get_class_by_type(typeof(Framework.TestCase));
 
 			foreach (Class testcls in testclasses) {
 				if (testcls.abstract)
 					continue;
 
 				var test = testcls.get_instance() as Framework.TestCase; 
-
 				_tests += test;
 
 				HashTable<string,AsyncMethod> async_tests = 
@@ -84,59 +83,80 @@ namespace Valadate.Framework {
 
 				foreach (Method method in testcls.get_methods()) {
 					int timeout = 200;
-
-					if (method.annotations == null &&
-						method.parameters == null &&
-						method.name.has_prefix("test_")) {
-						unowned TestMethod testmethod = 
-							(TestMethod)testcls.get_method(method.identifier);
-						test.add_test(method.name, ()=> {testmethod(test); });
-						continue;
+					string method_name = method.name.has_prefix("test_") ?
+						method.name.substring(5) : method.name;
+					method_name = method.name.has_prefix("_test_") ?
+						method.name.substring(6) : method_name;
+					unowned TestMethod testmethod = null;
+					
+					// The simple use case
+					if (method.annotations.length == 0 &&
+						method.parameters == null) {
+						if (method.name.has_prefix("test_")) {
+							testmethod = (TestMethod)testcls.get_method(method.identifier);
+						}
+						
+						if (method.name.has_prefix("_test_")) {
+							testmethod = ()=> { GLib.Test.skip(@"Skipping Test $(method_name)"); };
+						}
 					}
 
 					foreach (Annotation ano in method.annotations) {
-						if (ano.key.has_prefix("test.name")) {
-							unowned TestMethod testmethod = 
-								(TestMethod)testcls.get_method(method.identifier);
-							test.add_test(method.name, ()=> {testmethod(test); });
+
+						if (!ano.key.has_prefix("test."))
+							break;
+
+						if (ano.key == "test.name")
+							method_name = ano.value;
+
+						if (ano.key == "test.skip" && ano.value == "yes") {
+							testmethod = ()=> { GLib.Test.skip(@"Skipping Test $(method_name)"); };
+							break;
+						}
+
+						// need to check for null return value
+						if (method.parameters == null) {
+							testmethod = (TestMethod)testcls.get_method(method.identifier);
 							continue;
-						} else if (ano.key.has_prefix("skip-test.name")) {
-							test.add_test(method.name, ()=> { GLib.Test.skip(@"Skipping Test $(method.name)"); });
-							continue;
-						} else if (ano.key.has_prefix("async-test.timeout")) {
+						}
+						
+						if (ano.key == "test.timeout")
 							timeout = int.parse(ano.value);
-						} else if (ano.key.has_prefix("async-test.name")) {
-							if(!async_tests.contains(ano.value))
-								async_tests.set(ano.value, new AsyncMethod());
+						
+						if(method.parameters != null && ano.key == "test.name") {
+							testmethod = null;
+
+							if(!async_tests.contains(method_name))
+								async_tests.set(method_name, new AsyncMethod());
 							
-							AsyncMethod methods = async_tests.get(ano.value);
+							AsyncMethod methods = async_tests.get(method_name);
 							
-							if(method.parameters[0].name == "_res_") {
+							if(method.parameters[0].name == "_res_")
 								methods.end = method;
-							} else {
+							else
 								methods.begin = method;
-							}
 							
 							if (methods.begin != null && methods.end != null) {
 								
-								unowned AsyncTestMethod testmethod = 
+								unowned AsyncTestMethod tmethod = 
 									(AsyncTestMethod)testcls.get_method(methods.begin.identifier);
 
 								unowned AsyncTestMethodResult testmethodresult = 
 									(AsyncTestMethodResult)testcls.get_method(methods.end.identifier);
 								
 								test.add_async_test(
-									ano.value,
-									(cb) => {testmethod(test, cb);},
+									method_name,
+									(cb) => {tmethod(test, cb);},
 									(res) => {testmethodresult(test, res);},
 									timeout
 								);
 							}
 						}
 					}
+					if (testmethod != null)
+						test.add_test(method_name, ()=> {testmethod(test); });
 				}
 			}
-
 		}
 	}
 
