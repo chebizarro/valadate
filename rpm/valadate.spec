@@ -1,6 +1,6 @@
 Name:           valadate
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Valadate
 
 License:        LGPL-3.0+
