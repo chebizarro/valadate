@@ -164,8 +164,8 @@ namespace Valadate.Framework {
 
 		TextRunner runner = new TextRunner(args[0]);
 
-		GLib.Test.init (ref args);
-
+		Gtk.test_init(ref args);
+		
 		try {
 			runner.load();
 		} catch (RunError err) {

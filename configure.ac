@@ -77,7 +77,7 @@ dnl === Valadate =======================================================
 VALADATE_LIB_DIR=[${PWD}/libvaladate]
 AC_SUBST(VALADATE_LIB_DIR)
 
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
+pkg_modules="glib-2.0 gtk+-3.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
 
 AC_SUBST(pkg_modules)
 
