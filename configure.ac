@@ -190,6 +190,7 @@ AS_IF([test "x$use_gcov" = "xyes"],
         CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         VALADATE_CFLAGS=`echo "$VALADATE_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         TESTS_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
+        TESTS_GTK_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         changequote([,])
 
         dnl Define the special gcc flags
@@ -204,6 +205,8 @@ AS_IF([test "x$use_gcov" = "xyes"],
         
         TESTS_CFLAGS="$TESTS_CFLAGS $VALADATE_GCOV_CFLAGS"
         TESTS_LIBS="$TESTS_LIBS $VALADATE_GCOV_LDADD"
+        TESTS_GTK_CFLAGS="$TESTS_GTK_CFLAGS $VALADATE_GCOV_CFLAGS"
+        TESTS_GTK_LIBS="$TESTS_GTK_LIBS $VALADATE_GCOV_LDADD"
       ])
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
