@@ -13,8 +13,8 @@ testgtk_0_VALAFLAGS = \
 	--library Tests
 
 testgtk_0_LDADD = \
-	$(top_builddir)/libvaladate/libvaladate-1.0.la \
-	$(top_builddir)/libvaladate/libvaladate-gtk-1.0.la \
+	$(VALADATELIB) \
+	$(GTK_TEST_RUNNER) \
 	$(TESTS_GTK_LIBS) \
 	-lgio-2.0
 	

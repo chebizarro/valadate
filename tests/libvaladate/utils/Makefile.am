@@ -14,7 +14,8 @@ tests_libvaladate_utils_VALAFLAGS = \
 	$(TESTS_VALAFLAGS)
 
 tests_libvaladate_utils_LDADD = \
-	$(TESTS_LIBS)
+	$(TESTS_LIBS) \
+	$(VALADATELIB)
 
 tests_libvaladate_utils_CPPFLAGS = \
 	$(TESTS_CPPFLAGS)

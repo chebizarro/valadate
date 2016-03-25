@@ -18,6 +18,8 @@ tests_PIE_0_VALAFLAGS = \
 
 tests_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
+	$(VALADATELIB) \
+	$(TEST_RUNNER) \
 	-lgio-2.0
 
 tests_PIE_0_CPPFLAGS = \
@@ -45,6 +47,8 @@ endif
 
 testload_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
+	$(VALADATELIB) \
+	$(TEST_RUNNER) \
 	-lgio-2.0
 	
 testload_PIE_0_CPPFLAGS = \

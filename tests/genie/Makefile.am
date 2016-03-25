@@ -15,7 +15,9 @@ testgenie_0_VALAFLAGS = \
 	--library testgenie
 
 testgenie_0_LDADD = \
-	$(TESTS_LIBS)
+	$(TESTS_LIBS) \
+	$(VALADATELIB) \
+	$(TEST_RUNNER)
 	
 testgenie_0_CPPFLAGS = \
 	$(TESTS_CPPFLAGS) \
