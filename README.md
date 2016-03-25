@@ -57,7 +57,7 @@ Add the repository's key
 ```
 curl https://www.valadate.org/jenkins@valadate.org.gpg.key | sudo apt-key add -
 ```
-Create a file named  /etc/apt/sources.list.d/valadate.list with the following:
+Add the following repository to your software sources:
 ```
 deb	https://www.valadate.org/repos/debian valadate main
 ```
