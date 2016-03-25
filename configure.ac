@@ -77,15 +77,28 @@ dnl === Valadate =======================================================
 VALADATE_LIB_DIR=[${PWD}/libvaladate]
 AC_SUBST(VALADATE_LIB_DIR)
 
-pkg_modules="glib-2.0 gtk+-3.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
-
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
 AC_SUBST(pkg_modules)
-
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
 AC_SUBST(VALADATE_CFLAGS)
-AC_SUBST(VALADATE_VALAFLAGS)
 AC_SUBST(VALADATE_LIBS)
+
+# CLI
+pkg_cli_modules="glib-2.0"
+AC_SUBST(pkg_cli_modules)
+PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_cli_modules])
+
+AC_SUBST(VALADATE_CLI_CFLAGS)
+AC_SUBST(VALADATE_CLI_LIBS)
+
+# GTK
+pkg_gtk_modules="glib-2.0 gtk+-3.0"
+AC_SUBST(pkg_gtk_modules)
+PKG_CHECK_MODULES([VALADATE_GTK], [$pkg_gtk_modules])
+
+AC_SUBST(VALADATE_GTK_CFLAGS)
+AC_SUBST(VALADATE_GTK_LIBS)
 
 dnl === Valadate Tests =================================================
 
@@ -101,6 +114,16 @@ PKG_CHECK_MODULES([TESTS], [$tests_pkg_modules])
 AC_SUBST(TESTS_CFLAGS)
 AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
+
+tests_gtk_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 gtk+-3.0"
+
+AC_SUBST(tests_gtk_pkg_modules)
+
+PKG_CHECK_MODULES([TESTS_GTK], [$tests_gtk_pkg_modules])
+
+AC_SUBST(TESTS_GTK_CFLAGS)
+AC_SUBST(TESTS_GTK_VALAFLAGS)
+AC_SUBST(TESTS_GTK_LIBS)
 
 dnl === Test suite =====================================================
 
@@ -217,7 +240,9 @@ AC_CONFIG_FILES([
 	build/Makefile
 	build/autotools/Makefile
 	libvaladate/Makefile
+	libvaladate/libvaladate-1.0.pc
 	libvaladate/valadate-1.0.pc
+	libvaladate/valadate-gtk-1.0.pc
 	tests/Makefile
 	tests/genie/Makefile
 	tests/libvaladate/Makefile
@@ -225,6 +250,7 @@ AC_CONFIG_FILES([
 	tests/libvaladate/framework/Makefile
 	tests/libvaladate/utils/Makefile
 	tests/libvaladate/introspection/Makefile
+	tests/libvaladate/runners/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 	docs/Makefile

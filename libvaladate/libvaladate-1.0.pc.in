@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+includedir=@includedir@/valadate-1.0
+
+Name: libvaladate-1.0
+Description: Base Library for the Valadate Unit testing framework
+Version: @VERSION@
+Requires: @pkg_modules@
+Libs: -L${libdir} -llibvaladate-1.0
+Cflags: -I${includedir}

@@ -5,7 +5,10 @@ data/resources.c: $(top_srcdir)/libvaladate/data/valadate.gresource.xml $(shell 
 --sourcedir=$(top_srcdir)/libvaladate/data/ $(top_srcdir)/libvaladate/data/valadate.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/libvaladate/data/ --generate-source $<
 
-lib_LTLIBRARIES = libvaladate-1.0.la
+lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la libvaladate-gtk-1.0.la
+
+
+# The main valadate library which contains the framework and utilities
 
 libvaladate_1_0_la_SOURCES = \
 	data/resources.c \
@@ -20,50 +23,117 @@ libvaladate_1_0_la_CPPLAGS = \
 libvaladate_1_0_la_VALAFLAGS = \
 	$(VALADATE_VALAFLAGS) \
 	--gresources $(top_srcdir)/libvaladate/data/valadate.gresource.xml \
-	--library valadate-1.0 \
-	--vapi valadate-1.0.vapi \
-	-H valadate-1.0.h \
+	--library libvaladate-1.0 \
+	--vapi libvaladate-1.0.vapi \
+	-H libvaladate-1.0.h \
 	--gir=Valadate-1.0.gir
 
 libvaladate_1_0_la_LIBADD = \
 	$(VALADATE_LIBS) \
 	-lgio-2.0
 
+# The cli library which bootstraps cl tests
+
+libvaladate_cli_1_0_la_SOURCES = \
+	cli-main.vala
+
+libvaladate_cli_1_0_la_CFLAGS = \
+	$(VALADATE_CLI_CFLAGS) \
+	-I$(top_srcdir)/libvaladate
+
+libvaladate_cli_1_0_la_CPPLAGS = \
+	$(VALADATE_CLI_CPPFLAGS)
+
+libvaladate_cli_1_0_la_VALAFLAGS = \
+	$(VALADATE_CLI_VALAFLAGS) \
+	--pkg libvaladate-1.0 \
+	--vapidir $(top_builddir)/libvaladate \
+	--library valadate-1.0 \
+	--vapi valadate-1.0.vapi \
+	-H valadate-1.0.h
+
+libvaladate_cli_1_0_la_LIBADD = \
+	$(VALADATE_CLI_LIBS) \
+	$(top_builddir)/libvaladate/libvaladate-1.0.la
+
+# The gtk library which bootstraps gtk tests
+
+libvaladate_gtk_1_0_la_SOURCES = \
+	gtk-main.vala
+
+libvaladate_gtk_1_0_la_CFLAGS = \
+	$(VALADATE_GTK_CFLAGS) \
+	-I$(top_srcdir)/libvaladate
+
+libvaladate_gtk_1_0_la_CPPLAGS = \
+	$(VALADATE_GTK_CPPFLAGS)
+
+libvaladate_gtk_1_0_la_VALAFLAGS = \
+	$(VALADATE_GTK_VALAFLAGS) \
+	--pkg libvaladate-1.0 \
+	--vapidir $(top_builddir)/libvaladate \
+	--library valadate-gtk-1.0 \
+	--vapi valadate-gtk-1.0.vapi \
+	-H valadate-gtk-1.0.h
+
+libvaladate_gtk_1_0_la_LIBADD = \
+	$(VALADATE_GTK_LIBS) \
+	$(top_builddir)/libvaladate/libvaladate-1.0.la
+
+
+# Platform specific flags
+
 if PLATFORM_WIN32
 libvaladate_1_0_la_LDFLAGS = -no-undefined
+libvaladate_cli_1_0_la_LDFLAGS = -no-undefined
+libvaladate_gtk_1_0_la_LDFLAGS = -no-undefined
 endif
 
 if NATIVE_WIN32
 libvaladate_1_0_la_LDFLAGS = -export-dynamic
+libvaladate_cli_1_0_la_LDFLAGS = -export-dynamic
+libvaladate_gtk_1_0_la_LDFLAGS = -export-dynamic
 endif
+
+
+# includes
 
 libvaladate_1_0includedir = \
 	$(includedir)/valadate-1.0
 
 libvaladate_1_0include_HEADERS = \
-	valadate-1.0.h
+	libvaladate-1.0.h
 
+
+# vapis
 vapidir = \
 	$(datadir)/vala/vapi
 
 dist_vapi_DATA = \
-	valadate-1.0.vapi \
-	valadate-1.0.deps
+	libvaladate-1.0.vapi \
+	libvaladate-1.0.deps
 
+# pkg-config
 pkgconfigdir = \
 	$(libdir)/pkgconfig
 
 pkgconfig_DATA = \
-	valadate-1.0.pc
+	libvaladate-1.0.pc \
+	valadate-1.0.pc \
+	valadate-gtk-1.0.pc
 
 EXTRA_DIST = \
-	valadate-1.0.pc.in
+	libvaladate-1.0.pc.in \
+	valadate-1.0.pc.in \
+	valadate-gtk-1.0.pc.in
 
 noinst_DATA =
 	$(gresource_file)
 
 CLEANFILES += \
 	$(libvaladate_1_0_la_SOURCES:.vala=.c) \
+	$(libvaladate_cli_1_0_la_SOURCES:.vala=.c) \
+	$(libvaladate_gtk_1_0_la_SOURCES:.vala=.c) \
 	data/*.c \
 	*.vapi \
 	*.h \
