@@ -48,6 +48,7 @@ libvaladate_cli_1_0_la_VALAFLAGS = \
 	$(VALADATE_CLI_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
 	--library valadate-1.0 \
 	--vapi valadate-1.0.vapi \
 	-H valadate-1.0.h
@@ -72,6 +73,7 @@ libvaladate_gtk_1_0_la_VALAFLAGS = \
 	$(VALADATE_GTK_VALAFLAGS) \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
 	--library valadate-gtk-1.0 \
 	--vapi valadate-gtk-1.0.vapi \
 	-H valadate-gtk-1.0.h
