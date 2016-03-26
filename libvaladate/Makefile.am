@@ -55,7 +55,7 @@ libvaladate_cli_1_0_la_VALAFLAGS = \
 
 libvaladate_cli_1_0_la_LIBADD = \
 	$(VALADATE_CLI_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate-1.0.la
+	$(VALADATELIB)
 
 # The gtk library which bootstraps gtk tests
 
@@ -79,8 +79,8 @@ libvaladate_gtk_1_0_la_VALAFLAGS = \
 	-H valadate-gtk-1.0.h
 
 libvaladate_gtk_1_0_la_LIBADD = \
-	$(VALADATE_GTK_LIBS) \
-	$(top_builddir)/libvaladate/libvaladate-1.0.la
+	$(VALADATE_GTK_LIBS)\
+	$(VALADATELIB)
 
 
 # Platform specific flags
