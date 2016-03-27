@@ -1,4 +1,4 @@
-%define build_timestamp %(date +"%Y%m%d")
+%define build_timestamp %(date +"%Y%m%d%H%M")
 
 Name:           valadate
 Version:        1.0
