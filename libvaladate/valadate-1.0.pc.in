@@ -9,5 +9,5 @@ Name: valadate-1.0
 Description: Unit testing framework for GObject
 Version: @VERSION@
 Requires: @pkg_cli_modules@
-Libs: -L${libdir} -lvaladate-1.0
+Libs: -L${libdir} -lvaladate-cli-1.0
 Cflags: -I${includedir}
