@@ -31,6 +31,14 @@ libvaladate_1_0_la_LIBADD = \
 	$(VALADATE_LIBS) \
 	-lgio-2.0
 
+# includes
+libvaladate_1_0includedir = \
+	$(includedir)/libvaladate-1.0
+
+libvaladate_1_0include_HEADERS = \
+	libvaladate-1.0.h
+
+
 # The cli library which bootstraps cl tests
 
 libvaladate_cli_1_0_la_SOURCES = \
@@ -70,13 +78,6 @@ libvaladate_cli_1_0_la_LDFLAGS = -export-dynamic
 endif
 
 
-# includes
-
-libvaladate_1_0includedir = \
-	$(includedir)/valadate-1.0
-
-libvaladate_1_0include_HEADERS = \
-	libvaladate-1.0.h
 
 # vapis
 vapidir = \
