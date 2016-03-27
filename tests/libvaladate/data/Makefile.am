@@ -17,7 +17,6 @@ testexe_0_VALAFLAGS = \
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
-	$(VALADATELIB) \
 	$(TEST_RUNNER) \
 	-lgio-2.0
 	

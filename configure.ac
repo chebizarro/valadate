@@ -17,6 +17,7 @@ AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 
 AM_MAINTAINER_MODE([enable])
 
+AM_PROG_AR
 AM_PATH_GLIB_2_0
 AC_PROG_CC
 AM_PROG_CC_C_O

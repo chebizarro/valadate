@@ -5,7 +5,7 @@ data/resources.c: $(top_srcdir)/libvaladate/data/valadate.gresource.xml $(shell 
 --sourcedir=$(top_srcdir)/libvaladate/data/ $(top_srcdir)/libvaladate/data/valadate.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/libvaladate/data/ --generate-source $<
 
-noinst_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
+lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
 
 # The main valadate library which contains the framework and utilities
 
@@ -15,8 +15,9 @@ libvaladate_1_0_la_SOURCES = \
 
 libvaladate_1_0_la_CFLAGS = \
 	$(VALADATE_CFLAGS)
-
+	
 libvaladate_1_0_la_CPPLAGS = \
+	-fPIE \
 	$(VALADATE_CPPFLAGS)
 
 libvaladate_1_0_la_VALAFLAGS = \
@@ -27,6 +28,10 @@ libvaladate_1_0_la_VALAFLAGS = \
 	-H libvaladate-1.0.h \
 	--gir=Valadate-1.0.gir
 
+libvaladate_1_0_la_LDFLAGS = \
+	-export-dynamic \
+	-shared
+	
 libvaladate_1_0_la_LIBADD = \
 	$(VALADATE_LIBS) \
 	-lgio-2.0
@@ -42,9 +47,11 @@ libvaladate_1_0include_HEADERS = \
 # The cli library which bootstraps cl tests
 
 libvaladate_cli_1_0_la_SOURCES = \
+	data/resources.c \
 	cli-main.vala
 
 libvaladate_cli_1_0_la_CFLAGS = \
+	-pie \
 	$(VALADATE_CLI_CFLAGS) \
 	-I$(top_srcdir)/libvaladate
 
@@ -53,6 +60,7 @@ libvaladate_cli_1_0_la_CPPLAGS = \
 
 libvaladate_cli_1_0_la_VALAFLAGS = \
 	$(VALADATE_CLI_VALAFLAGS) \
+	--gresources $(top_srcdir)/libvaladate/data/valadate.gresource.xml \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
 	--vapidir $(top_builddir)/vapi \
@@ -62,18 +70,24 @@ libvaladate_cli_1_0_la_VALAFLAGS = \
 
 libvaladate_cli_1_0_la_LIBADD = \
 	$(VALADATE_CLI_LIBS) \
-	$(VALADATELIB)
+	-dlopen	$(VALADATELIB)
 
+# includes
+libvaladate_cli_1_0includedir = \
+	$(includedir)/libvaladate-1.0
+
+libvaladate_cli_1_0include_HEADERS = \
+	libvaladate-1.0.h
 
 # Platform specific flags
 
 if PLATFORM_WIN32
-libvaladate_1_0_la_LDFLAGS = -no-undefined
+libvaladate_1_0_la_LDFLAGS += -no-undefined
 libvaladate_cli_1_0_la_LDFLAGS = -no-undefined
 endif
 
 if NATIVE_WIN32
-libvaladate_1_0_la_LDFLAGS = -export-dynamic
+libvaladate_1_0_la_LDFLAGS += -export-dynamic
 libvaladate_cli_1_0_la_LDFLAGS = -export-dynamic
 endif
 
@@ -117,6 +131,6 @@ DISTCLEANFILES += $(CLEANFILES)
 
 MAINTAINERCLEANFILES = $(DISTCLEANFILES)
 
-.NOTPARALLEL: lib_LTLIBRARIES
+.NOTPARALLEL: noinst_LTLIBRARIES
 
 -include $(top_srcdir)/git.mk

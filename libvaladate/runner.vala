@@ -53,7 +53,8 @@ namespace Valadate.Framework {
 			string girdir = Path.get_dirname(path).replace(".libs", "");
 			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + 
 				Path.get_basename(path).replace("lt-","") + ".gir";
-			
+				message (girfile);
+				message (path);
 			try {
 				Repository.add_package(path, girfile);
 				load_tests();

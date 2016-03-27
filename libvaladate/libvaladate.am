@@ -5,6 +5,7 @@ libvaladate_sources = \
 	framework/testsuite.vala \
 	framework/testresult.vala \
 	framework/testrunner.vala \
+	introspection/girparser.vala \
 	introspection/introspection.vala \
 	introspection/module.vala \
 	introspection/namespace.vala \
