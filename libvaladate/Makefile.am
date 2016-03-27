@@ -47,11 +47,9 @@ libvaladate_1_0include_HEADERS = \
 # The cli library which bootstraps cl tests
 
 libvaladate_cli_1_0_la_SOURCES = \
-	data/resources.c \
 	cli-main.vala
 
 libvaladate_cli_1_0_la_CFLAGS = \
-	-pie \
 	$(VALADATE_CLI_CFLAGS) \
 	-I$(top_srcdir)/libvaladate
 
@@ -60,7 +58,6 @@ libvaladate_cli_1_0_la_CPPLAGS = \
 
 libvaladate_cli_1_0_la_VALAFLAGS = \
 	$(VALADATE_CLI_VALAFLAGS) \
-	--gresources $(top_srcdir)/libvaladate/data/valadate.gresource.xml \
 	--pkg libvaladate-1.0 \
 	--vapidir $(top_builddir)/libvaladate \
 	--vapidir $(top_builddir)/vapi \
@@ -74,10 +71,10 @@ libvaladate_cli_1_0_la_LIBADD = \
 
 # includes
 libvaladate_cli_1_0includedir = \
-	$(includedir)/libvaladate-1.0
+	$(includedir)/valadate-1.0
 
 libvaladate_cli_1_0include_HEADERS = \
-	libvaladate-1.0.h
+	valadate-1.0.h
 
 # Platform specific flags
 
