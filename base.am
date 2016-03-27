@@ -1,6 +1,5 @@
 VALADATELIB = $(top_builddir)/libvaladate/libvaladate-1.0.la
 TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-cli-1.0.la
-GTK_TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-gtk-1.0.la
 
 VALADATE_LIB_PATHS = \
 	$(top_srcdir) \
@@ -41,26 +40,6 @@ TESTS_CPPFLAGS = \
 	`pkg-config --cflags --libs $(tests_pkg_modules) gio-2.0`
 
 TESTS_CFLAGS = \
-	-Wall \
-	-I$(top_srcdir)/libvaladate
-
-TESTS_GTK_VALAFLAGS = \
-	--vapidir $(top_builddir)/libvaladate \
-	--vapidir $(top_builddir)/vapi \
-	--pkg valadate-1.0 \
-	--pkg config \
-	--pkg gio-2.0 \
-	--pkg glib-2.0 \
-	--pkg gtk+-3.0 \
-	--target-glib=2.40.0 \
-	-g
-
-TESTS_GTK_CPPFLAGS = \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
-	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
-	`pkg-config --cflags --libs $(tests_gtk_pkg_modules) gio-2.0`
-
-TESTS_GTK_CFLAGS = \
 	-Wall \
 	-I$(top_srcdir)/libvaladate
 

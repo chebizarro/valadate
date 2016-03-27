@@ -92,14 +92,6 @@ PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_cli_modules])
 AC_SUBST(VALADATE_CLI_CFLAGS)
 AC_SUBST(VALADATE_CLI_LIBS)
 
-# GTK
-pkg_gtk_modules="glib-2.0 gtk+-3.0"
-AC_SUBST(pkg_gtk_modules)
-PKG_CHECK_MODULES([VALADATE_GTK], [$pkg_gtk_modules])
-
-AC_SUBST(VALADATE_GTK_CFLAGS)
-AC_SUBST(VALADATE_GTK_LIBS)
-
 dnl === Valadate Tests =================================================
 
 VALADATE_TESTS_DIR=[${PWD}/tests]
@@ -114,16 +106,6 @@ PKG_CHECK_MODULES([TESTS], [$tests_pkg_modules])
 AC_SUBST(TESTS_CFLAGS)
 AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
-
-tests_gtk_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 gtk+-3.0"
-
-AC_SUBST(tests_gtk_pkg_modules)
-
-PKG_CHECK_MODULES([TESTS_GTK], [$tests_gtk_pkg_modules])
-
-AC_SUBST(TESTS_GTK_CFLAGS)
-AC_SUBST(TESTS_GTK_VALAFLAGS)
-AC_SUBST(TESTS_GTK_LIBS)
 
 dnl === Test suite =====================================================
 
@@ -190,7 +172,6 @@ AS_IF([test "x$use_gcov" = "xyes"],
         CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         VALADATE_CFLAGS=`echo "$VALADATE_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         TESTS_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
-        TESTS_GTK_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
         changequote([,])
 
         dnl Define the special gcc flags
@@ -205,8 +186,6 @@ AS_IF([test "x$use_gcov" = "xyes"],
         
         TESTS_CFLAGS="$TESTS_CFLAGS $VALADATE_GCOV_CFLAGS"
         TESTS_LIBS="$TESTS_LIBS $VALADATE_GCOV_LDADD"
-        TESTS_GTK_CFLAGS="$TESTS_GTK_CFLAGS $VALADATE_GCOV_CFLAGS"
-        TESTS_GTK_LIBS="$TESTS_GTK_LIBS $VALADATE_GCOV_LDADD"
       ])
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
@@ -245,7 +224,6 @@ AC_CONFIG_FILES([
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	libvaladate/valadate-1.0.pc
-	libvaladate/valadate-gtk-1.0.pc
 	tests/Makefile
 	tests/genie/Makefile
 	tests/libvaladate/Makefile

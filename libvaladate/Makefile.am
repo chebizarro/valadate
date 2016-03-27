@@ -5,8 +5,7 @@ data/resources.c: $(top_srcdir)/libvaladate/data/valadate.gresource.xml $(shell 
 --sourcedir=$(top_srcdir)/libvaladate/data/ $(top_srcdir)/libvaladate/data/valadate.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/libvaladate/data/ --generate-source $<
 
-lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la libvaladate-gtk-1.0.la
-
+lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
 
 # The main valadate library which contains the framework and utilities
 
@@ -57,44 +56,17 @@ libvaladate_cli_1_0_la_LIBADD = \
 	$(VALADATE_CLI_LIBS) \
 	$(VALADATELIB)
 
-# The gtk library which bootstraps gtk tests
-
-libvaladate_gtk_1_0_la_SOURCES = \
-	gtk-main.vala
-
-libvaladate_gtk_1_0_la_CFLAGS = \
-	$(VALADATE_GTK_CFLAGS) \
-	-I$(top_srcdir)/libvaladate
-
-libvaladate_gtk_1_0_la_CPPLAGS = \
-	$(VALADATE_GTK_CPPFLAGS)
-
-libvaladate_gtk_1_0_la_VALAFLAGS = \
-	$(VALADATE_GTK_VALAFLAGS) \
-	--pkg libvaladate-1.0 \
-	--vapidir $(top_builddir)/libvaladate \
-	--vapidir $(top_builddir)/vapi \
-	--library valadate-gtk-1.0 \
-	--vapi valadate-gtk-1.0.vapi \
-	-H valadate-gtk-1.0.h
-
-libvaladate_gtk_1_0_la_LIBADD = \
-	$(VALADATE_GTK_LIBS)\
-	$(VALADATELIB)
-
 
 # Platform specific flags
 
 if PLATFORM_WIN32
 libvaladate_1_0_la_LDFLAGS = -no-undefined
 libvaladate_cli_1_0_la_LDFLAGS = -no-undefined
-libvaladate_gtk_1_0_la_LDFLAGS = -no-undefined
 endif
 
 if NATIVE_WIN32
 libvaladate_1_0_la_LDFLAGS = -export-dynamic
 libvaladate_cli_1_0_la_LDFLAGS = -export-dynamic
-libvaladate_gtk_1_0_la_LDFLAGS = -export-dynamic
 endif
 
 
@@ -105,7 +77,6 @@ libvaladate_1_0includedir = \
 
 libvaladate_1_0include_HEADERS = \
 	libvaladate-1.0.h
-
 
 # vapis
 vapidir = \
@@ -121,13 +92,11 @@ pkgconfigdir = \
 
 pkgconfig_DATA = \
 	libvaladate-1.0.pc \
-	valadate-1.0.pc \
-	valadate-gtk-1.0.pc
+	valadate-1.0.pc
 
 EXTRA_DIST = \
 	libvaladate-1.0.pc.in \
-	valadate-1.0.pc.in \
-	valadate-gtk-1.0.pc.in
+	valadate-1.0.pc.in
 
 noinst_DATA =
 	$(gresource_file)
@@ -135,7 +104,6 @@ noinst_DATA =
 CLEANFILES += \
 	$(libvaladate_1_0_la_SOURCES:.vala=.c) \
 	$(libvaladate_cli_1_0_la_SOURCES:.vala=.c) \
-	$(libvaladate_gtk_1_0_la_SOURCES:.vala=.c) \
 	data/*.c \
 	*.vapi \
 	*.h \
