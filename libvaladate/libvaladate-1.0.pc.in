@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 datarootdir=@datarootdir@
 datadir=@datadir@
-includedir=@includedir@/valadate-1.0
+includedir=@includedir@/libvaladate-1.0
 
 Name: libvaladate-1.0
 Description: Base Library for the Valadate Unit testing framework
