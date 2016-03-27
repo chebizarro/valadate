@@ -5,7 +5,7 @@ data/resources.c: $(top_srcdir)/libvaladate/data/valadate.gresource.xml $(shell 
 --sourcedir=$(top_srcdir)/libvaladate/data/ $(top_srcdir)/libvaladate/data/valadate.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/libvaladate/data/ --generate-source $<
 
-lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
+noinst_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
 
 # The main valadate library which contains the framework and utilities
 
