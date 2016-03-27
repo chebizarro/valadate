@@ -84,7 +84,9 @@ vapidir = \
 
 dist_vapi_DATA = \
 	libvaladate-1.0.vapi \
-	libvaladate-1.0.deps
+	libvaladate-1.0.deps \
+	valadate-1.0.vapi \
+	valadate-1.0.deps
 
 # pkg-config
 pkgconfigdir = \

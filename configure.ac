@@ -20,7 +20,6 @@ AM_MAINTAINER_MODE([enable])
 AM_PATH_GLIB_2_0
 AC_PROG_CC
 AM_PROG_CC_C_O
-#AM_PROG_AR
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
@@ -65,7 +64,6 @@ AM_CONDITIONAL(PLATFORM_LINUX, test x"$platform_linux" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static win32-dll])
 
-dnl GTK_DOC_CHECK([1.0],[--flavour=no-tmpl])
 
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"

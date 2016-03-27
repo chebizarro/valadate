@@ -8,6 +8,6 @@ includedir=@includedir@/valadate-1.0
 Name: valadate-1.0
 Description: Unit testing framework for GObject
 Version: @VERSION@
-Requires: @pkg_modules@
+Requires: @pkg_cli_modules@
 Libs: -L${libdir} -lvaladate-1.0
 Cflags: -I${includedir}
