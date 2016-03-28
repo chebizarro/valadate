@@ -1,6 +1,5 @@
 ## Arrange >> Act >> Assert with Valadate
 
-<<<<<<< HEAD
 For Vala developers who need to test their code, Valadate is a powerful testing framework that provides behavioral, functional and unit testing features to help them write great Open Source software. Unlike other testing frameworks, Valadate is designed especially for Vala while integrating seamlessly into existing toolchains.
 
 [![Real example](https://github.com/chebizarro/valadate/wiki/images/valadate_screenshot.png)]()
