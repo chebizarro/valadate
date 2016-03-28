@@ -1,5 +1,6 @@
 ## Arrange >> Act >> Assert with Valadate
 
+<<<<<<< HEAD
 For Vala developers who need to test their code, Valadate is a powerful testing framework that provides behavioral, functional and unit testing features to help them write great Open Source software. Unlike other testing frameworks, Valadate is designed especially for Vala while integrating seamlessly into existing toolchains.
 
 [![Real example](https://github.com/chebizarro/valadate/wiki/images/valadate_screenshot.png)]()
@@ -68,9 +69,14 @@ apt-get install valadate
 ```
 
 #### Fedora 23
+=======
+Valadate
+========
+>>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 Add the following to /etc/yum.repos.d/valadate.repo
 
+<<<<<<< HEAD
 ```
 [valadate]
 name=valadate
@@ -80,6 +86,14 @@ gpgcheck=1
 enabled=1
 gpgkey=http://www.valadate.org/jenkins@valadate.org.gpg.key
 ```
+=======
+You can follow Valadate's development [here](http://bit.ly/1UDpayV).
+
+The following features pertain to the ```master``` branch, the current development branch is [version-1.0.0](https://github.com/chebizarro/valadate/tree/version-1.0.0). Not all features below are guaranteed to work.
+
+Features
+--------
+>>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 Then run with root privileges:
 
@@ -158,6 +172,7 @@ See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instruc
 
 There are a number of sample projects available [here](https://github.com/chebizarro/valadate-examples) which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
 
+<<<<<<< HEAD
 The Valadoc Reference Manual for the Vala API can be found [here](http://www.valadate.org/docs/valadoc/valadate/index.htm).
 
 The Gtk-Doc Reference Manual for the C API can be found [here](http://www.valadate.org/docs/gtkdoc/html/).
@@ -181,6 +196,18 @@ Valadate was originally developed by [Jan Hudec](bulb@ucw.cz) with significant c
 Special thanks to Al Thomas and Mario Daniel for feedback and inspiration, the Vala mailing list and IRC channel for help and advice and the Vala developers and maintainers for their fantastic work. Oh and to you, for reading this far and for taking an interest in our little project. I hope you find it useful!
 
 ### Copyright
+=======
+Building
+--------
+```
+./autogen.sh
+make
+```
+
+
+Copyright
+---------
+>>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published
