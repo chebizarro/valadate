@@ -69,8 +69,6 @@ LT_INIT([disable-static win32-dll])
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
-AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
-
 dnl === Valadate =======================================================
 
 VALADATE_LIB_DIR=[${PWD}/libvaladate]
@@ -230,7 +228,6 @@ AC_CONFIG_FILES([
 	tests/libvaladate/framework/Makefile
 	tests/libvaladate/utils/Makefile
 	tests/libvaladate/introspection/Makefile
-	tests/libvaladate/runners/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 	docs/Makefile

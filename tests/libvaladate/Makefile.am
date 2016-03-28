@@ -1,3 +1,2 @@
-SUBDIRS = data framework utils introspection #runners
-
+SUBDIRS = data framework utils introspection
 -include $(top_srcdir)/git.mk

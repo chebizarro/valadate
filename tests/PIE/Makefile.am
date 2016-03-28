@@ -11,16 +11,15 @@ tests_PIE_0_SOURCES =  \
 	testpie.vala
 	
 tests_PIE_0_VALAFLAGS = \
-	$(TESTS_VALAFLAGS) \
 	--pkg gmodule-2.0 \
 	--gir tests_PIE-0.gir \
-	--library tests_PIE
+	--library tests_PIE \
+	$(TESTS_VALAFLAGS)
 
 tests_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
 	$(VALADATELIB) \
-	$(TEST_RUNNER) \
-	-lgio-2.0
+	$(TEST_RUNNER)
 
 tests_PIE_0_CPPFLAGS = \
 	$(TESTS_CPPFLAGS) \
@@ -36,10 +35,10 @@ testload_PIE_0_SOURCES =  \
 	testloadpie.vala
 	
 testload_PIE_0_VALAFLAGS = \
-	$(TESTS_VALAFLAGS) \
 	--pkg gmodule-2.0 \
 	--gir testload_PIE-0.gir \
-	--library testload_PIE
+	--library testload_PIE \
+	$(TESTS_VALAFLAGS)
 
 if PLATFORM_DARWIN
 testload_PIE_0_VALAFLAGS += -D MACOSX
@@ -48,17 +47,16 @@ endif
 testload_PIE_0_LDADD = \
 	$(TESTS_LIBS) \
 	$(VALADATELIB) \
-	$(TEST_RUNNER) \
-	-lgio-2.0
+	$(TEST_RUNNER)
 	
 testload_PIE_0_CPPFLAGS = \
-	$(TESTS_CPPFLAGS) \
 	-fPIE \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\"
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(TESTS_CPPFLAGS)
 	
 testload_PIE_0_CFLAGS = \
-	$(TESTS_CFLAGS) \
-	-pie
+	-pie \
+	$(TESTS_CFLAGS)
 
 CLEANFILES += \
 	$(tests_PIE_0_SOURCES:.vala=.c) \
