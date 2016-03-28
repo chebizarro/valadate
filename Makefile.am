@@ -1,18 +1,32 @@
-ACLOCAL_AMFLAGS  = -I m4 ${ACLOCAL_FLAGS}
+include $(top_srcdir)/base.am
+
+ACLOCAL_AMFLAGS  = -I build/autotools ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
-SUBDIRS = lib runner test
+EXTRA_DIST = \
+	$(noinst_DATA) \
+	autogen.sh \
+	vapi
 
-AM_CFLAGS =	$(VALADATE_CFLAGS)
+SUBDIRS = build libvaladate tests vapi
 
-AM_CPPFLAGS = \
-	$(addprefix -I ,$(VALADATE_LIBS)) \
-	`pkg-config --cflags --libs $(pkg_modules)` \
-	-w \
-	-g \
-	$(VALADATE_CPPFLAGS)
+if ENABLE_DOCS
+SUBDIRS += docs
+endif
 
+MAINTAINERCLEANFILES = \
+	$(srcdir)/build/aclocal.m4 \
+	$(srcdir)/build/compile \
+	$(srcdir)/build/config.guess \
+	$(srcdir)/build/config.h.in \
+	$(srcdir)/build/config.rpath \
+	$(srcdir)/build/config.sub \
+	$(srcdir)/build/depcomp \
+	$(srcdir)/build/install-sh \
+	$(srcdir)/build/ltmain.sh \
+	$(srcdir)/build/missing \
+	$(srcdir)/build/mkinstalldirs \
+	`find "$(srcdir)" -type f -name Makefile.in -print` \
+	`find "m4" -type f -name "*.m4" ! -name "as-compiler-flag.m4" ! -name "introspection.m4" ! -name "vala.m4" -print`
 
-AM_VALAFLAGS = $(VALADATE_VALAFLAGS) \
-	--pkg config \
-	-g
+-include $(top_srcdir)/git.mk

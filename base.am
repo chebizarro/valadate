@@ -1,0 +1,96 @@
+VALADATELIB = $(top_builddir)/libvaladate/libvaladate-1.0.la
+TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-cli-1.0.la
+
+VALADATE_LIB_PATHS = \
+	$(top_srcdir) \
+	$(top_builddir)/vapi \
+	$(top_builddir)/libvaladate
+
+VALADATE_VALAFLAGS = \
+	--vapidir $(top_builddir)/vapi \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--pkg libxml-2.0 \
+	--pkg libxslt \
+	--pkg json-glib-1.0 \
+	--pkg gmodule-2.0 \
+	--pkg posix \
+	--pkg config \
+	--target-glib=2.40.0 \
+	-g
+
+VALADATE_CPPFLAGS = \
+	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
+	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
+
+
+TESTS_VALAFLAGS = \
+	--vapidir $(top_builddir)/libvaladate \
+	--vapidir $(top_builddir)/vapi \
+	--pkg valadate-1.0 \
+	--pkg config \
+	--pkg gio-2.0 \
+	--pkg glib-2.0 \
+	--target-glib=2.40.0 \
+	-g
+
+TESTS_CPPFLAGS = \
+	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
+	`pkg-config --cflags --libs $(tests_pkg_modules) gio-2.0`
+
+TESTS_CFLAGS = \
+	-Wall \
+	-I$(top_srcdir)/libvaladate
+
+# ---- AM FLAGS ----
+
+AM_CFLAGS =	\
+	-Wall \
+	-g
+
+AM_CPPFLAGS = \
+	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
+	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
+	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
+	$(VALADATE_CFLAGS)
+
+
+CLEANFILES = \
+	*.stamp \
+	*.o \
+	*.gcda \
+	*.gcno \
+	*.html
+
+DISTCLEANFILES = \
+	$(CLEANFILES) \
+	*.log
+
+
+if ENABLE_GCOV
+# use recursive makes in order to ignore errors during check/perf
+lcov:
+	-$(MAKE) $(AM_MAKEFLAGS) check
+	$(MAKE) $(AM_MAKEFLAGS) genlcov
+
+# we have to massage the lcov.info file slightly to hide the effect of libtool
+# placing the objects files in the .libs/ directory separate from the *.c
+genlcov:
+	$(LTP) --directory $(top_builddir) --capture --output-file $(top_builddir)/tests/results/valadate-lcov.info --test-name VALADATE_TEST --no-checksum
+	$(SED) -e 's#.libs/##' < $(top_builddir)/tests/results/valadate-lcov.info > $(top_builddir)/tests/results/valadate-lcov.info.tmp
+	LANG=C $(LTP_GENHTML) --output-directory $(top_builddir)/tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details $(top_builddir)/tests/results/valadate-lcov.info.tmp
+	rm -f $(top_builddir)/tests/results/valadate-lcov.info.tmp
+
+lcov-clean:
+	-$(LTP) --directory $(top_builddir) -z
+	-$(RM) -rf $(top_builddir)/tests/results/valadate-lcov.info $(top_builddir)/tests/results/valadate-lcov
+else
+lcov genlcov lcov-clean:
+	@echo You need to configure Valadate with support for gcov enabled.
+	@echo e.g., ./configure --enable-gcov
+endif
+
+.PHONY: lcov genlcov lcov-clean
+
+

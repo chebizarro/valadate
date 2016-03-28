@@ -1,76 +1,186 @@
-[![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
-[![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate)](http://jenkins.valadate.org:8080/job/Valadate/)
+## Arrange >> Act >> Assert with Valadate
 
-This is a fork of Valadate, updated to Vala 0.30 and Autotools
+For Vala developers who need to test their code, Valadate is a powerful testing framework that provides behavioral, functional and unit testing features to help them write great Open Source software. Unlike other testing frameworks, Valadate is designed especially for Vala while integrating seamlessly into existing toolchains.
 
-To build
+[![Real example](https://github.com/chebizarro/valadate/wiki/images/valadate_screenshot.png)]()
 
-./autogen.sh
+### Status
+Valadate is undergoing active development, the current stable version is 1.0.0.
 
-make
+| Platform | Status |
+| --- | --- |
+| Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
+| Ubuntu  15.10 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Ubuntu-15.10))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Ubuntu-15.10)/) |
+| Fedora  22 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Fedora-22))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Fedora-22)/) |
+| Fedora  23 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Fedora-23))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Fedora-23)/) |
+| Mac OS X | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Mac OSX))](http://jenkins.valadate.org:8080/job/Valadate-1.0.0%20(Mac%20OSX)/) |
 
-
-
-Valadate
-========
-
-Valadate is a unit testing framework based on GLib Testing. It is primarily
-intended for testing code written in [Vala][vala], but can be used with any
-GObject-based code.
-
-Features
---------
+### Current Features ([Version 1.0](https://github.com/chebizarro/valadate/milestones/Version%201.0.0))
 
   * Automatic test discovery like JUnit or .NET testing framework.
-
-    Tests can be automatically found in a shared library using either
-    .vapi ([Vala][vala] API description) or [.gir][gir] file.
-
-  * Running tests for all parameters from specific set.
-
-    A test fixture can define properties and sets of values for them and the
-    discovered test methods will automatically be run for all of them.
 
   * Utility functions for waiting in a main loop until specified event or
     timeout occurs.
 
-  * Support for asynchronous tests. Method declared async in vala will be
-    automatically run under main loop until completion or configurable
-    timeout.
+  * Support for asynchronous tests.
 
   * Utility functions providing temporary directory to tests.
 
-    With support for initializing the temporary directory by storing data,
-    copying specified files there, and running a shell snippet.
-
-Planned features
-----------------
-
-  * Automatically running each test in a separate child process.
-
-  * Running next tests even after failure.
-
-    It requires chaning the runner for that.
-
   * Skipped tests and expected failures.
+  
+### Planned Features ([Version 1.1](https://github.com/chebizarro/valadate/milestones/Version%201.1.0))
 
-  * Initializing test directories by extracting zip and/or tar.gz
-    archives.
+  * Gherkin/Cucumber integration
+  
+  * GUI and CLI Test Runner
+  
+  * IDE Plugins
+  
+  * Events and notifications
+  
+  * Project Wizard
 
-  * Generic tests.
+### Installation
 
-    Support for providing a list of types a generic test fixture should be
-    instantiated for. 
+#### From Source
 
-Dependencies
-------------
+```bash
+./autogen.sh
+make
+# as root
+make install
+```
 
-  * [GLib][glib] 2.20.0 or later
-  * [Vala][vala] 0.30.0 or later
-  * [GOjbect-introspection][gir] 1.0.0 or later
+#### Debian
 
-Copyright
----------
+Add the repository's key
+```
+curl https://www.valadate.org/jenkins@valadate.org.gpg.key | sudo apt-key add -
+```
+Add the following repository to your software sources:
+```
+deb	https://www.valadate.org/repos/debian valadate main
+```
+Then you can install with:
+```
+apt-get update
+apt-get install valadate
+```
+
+#### Fedora 23
+
+Add the following to /etc/yum.repos.d/valadate.repo
+
+```
+[valadate]
+name=valadate
+baseurl=http://www.valadate.org/repos/fedora/$releasever/$basearch
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=http://www.valadate.org/jenkins@valadate.org.gpg.key
+```
+
+Then run with root privileges:
+
+```
+dnf update
+dnf install valadate
+```
+
+### Usage
+
+Once correctly installed and configured, Valadate makes writing tests as simple as:
+
+```vala
+public class BookTest : Valadate.Framework.TestCase {
+
+	public void test_construct_book() {
+		
+		// Arrange ...
+		
+		// Act ...
+		
+		// Assert ...
+	}
+}
+
+$ valac --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPIE mytest-0.vala
+
+$ ./mtest-0
+
+/LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
+
+OK
+```
+
+To run with [TAP](https://testanything.org/) output:
+
+```
+$ ./mtest-0 --tap
+
+# random seed: R02Sddf35dad90ff6d1b6603ccb68028a4f0
+
+1..1
+
+# Start of LibraryBookTest tests
+
+** Message: mytest-0.vala:15: running
+
+ok 1 /LibraryBookTest/test_construct_book
+
+# End of LibraryBookTest tests
+```
+
+The ```[Test]``` annotation and parameters are also available for giving tests more readable names and asynchronous tests.
+
+```vala
+[Test (name="Annotated Test With Name")]
+public void annotated_test_with_name () {
+	assert_true(true);
+}
+
+
+[Test (name="Asynchronous Test", timeout=1000)]
+public async void test_async () {
+	assert_true(true);
+}
+
+[Test (skip="yes")]
+public void skip_test () {
+	assert_true(false);
+}
+```
+
+### Documentation
+
+See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instructions on installing and setting up your toolchain with Valadate.
+
+There are a number of sample projects available [here](https://github.com/chebizarro/valadate-examples) which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
+
+The Valadoc Reference Manual for the Vala API can be found [here](http://www.valadate.org/docs/valadoc/valadate/index.htm).
+
+The Gtk-Doc Reference Manual for the C API can be found [here](http://www.valadate.org/docs/gtkdoc/html/).
+
+### Follow
+
+* [Blog](http://bit.ly/1UDpayV)
+* Waffle backlog - [![Stories in Ready](https://badge.waffle.io/chebizarro/valadate.png?label=ready&title=Ready)](https://waffle.io/chebizarro/valadate)
+* GitHub [Issues](https://github.com/chebizarro/valadate/issues) - for bug/feature requests
+* IRC - #vala on GIMPnet (irc.gimp.org) - look for @bizarro
+
+### Code of Conduct
+
+This project adheres to the [Open Code of Conduct][code-of-conduct]. By participating, you are expected to honor this code.
+[code-of-conduct]: http://todogroup.org/opencodeofconduct/#Valadate/chebizarro@gmail.com
+
+### Acknowledgements
+
+Valadate was originally developed by [Jan Hudec](bulb@ucw.cz) with significant contributions from [Julien Peeters](contact@julienpeeters.fr) and [Simon Busch](morphis@gravedo.de) and was most recently maintained by the [Yorba Foundation](http://yorba.org/).
+
+Special thanks to Al Thomas and Mario Daniel for feedback and inspiration, the Vala mailing list and IRC channel for help and advice and the Vala developers and maintainers for their fantastic work. Oh and to you, for reading this far and for taking an interest in our little project. I hope you find it useful!
+
+### Copyright
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published
@@ -85,8 +195,4 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program in the file COPYING.  You should have received
 a copy of the GNU General Public License refered therein along with this
-program in the file GPL-3.  If not, see <http://www.gnu.org/licenses/>.
-
-[vala]: http://live.gnome.org/Vala
-[gir]: http://live.gnome.org/GObjectIntrospection
-[glib]: http://www.gtk.org/ (The GTK+ Project)
+program in the file GPL-3.  If not, see <[http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)>.

@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+datarootdir=@datarootdir@
+datadir=@datadir@
+includedir=@includedir@/libvaladate-1.0
+
+Name: valadate-1.0
+Description: Unit testing framework for GObject
+Version: @VERSION@
+Requires: @pkg_cli_modules@
+Libs: -L${libdir} -lvaladate-cli-1.0
+Cflags: -I${includedir}

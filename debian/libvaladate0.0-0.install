@@ -1,3 +1,0 @@
-usr/lib/lib*.so.*
-usr/share/vala/vapi/*
-usr/share/gir-1.0/*.gir

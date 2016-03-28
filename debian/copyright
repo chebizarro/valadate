@@ -1,40 +1,28 @@
-This work was packaged for Debian by:
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: valadate
+Source: <https://github.com/chebizarro/valadate>
 
-    Jan Hudec <bulb@ucw.cz> on Fri, 25 Sep 2009 11:19:10 +0200
+Files: *
+Copyright: 2016 Chris Daley <chebizarro@gmail.com>
+License: LGPL-3.0+
 
-It was downloaded from:
+Files: debian/*
+Copyright: 2016 Chris Daley <chebizarro@gmail.com>
+License: LGPL-3.0+
 
-    http://gitorious.org/valadate/valadate/archive-tarball/master
-
-Upstream Author(s):
-
-    Jan Hudec <bulb@ucw.cz>
-
-Copyright:
-
-    Copyright (C) 2009 Jan Hudec
-
-License:
-
-    This package is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 3 of the License, or (at your option) any later version.
-
-    This package is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this package; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-
-On Debian systems, the complete text of the GNU Lesser General
-Public License can be found in `/usr/share/common-licenses/LGPL-3'.
-
-The Debian packaging is:
-
-    Copyright (C) 2009 Jan Hudec <bulb@ucw.cz>
-
-and is licensed under the same terms as the package itself.
+License: LGPL-3.0+
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License, or (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License can be found in "/usr/share/common-licenses/LGPL-3".
