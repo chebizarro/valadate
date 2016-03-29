@@ -75,6 +75,7 @@ namespace Valadate.Framework.Tests {
 		
 	}
 
+	[Test (name="Annotated Test Class With Name")]
 	public class TestExeSubClass : TestExe {
 
 		public void test_method() {
