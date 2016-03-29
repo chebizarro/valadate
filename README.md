@@ -9,9 +9,8 @@ Valadate is undergoing active development, the current stable version is 1.0.0.
 
 | Platform | Status |
 | --- | --- |
-| Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0)](http://jenkins.valadate.org:8080/job/Valadate-1.0.0/) |
+| Ubuntu  15.04 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate)](http://jenkins.valadate.org:8080/job/Valadate/) |
 | Ubuntu  15.10 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Ubuntu-15.10))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Ubuntu-15.10)/) |
-| Fedora  22 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Fedora-22))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Fedora-22)/) |
 | Fedora  23 | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Fedora-23))](http://jenkins.valadate.org:8080/view/Valadate/job/Valadate-1.0.0%20(Fedora-23)/) |
 | Mac OS X | [![Build Status](http://jenkins.valadate.org:8080/buildStatus/icon?job=Valadate-1.0.0 (Mac OSX))](http://jenkins.valadate.org:8080/job/Valadate-1.0.0%20(Mac%20OSX)/) |
 
@@ -68,14 +67,9 @@ apt-get install valadate
 ```
 
 #### Fedora 23
-=======
-Valadate
-========
->>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 Add the following to /etc/yum.repos.d/valadate.repo
 
-<<<<<<< HEAD
 ```
 [valadate]
 name=valadate
@@ -85,14 +79,6 @@ gpgcheck=1
 enabled=1
 gpgkey=http://www.valadate.org/jenkins@valadate.org.gpg.key
 ```
-=======
-You can follow Valadate's development [here](http://bit.ly/1UDpayV).
-
-The following features pertain to the ```master``` branch, the current development branch is [version-1.0.0](https://github.com/chebizarro/valadate/tree/version-1.0.0). Not all features below are guaranteed to work.
-
-Features
---------
->>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 Then run with root privileges:
 
@@ -171,7 +157,6 @@ See the [Wiki](https://github.com/chebizarro/valadate/wiki) for detailed instruc
 
 There are a number of sample projects available [here](https://github.com/chebizarro/valadate-examples) which showcase Valadate's features and how to use it with different toolchains and platforms. More information can be found on the relevant [Wiki page](https://github.com/chebizarro/valadate/wiki).
 
-<<<<<<< HEAD
 The Valadoc Reference Manual for the Vala API can be found [here](http://www.valadate.org/docs/valadoc/valadate/index.htm).
 
 The Gtk-Doc Reference Manual for the C API can be found [here](http://www.valadate.org/docs/gtkdoc/html/).
@@ -195,18 +180,6 @@ Valadate was originally developed by [Jan Hudec](bulb@ucw.cz) with significant c
 Special thanks to Al Thomas and Mario Daniel for feedback and inspiration, the Vala mailing list and IRC channel for help and advice and the Vala developers and maintainers for their fantastic work. Oh and to you, for reading this far and for taking an interest in our little project. I hope you find it useful!
 
 ### Copyright
-=======
-Building
---------
-```
-./autogen.sh
-make
-```
-
-
-Copyright
----------
->>>>>>> 5479c57c9800059a856531534489477fc1dd40a8
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published
