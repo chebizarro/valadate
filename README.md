@@ -108,9 +108,7 @@ $ valac --library mytest-0 --gir mytest-0.gir --pkg valadate-1.0 -X -pie -X -fPI
 
 $ ./mtest-0
 
-/LibraryBookTest/test_construct_book: ** Message: mytest-0.vala:15: running
-
-OK
+/LibraryBookTest/test_construct_book: OK
 ```
 
 To run with [TAP](https://testanything.org/) output:
@@ -124,31 +122,45 @@ $ ./mtest-0 --tap
 
 # Start of LibraryBookTest tests
 
-** Message: mytest-0.vala:15: running
-
 ok 1 /LibraryBookTest/test_construct_book
 
 # End of LibraryBookTest tests
 ```
 
-The ```[Test]``` annotation and parameters are also available for giving tests more readable names and asynchronous tests.
+The ```[Test]``` annotation and parameters are also available for giving test classes and methods more readable names and for supporting asynchronous tests.
 
 ```vala
-[Test (name="Annotated Test With Name")]
-public void annotated_test_with_name () {
-	assert_true(true);
+
+[Test (name="Annotated TestCase with name")]
+public class MyTest : Valadate.Framework.TestCase {
+
+	[Test (name="Annotated Method With Name")]
+	public void annotated_test_with_name () {
+		assert_true(true);
+	}
+
+
+	[Test (name="Asynchronous Test", timeout=1000)]
+	public async void test_async () {
+		assert_true(true);
+	}
+
+	[Test (skip="yes")]
+	public void skip_test () {
+		assert_true(false);
+	}
+
 }
 
 
-[Test (name="Asynchronous Test", timeout=1000)]
-public async void test_async () {
-	assert_true(true);
-}
 
-[Test (skip="yes")]
-public void skip_test () {
-	assert_true(false);
-}
+1..3
+# Start of Annotated TestCase with name tests
+ok 1 /Annotated TestCase with name/Annotated Method With Name
+ok 2 /Annotated TestCase with name/Asynchronous Test
+ok 3 /Annotated TestCase with name/skip_test # SKIP Skipping Test skip_test
+# End of Annotated TestCase with name tests
+
 ```
 
 ### Documentation

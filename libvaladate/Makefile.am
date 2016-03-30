@@ -98,6 +98,26 @@ pkgconfig_DATA = \
 	libvaladate-1.0.pc \
 	valadate-1.0.pc
 
+
+-include $(INTROSPECTION_MAKEFILE)
+if HAVE_INTROSPECTION
+
+Valadate-1.0.typelib:
+	g-ir-compiler \
+		--shared-library=libvaladate.so \
+		--output=Valadate-1.0.typelib \
+		Valadate-1.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = Valadate-1.0.gir
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = Valadate-1.0.typelib
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+endif
+
+
 EXTRA_DIST = \
 	libvaladate-1.0.pc.in \
 	valadate-1.0.pc.in

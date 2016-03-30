@@ -3,6 +3,8 @@ include $(top_srcdir)/base.am
 ACLOCAL_AMFLAGS  = -I build/autotools ${ACLOCAL_FLAGS}
 AUTOMAKE_OPTIONS = subdir-objects
 
+DISTCHECK_CONFIGURE_FLAGS = --enable-introspection
+
 EXTRA_DIST = \
 	$(noinst_DATA) \
 	autogen.sh \

@@ -211,6 +211,8 @@ if test x$enable_docs = xyes; then
 fi
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
+# Introspection
+GOBJECT_INTROSPECTION_CHECK([1.38.0])
 
 dnl === Makefiles ======================================================
 
