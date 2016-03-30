@@ -53,23 +53,31 @@ namespace Valadate.Framework {
 	 */
 	public abstract class TestCase : Object, Test, TestFixture {
 
-		public GLib.TestSuite suite {get; private set;}
+		public GLib.TestSuite _suite;
+
+		public GLib.TestSuite suite {
+			get {
+				if (_suite == null)
+					_suite = new GLib.TestSuite (this.name);
+				return _suite;
+			}
+		}
 
 		public string name {get;set;} 
 
 		private Adaptor[] adaptors = new Adaptor[0];
 
+		
 		construct {
 			name = this.get_type().name();
-			this.suite = new GLib.TestSuite (name);
+			//this.suite = new GLib.TestSuite (name);
 		}
 
 		/*
 		public TestCase (string? name = null)
-			requires (name.contains("/") != true)
 		{
-			this.name = name ?? this.name;
-			this.suite = new GLib.TestSuite (name);
+			this.name = name ?? this.get_type().name();
+			this.suite = new GLib.TestSuite (this.name);
 		}*/
 
 		public void add_test (string name, owned Test.TestMethod test)

@@ -119,6 +119,9 @@ namespace Valadate.Introspection.Repository {
 		public Method[] methods {get;internal set;}
 		internal MethodDef method {get;set;}
 
+		public Annotation annotation {get;set;}
+		public Annotation[] annotations {get;set;}
+
 		public string get_type_method {get;set;}
 		
 		public weak Namespace namespace {get;set;}
@@ -154,6 +157,18 @@ namespace Valadate.Introspection.Repository {
 				}
 				methods = incl;
 				value.init(typeof(Method));
+			} else if (property_name == "annotation") {
+				Annotation[] incl = {};
+				if (property_node.get_node_type() == Json.NodeType.OBJECT) {
+					incl += Json.gobject_deserialize(typeof(Annotation), property_node) as Annotation;
+				} else {
+					var array = property_node.get_array();
+					array.foreach_element ((a,i,n) => {
+						incl += Json.gobject_deserialize(typeof(Annotation), n) as Annotation;
+					});
+				}
+				annotations = incl;
+				value.init_from_instance(incl[0]);
 			} else {
 				return default_deserialize_property (property_name, value, pspec, property_node);
 			}

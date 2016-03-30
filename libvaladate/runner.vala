@@ -75,6 +75,12 @@ namespace Valadate.Framework {
 					continue;
 
 				var test = testcls.get_instance() as Framework.TestCase; 
+				test.name = testcls.name;
+
+				foreach (var an in testcls.annotations)
+					if (an.key.has_prefix("test.name"))
+						test.name = an.value;
+				
 				_tests += test;
 
 				HashTable<string,AsyncMethod> async_tests = 

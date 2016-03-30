@@ -54,11 +54,14 @@ namespace Valadate.Introspection {
 
 		internal weak Module module {get{return classdef.module;}}
 
+		public Annotation[] annotations {get;internal set;}
+
 		private Class() {}
 
 		internal Class.from_class_def(Repository.ClassDef def) {
 			name = def.name;
 			classdef = def;
+			annotations = def.annotations;
 		}
 
 		private void init_class_type() {
