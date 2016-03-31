@@ -15,7 +15,8 @@ Build-Depends:
  libxslt1-dev,
  gtk-doc-tools,
  valac,
- valadoc
+ valadoc,
+ libgirepository1.0-dev
 Standards-Version: 3.9.6
 Homepage: https://github.com/chebizarro/valadate
 #Vcs-Git: git@github.com:chebizarro/valadate.git
