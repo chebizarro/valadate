@@ -61,6 +61,11 @@ libvaladate_cli_1_0_la_LIBADD = \
 	-dlopen	$(VALADATELIB) \
 	$(VALADATE_CLI_LIBS)
 
+libvaladate_cli_1_0_la_LDFLAGS = \
+	-export-dynamic \
+	-shared
+
+
 # includes
 libvaladate_cli_1_0includedir = \
 	$(includedir)/valadate-1.0
@@ -72,12 +77,12 @@ libvaladate_cli_1_0include_HEADERS = \
 
 if PLATFORM_WIN32
 libvaladate_1_0_la_LDFLAGS += -no-undefined
-libvaladate_cli_1_0_la_LDFLAGS = -no-undefined
+libvaladate_cli_1_0_la_LDFLAGS += -no-undefined
 endif
 
 if NATIVE_WIN32
 libvaladate_1_0_la_LDFLAGS += -export-dynamic
-libvaladate_cli_1_0_la_LDFLAGS = -export-dynamic
+libvaladate_cli_1_0_la_LDFLAGS += -export-dynamic
 endif
 
 # vapis
