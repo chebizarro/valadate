@@ -51,8 +51,12 @@ namespace Valadate.Framework {
 		
 		public void load() throws RunError {
 			string girdir = Path.get_dirname(path).replace(".libs", "");
-			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + 
-				Path.get_basename(path).replace("lt-","") + ".gir";
+			
+			string girname = Path.get_basename(path);
+			if(girname.has_prefix("lt-"))
+				girname = girname.substring(3);
+			
+			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + girname + ".gir";
 			try {
 				Repository.add_package(path, girfile);
 				load_tests();
