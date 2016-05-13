@@ -56,7 +56,7 @@ namespace Valadate.Framework {
 			if(girname.has_prefix("lt-"))
 				girname = girname.substring(3);
 			
-			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + girname + ".gir";
+			string girfile = girdir + girname + ".gir";
 			try {
 				Repository.add_package(path, girfile);
 				load_tests();
