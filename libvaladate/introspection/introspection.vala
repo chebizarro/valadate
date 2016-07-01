@@ -69,17 +69,17 @@ namespace Valadate.Introspection {
 			_class_type = meth();
 		}
 
-		[Experimental]
+		[Version (experimental = true, experimental_until = "")]
 		public Method[] get_methods() {
 			return classdef.methods;
 		} 
 
-		[Experimental]
+		[Version (experimental = true, experimental_until = "")]
 		public void* get_method(string methodname) {
 			return module.get_method(methodname);
 		}
 
-		[Experimental]
+		[Version (experimental = true, experimental_until = "")]
 		public void* get_instance() {
 			unowned Constructor meth = (Constructor)module.get_method(classdef.constructor.identifier);
 			return meth();
@@ -102,7 +102,7 @@ namespace Valadate.Introspection {
 		[CCode ( has_target = "false" )]
 		internal delegate void* Method(void* object, ...);
 		
-		[Experimental]
+		[Version (experimental = true, experimental_until = "")]
 		public void* call(void* object, ...) {
 			unowned Method meth = (Method)module.get_method(identifier);
 			return meth(object);
