@@ -32,7 +32,7 @@ namespace Valadate.Introspection.Repository {
 		}
 	}
 
-	[Experimental]
+	[Version (experimental = true, experimental_until = "")]
 	public static Class[] get_class_by_type(GLib.Type type) {
 		Class[] result = {};
 		classes.foreach((k, c)=> {
@@ -42,14 +42,14 @@ namespace Valadate.Introspection.Repository {
 		return result;
 	}
 
-	[Experimental]
+	[Version (experimental = true, experimental_until = "")]
 	public static Class get_class_by_name(string name) {
 		unowned Class result = classes.lookup(name);
 		return result;
 	}
 
 
-	[Experimental]
+	[Version (experimental = true, experimental_until = "")]
 	public static void add_package(string modpath, string girpath) throws Error {
 		initialize();
 		var module = new Module(modpath);
