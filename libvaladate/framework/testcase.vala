@@ -53,7 +53,7 @@ namespace Valadate.Framework {
 	 */
 	public abstract class TestCase : Object, Test, TestFixture {
 
-		public GLib.TestSuite _suite;
+		private GLib.TestSuite _suite;
 
 		public GLib.TestSuite suite {
 			get {
