@@ -17,6 +17,7 @@ VALADATE_VALAFLAGS = \
 	--pkg posix \
 	--pkg config \
 	--target-glib=2.40.0 \
+	--hide-internal \
 	-g
 
 VALADATE_CPPFLAGS = \
