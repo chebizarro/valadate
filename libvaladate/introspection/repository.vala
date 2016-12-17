@@ -76,19 +76,6 @@ namespace Valadate.Introspection.Repository {
 		if (gir == null)
 			throw new Error.GIR("Gir for %s not found", girpath);
 			
-		/*
-		File xslfile = File.new_for_uri("resource:///org/valadate/lib/data/gir.xsl");
-		
-		if(!xslfile.query_exists())
-			throw new Error.PARSER("Gir parser not found");
-		
-		uint8[] contents;
-		try {
-			xslfile.load_contents (null, out contents, null);
-		} catch (GLib.Error e) {
-			throw new Error.PARSER(e.message);
-		}
-		*/
 		var xsl = Xml.Parser.parse_doc(GIR_PARSER);
 		if (xsl == null)
 			throw new Error.PARSER("Gir parser corrupted");
