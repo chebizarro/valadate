@@ -31,4 +31,7 @@ MAINTAINERCLEANFILES = \
 	`find "$(srcdir)" -type f -name Makefile.in -print` \
 	`find "m4" -type f -name "*.m4" ! -name "as-compiler-flag.m4" ! -name "introspection.m4" ! -name "vala.m4" -print`
 
+
+GITIGNOREFILES = aclocal.m4 .deps .dirstamp .libs .lo
+
 -include $(top_srcdir)/git.mk

@@ -21,8 +21,13 @@ AM_PROG_AR
 AM_PATH_GLIB_2_0
 AC_PROG_CC
 AM_PROG_CC_C_O
+
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
+
+AM_PROG_VALAC([0.34.0], vala34=yes,)
+AM_CONDITIONAL([VALA_34], [test x$vala34 = xyes])
+
 
 dnl === OS Check =======================================================
 

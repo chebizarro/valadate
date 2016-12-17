@@ -22,6 +22,11 @@ libvaladate_1_0_la_VALAFLAGS = \
 	--gir=Valadate-1.0.gir \
 	$(VALADATE_VALAFLAGS)
 
+if VALA_34
+libvaladate_1_0_la_VALAFLAGS += \
+	-D VALA_34
+endif
+
 libvaladate_1_0_la_LDFLAGS = \
 	-export-dynamic \
 	-shared

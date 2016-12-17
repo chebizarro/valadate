@@ -157,11 +157,19 @@ namespace Valadate.Introspection.Repository {
 				ns.repository = this;
 				value.init_from_instance(ns);
 			} else
+		#if VALA_34
+				return default_deserialize_property (property_name, out value, pspec, property_node);
+		#else
 				return default_deserialize_property (property_name, value, pspec, property_node);
+		#endif
 			return true;
 		}
 
+	#if VALA_34
+		public unowned GLib.ParamSpec? find_property (string name) {
+	#else
 		public unowned GLib.ParamSpec find_property (string name) {
+	#endif
 			GLib.Type type = this.get_type();
 			GLib.ObjectClass ocl = (GLib.ObjectClass)type.class_ref();
 			unowned GLib.ParamSpec? spec = ocl.find_property (name); 
