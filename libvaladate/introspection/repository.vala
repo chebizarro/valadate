@@ -157,7 +157,7 @@ namespace Valadate.Introspection.Repository {
 				ns.repository = this;
 				value.init_from_instance(ns);
 			} else
-		#if VALA_34
+		#if VALA_0_34
 				return default_deserialize_property (property_name, out value, pspec, property_node);
 		#else
 				return default_deserialize_property (property_name, value, pspec, property_node);
@@ -165,7 +165,7 @@ namespace Valadate.Introspection.Repository {
 			return true;
 		}
 
-	#if VALA_34
+	#if VALA_0_34
 		public unowned GLib.ParamSpec? find_property (string name) {
 	#else
 		public unowned GLib.ParamSpec find_property (string name) {
