@@ -81,10 +81,12 @@ namespace Valadate.Framework {
 				var test = testcls.get_instance() as Framework.TestCase; 
 				test.name = testcls.name;
 
-				foreach (var an in testcls.annotations)
-					if (an.key.has_prefix("test.name"))
+				foreach (var an in testcls.annotations) {
+					string ankey = (an.key != null) ? an.key : an.name;
+					if (ankey.has_prefix("test.name"))
 						test.name = an.value;
-				
+				}
+					
 				_tests += test;
 
 				HashTable<string,AsyncMethod> async_tests = 
@@ -112,13 +114,15 @@ namespace Valadate.Framework {
 
 					foreach (Annotation ano in method.annotations) {
 
-						if (!ano.key.has_prefix("test."))
+						string anokey = (ano.key != null) ? ano.key : ano.name;
+
+						if (!anokey.has_prefix("test."))
 							break;
 
-						if (ano.key == "test.name")
+						if (anokey == "test.name")
 							method_name = ano.value;
 
-						if (ano.key == "test.skip" && ano.value == "yes") {
+						if (anokey == "test.skip" && ano.value == "yes") {
 							testmethod = ()=> { GLib.Test.skip(@"Skipping Test $(method_name)"); };
 							break;
 						}
@@ -129,10 +133,10 @@ namespace Valadate.Framework {
 							continue;
 						}
 						
-						if (ano.key == "test.timeout")
+						if (anokey == "test.timeout")
 							timeout = int.parse(ano.value);
 						
-						if(method.parameters != null && ano.key == "test.name") {
+						if(method.parameters != null && anokey == "test.name") {
 							testmethod = null;
 
 							if(!async_tests.contains(method_name))

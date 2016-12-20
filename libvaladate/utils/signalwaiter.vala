@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  */
 
-//[ CCode ( gir_version = "1.0", gir_namespace = "Valadate.Utils") ]
 namespace Valadate.Utils {
 
 	private class SignalWrapper {

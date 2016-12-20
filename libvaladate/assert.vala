@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-[CCode (gir_namespace = "Valadate", gir_version = "1.0")]
+
 namespace Valadate {
 
 	using Valadate.Utils;

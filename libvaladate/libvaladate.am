@@ -1,4 +1,10 @@
 libvaladate_sources = \
+	src/assembly.vala \
+	src/module.vala \
+	src/test.vala \
+	src/testcase.vala \
+	src/testfixture.vala \
+	src/testsuite.vala \
 	framework/test.vala \
 	framework/testcase.vala \
 	framework/testfixture.vala \

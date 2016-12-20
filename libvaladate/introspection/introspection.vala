@@ -134,6 +134,7 @@ namespace Valadate.Introspection {
 
 	public class Annotation : Object {
 		public string key {get;internal set;}
+		public string name {get;internal set;}
 		public string value {get;internal set;}
 		internal weak Method method {get;set;}
 	}
