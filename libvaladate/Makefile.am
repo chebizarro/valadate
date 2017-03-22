@@ -55,7 +55,9 @@ libvaladate_cli_1_0_la_VALAFLAGS = \
 	--library valadate-1.0 \
 	--vapi valadate-1.0.vapi \
 	-H valadate-1.0.h \
-	$(VALADATE_CLI_VALAFLAGS)
+	--target-glib=2.40.0 \
+	--hide-internal \
+	-g
 
 libvaladate_cli_1_0_la_LIBADD = \
 	-dlopen	$(VALADATELIB) \
