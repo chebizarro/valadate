@@ -50,13 +50,20 @@ namespace Valadate.Framework {
 		
 		
 		public void load() throws RunError {
-			string girdir = Path.get_dirname(path).replace(".libs", "");
-			
+
 			string girname = Path.get_basename(path);
 			if(girname.has_prefix("lt-"))
 				girname = girname.substring(3);
+
+			string girfile = GLib.Path.DIR_SEPARATOR_S + girname + ".gir";
+			string girdir = Environment.get_variable("srcdir");
 			
-			string girfile = girdir + GLib.Path.DIR_SEPARATOR_S + girname + ".gir";
+			if(FileUtils.test (girdir + girfile, FileTest.EXISTS)) {
+				girfile = girdir + girfile;
+			} else {
+				girfile = Path.get_dirname(path).replace(".libs", "") + girfile;
+			}
+
 			try {
 				Repository.add_package(path, girfile);
 				load_tests();

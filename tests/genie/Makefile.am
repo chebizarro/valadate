@@ -11,8 +11,8 @@ testgenie_0_SOURCES = testgenie.c
 	
 testgenie_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
-	--gir testgenie-0.gir \
-	--library testgenie
+	--gir=testgenie-0.gir \
+	--library=testgenie
 
 testgenie_0_LDADD = \
 	$(TESTS_LIBS) \

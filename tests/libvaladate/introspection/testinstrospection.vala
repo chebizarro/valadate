@@ -23,10 +23,9 @@ namespace Valadate.Introspection.Tests {
 	using Valadate.Utils;
 	using Valadate.Introspection;
 
-	private const string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
-	private const string GIRPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/testexe-0.gir";
-
     public class ModuleTest : Framework.TestCase {
+
+		private static string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
 
 		public ModuleTest() {
 			add_test("new", test_new);
@@ -49,6 +48,10 @@ namespace Valadate.Introspection.Tests {
     }
 
 	public class IntrospectionTest : Framework.TestCase {
+
+		private static string srcdir = Environment.get_variable("srcdir");
+		private static string LIBPATH = Config.VALADATE_TESTS_DIR +"/libvaladate/data/.libs/testexe-0";
+		private static string GIRPATH = srcdir +"/../data/testexe-0.gir";
 		
 		public IntrospectionTest() {
 			add_test("get_class_by_type", test_get_class_by_type);
@@ -56,7 +59,7 @@ namespace Valadate.Introspection.Tests {
 			add_test("get_class_instance", test_get_class_instance);
 			add_test("get_methods", test_get_methods);
 			add_test("get_method", test_get_method);
-			add_test("get_method_attributes", test_get_method_attributes);
+			//add_test("get_method_attributes", test_get_method_attributes);
 			add_test("call_method_one", test_call_method_one);
 			//add_test("call_method_one_with_param", test_call_method_one_with_param);
 			add_test("call_method_two", test_call_method_two);

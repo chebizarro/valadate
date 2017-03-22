@@ -32,6 +32,21 @@ MAINTAINERCLEANFILES = \
 	`find "m4" -type f -name "*.m4" ! -name "as-compiler-flag.m4" ! -name "introspection.m4" ! -name "vala.m4" -print`
 
 
-GITIGNOREFILES = aclocal.m4
+GITIGNOREFILES = \
+	autom4te.cache \
+	aclocal.m4 \
+	ar-lib \
+	build/autotools/libtool.m4 \
+	build/autotools/ltoptions.m4 \
+	build/autotools/ltsugar.m4 \
+	build/autotools/ltversion.m4 \
+	build/autotools/lt~obsolete.m4 \
+	compile \
+	config.guess \
+	config.sub \
+	depcomp \
+	install-sh \
+	ltmain.sh \
+	missing
 
 -include $(top_srcdir)/git.mk

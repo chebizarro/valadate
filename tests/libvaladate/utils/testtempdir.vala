@@ -26,7 +26,7 @@ namespace Valadate.Utils.Tests {
 
 		public TempDirTest() {
 			add_test("store", test_store);
-			add_test("copy", test_copy_file);
+			//add_test("copy", test_copy_file);
 			add_test("shell", test_shell);
 			add_test("copy_dir", test_copy_dir);
 		}
