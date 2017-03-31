@@ -78,12 +78,16 @@ namespace Valadate.Framework {
 			public Method end;
 		}
 		
+		private Class[] abstract_classes = {};
+		
 		public void load_tests() throws RunError {
 			Class[] testclasses = Repository.get_class_by_type(typeof(Framework.TestCase));
 
 			foreach (Class testcls in testclasses) {
-				if (testcls.abstract)
+				if (testcls.abstract) {
+					abstract_classes += testcls;
 					continue;
+				}
 
 				var test = testcls.get_instance() as Framework.TestCase; 
 				test.name = testcls.name;
