@@ -2,7 +2,7 @@
  * Valadate - Unit testing library for GObject-based libraries.
  *
  * testcase.vala
- * Copyright (C) 2016 Chris Daley
+ * Copyright (C) 2016-2017 Chris Daley
  * Copyright (C) 2009-2012 Julien Peeters
  *
  * This library is free software; you can redistribute it and/or
@@ -27,10 +27,6 @@
 
 namespace Valadate {
 	
-	public errordomain TestError {
-		NOT_FOUND
-	}
-
 	public abstract class TestCase : Object, Test, TestFixture {
 
 		/**
@@ -45,12 +41,9 @@ namespace Valadate {
 		public string name { get; set; }
 
 		/**
-		 * The public constructor takes an optional string parameter for the
-		 * TestCase's name
+		 * the label of the TestCase
 		 */
-		public TestCase(string? name = null) {
-			this.name = name ?? this.get_type().name();
-		}
+		public string label { get; set; }
 
 		/**
 		 * Returns the number of {@link Valadate.Test}s that will be run by this TestCase
@@ -67,11 +60,21 @@ namespace Valadate {
 
 		public string bug_base {get;set;}
 		
-
 		private List<Test> _tests = new List<Test>();
 
-		public void add_test(string testname, owned TestMethod test) {
+		public new Test get(int index) {
+			return _tests.nth_data((uint)index);
+		}
+
+		public new void set(int index, Test test) {
+			_tests.insert_before(_tests.nth(index), test);
+			var t = _tests.nth_data((uint)index++);
+			_tests.remove(t);
+		}
+
+		public void add_test(string testname, owned TestMethod test, string? label = null) {
 			var adaptor = new TestAdaptor (testname, (owned)test, this);
+			adaptor.label = label;
 			_tests.append(adaptor);
 		}
 
@@ -111,6 +114,7 @@ namespace Valadate {
 			private unowned TestCase testcase;
 
 			public string name {get;set;}
+			public string label { get; set; }
 
 			public int count {
 				get {

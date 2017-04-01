@@ -1,23 +1,32 @@
 libvaladate_sources = \
 	src/assembly.vala \
-	src/module.vala \
+	src/driver.vala \
+	src/girtestplan.vala \
+	src/pluginmodule.vala \
+	src/testmodule.vala \
 	src/test.vala \
 	src/testcase.vala \
+	src/testerror.vala \
+	src/testconfig.vala \
 	src/testfixture.vala \
+	src/testoptions.vala \
+	src/testplan.vala \
+	src/testrunner.vala \
+	src/testresult.vala \
 	src/testsuite.vala \
-	framework/test.vala \
-	framework/testcase.vala \
-	framework/testfixture.vala \
-	framework/testsuite.vala \
-	framework/testresult.vala \
-	framework/testrunner.vala \
-	introspection/girparser.vala \
-	introspection/introspection.vala \
-	introspection/module.vala \
-	introspection/namespace.vala \
-	introspection/repository.vala \
+	deprecated/assert.vala \
+	deprecated/runner.vala \
+	deprecated/framework/test.vala \
+	deprecated/framework/testcase.vala \
+	deprecated/framework/testfixture.vala \
+	deprecated/framework/testsuite.vala \
+	deprecated/framework/testresult.vala \
+	deprecated/framework/testrunner.vala \
+	deprecated/introspection/girparser.vala \
+	deprecated/introspection/introspection.vala \
+	deprecated/introspection/namespace.vala \
+	deprecated/introspection/repository.vala \
+	utils/xmlfile.vala \
 	utils/tempdir.vala \
 	utils/wait.vala \
-	utils/signalwaiter.vala \
-	assert.vala \
-	runner.vala
+	utils/signalwaiter.vala

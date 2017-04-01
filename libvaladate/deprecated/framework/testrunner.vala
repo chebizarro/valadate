@@ -18,11 +18,8 @@
 
 namespace Valadate.Framework {
 
-    public interface TestFixture : Object {
-
-		public abstract void set_up ();
-
-		public abstract void tear_down ();
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "ValadateTestRunner")]
+    public interface TestRunner : Object {
 
     }
 

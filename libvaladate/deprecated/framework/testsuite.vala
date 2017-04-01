@@ -19,19 +19,22 @@
 namespace Valadate.Framework {
 
 	/**
-	 * The Test interface is implemented by TestCase and TestSuite.
-	 * It is the base interface for all runnable Tests.
+	 * TestSuite is a class representing a collection of Tests. Since it
+	 * implements Test, it can be run just like a TestCase. When run, a
+	 * TestSuite runs all the Tests it contains. It may contain both TestCases
+	 * and other TestSuites.
+	 * 
+	 * Tests also can be added to a TestSuite using the add_test() method.
+	 * 
+	 * Hamill, Paul (2004-11-02). Unit Test Frameworks: Tools for
+	 * High-Quality Software Development (Kindle Locations 2970-2980). O'Reilly Media. Kindle Edition. 
 	 */
-    public interface Test : Object {
-		/**
-		 * Runs the Tests and collects the results in a TestResult 
-		 *
-		 * @param result the TestResult object used to store the results of the Test
-		 */
-		public abstract void run (TestResult? result = null);
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "ValadateTestSuite")]
+    public abstract class TestSuite : Valadate.TestSuite {
 
-		public delegate void TestMethod ();
+		public abstract void add_test (Test test);
 
+		public virtual void run (TestResult? result = null) {}
 
     }
 

@@ -24,6 +24,8 @@ namespace Valadate {
 
 	public class TestRunner : Object {
 
+		public int testcount {get;private set;default=0;}
+
 		private uint _n_ongoing_tests = 0;
 		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
 
@@ -38,9 +40,13 @@ namespace Valadate {
 			new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
 
 		private string binary;
+		private MainLoop loop;
+
+		private TestPlan plan;
 		
-		public TestRunner(string binary) {
-			this.binary = binary;
+		public TestRunner(TestPlan plan) {
+			this.plan = plan;
+			this.binary = plan.binary;
 			this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
 			this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
 			this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
@@ -70,6 +76,20 @@ namespace Valadate {
 				LogLevelFlags.LEVEL_CRITICAL)) != 0) {
 				GLib.on_error_stack_trace ("libtool --mode=execute gdb");
 			}
+		}
+
+		private void count_tests(Test test) {
+			if(test is TestSuite)
+				foreach(var subtest in test)
+					count_tests(subtest);
+			else
+				testcount += test.count;
+		}
+
+
+		public int run_all() {
+			plan.result.run(this);
+			return -1;
 		}
 
 		public void run_test(Test test, TestResult result) {
@@ -128,20 +148,16 @@ namespace Valadate {
 					result.add_success(test, string.joinv("\n",message));
 		}
 
-		public static int main (string[] args) {
-			
-			var bin = args[0];
-			var config = new TestConfig();
-			int result = config.parse(args);
-
-			if(result >= 0)
-				return result;
-
-			var runner = new TestRunner(bin);
-			var testresult = new TestResult(config);
-			testresult.run(runner);
-
-			return 0;
+		public static void main (string[] args) {
+			try {
+				Module.load_all();
+				var options = new TestOptions(args);
+				var testplan = TestPlan.new(options);
+				var runner = new TestRunner(testplan);
+				runner.run_all();
+			} catch (Error e) {
+				error(e.message);
+			}
 		}
 	}
 }

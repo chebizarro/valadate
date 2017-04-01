@@ -18,7 +18,21 @@
 
 namespace Valadate.Framework {
 
-    public interface TestRunner : Object {
+	/**
+	 * The Test interface is implemented by TestCase and TestSuite.
+	 * It is the base interface for all runnable Tests.
+	 */
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "ValadateTest")]
+    public interface Test : Object {
+		/**
+		 * Runs the Tests and collects the results in a TestResult 
+		 *
+		 * @param result the TestResult object used to store the results of the Test
+		 */
+		public abstract void run (TestResult? result = null);
+
+		public delegate void TestMethod ();
+
 
     }
 

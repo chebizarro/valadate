@@ -19,7 +19,7 @@
 namespace Valadate.Introspection.Repository {
 	
 	private static bool initialized = false;
-	private static Module[] modules;
+	private static TestModule[] modules;
 	private static HashTable<string, Class> classes;
 	private static Repository[] repositories;
 	
@@ -32,7 +32,7 @@ namespace Valadate.Introspection.Repository {
 		}
 	}
 
-	[Version (experimental = true, experimental_until = "")]
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public static Class[] get_class_by_type(GLib.Type type) {
 		Class[] result = {};
 		classes.foreach((k, c)=> {
@@ -42,17 +42,17 @@ namespace Valadate.Introspection.Repository {
 		return result;
 	}
 
-	[Version (experimental = true, experimental_until = "")]
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public static Class get_class_by_name(string name) {
 		unowned Class result = classes.lookup(name);
 		return result;
 	}
 
 
-	[Version (experimental = true, experimental_until = "")]
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public static void add_package(string modpath, string girpath) throws Error {
 		initialize();
-		var module = new Module(modpath);
+		var module = new TestModule(modpath);
 		module.load_module();
 		var repo = load_gir(girpath);
 		repo.module = module;
@@ -119,7 +119,7 @@ namespace Valadate.Introspection.Repository {
 		public Include[] includes {get;set;} 
 		public Namespace namespace {get;set;}
 
-		public weak Module module {get;set;}
+		public weak TestModule module {get;set;}
 
 		/**
 		 * Json.Serializable interface implementation

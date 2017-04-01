@@ -20,7 +20,7 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-using namespace Valadate {
+namespace Valadate {
 
 	public class TestSuite : Object, Test {
 
@@ -30,6 +30,11 @@ using namespace Valadate {
 		 * the name of the TestSuite
 		 */
 		public string name { get; set; }
+
+		/**
+		 * the label of the TestSuite
+		 */
+		public string label { get; set; }
 
 		/**
 		 * Returns the number of {@link Valadate.Test}s that will be run by 
@@ -73,6 +78,17 @@ using namespace Valadate {
 		public Test get_test(int index) {
 			return _tests.nth_data((uint)index);
 		}
+
+		public new Test get(int index) {
+			return _tests.nth_data((uint)index);
+		}
+
+		public new void set(int index, Test test) {
+			_tests.insert_before(_tests.nth(index), test);
+			var t = _tests.nth_data((uint)index++);
+			_tests.remove(t);
+		}
+
 
 		public virtual void set_up() {}
 		public virtual void tear_down() {}

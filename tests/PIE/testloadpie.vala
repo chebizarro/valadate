@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate.Framework.Tests {
+namespace Valadate.Tests {
 
 #if MACOSX
 	const string TESTEXE = "tests_PIE-0";
@@ -29,16 +29,16 @@ namespace Valadate.Framework.Tests {
 		[Test (name="load_pie")]
 		public void load_pie () {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
-			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
+			var mod = GLib.Module.open (modname, ModuleFlags.BIND_LOCAL);
 			assert (mod != null);
 		}
 		
 		[Test (name="has_test_method")]
 		public void has_test_method() {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
-			var mod = Module.open (modname, ModuleFlags.BIND_LOCAL);
+			var mod = GLib.Module.open (modname, ModuleFlags.BIND_LOCAL);
 			void* function;
-			assert(mod.symbol ("valadate_framework_tests_test_pie_test_pie_fail", out function));
+			assert(mod.symbol ("valadate_tests_test_pie_test_pie_fail", out function));
 			assert(function != null);
 		}
 	}

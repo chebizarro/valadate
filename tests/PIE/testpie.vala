@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate.Framework.Tests {
+namespace Valadate.Tests {
 	
 	
 	public class TestPIE : TestCase {

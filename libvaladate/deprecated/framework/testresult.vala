@@ -34,6 +34,7 @@ namespace Valadate.Framework {
 	 * Hamill, Paul (2004-11-02). Unit Test Frameworks: Tools for
 	 * High-Quality Software Development (Kindle Locations 2917-2925). O'Reilly Media. Kindle Edition. 
 	 */
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "ValadateTestResult")]
     public class TestResult : Object {
 
 		public int error_count {get;internal set;}

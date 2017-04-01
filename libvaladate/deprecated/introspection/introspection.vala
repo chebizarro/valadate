@@ -18,6 +18,7 @@
 
 namespace Valadate.Introspection {
 
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public errordomain Error {
 		MODULE,
 		GIR,
@@ -27,12 +28,14 @@ namespace Valadate.Introspection {
 	}
 
 
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class TypeInfo : Object {
 		public string name {get;internal set;}
 		
 	}
 
 
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class Class : Object {
 		
 		internal delegate Type GetClassType(); 
@@ -52,7 +55,7 @@ namespace Valadate.Introspection {
 
 		internal Repository.ClassDef classdef {get;set;}
 
-		internal weak Module module {get{return classdef.module;}}
+		internal weak TestModule module {get{return classdef.module;}}
 
 		public Annotation[] annotations {get;internal set;}
 
@@ -87,6 +90,7 @@ namespace Valadate.Introspection {
 
 	}
 	
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class Method : Object {
 		public string name {get;internal set;}
 		public string identifier {get;internal set;}
@@ -95,7 +99,7 @@ namespace Valadate.Introspection {
 		
 		public Parameter[] parameters {get;internal set;}
 		
-		internal weak Module module {get{return class.module;}}
+		internal weak TestModule module {get{return class.module;}}
 
 		public Annotation[] annotations {get;internal set;}
 		
@@ -120,11 +124,13 @@ namespace Valadate.Introspection {
 		
 	}
 	
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class Field : Object {
 		
 	}
 	
 	
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class Parameter : Object {
 		public string name {get;internal set;}
 		public string transfer_ownership {get;internal set;}
@@ -132,6 +138,7 @@ namespace Valadate.Introspection {
 		
 	}
 
+	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public class Annotation : Object {
 		public string key {get;internal set;}
 		public string name {get;internal set;}

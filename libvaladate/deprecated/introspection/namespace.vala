@@ -141,7 +141,7 @@ namespace Valadate.Introspection.Repository {
 		public string get_type_method {get;set;}
 		
 		public weak Namespace namespace {get;set;}
-		public weak Module module {get { return namespace.module; }}
+		public weak TestModule module {get { return namespace.module; }}
 
 		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec) {
 			return default_serialize_property (property_name, value, pspec);
@@ -218,7 +218,7 @@ namespace Valadate.Introspection.Repository {
 		public Annotation[] annotations {get;internal set;}
 		internal ClassDef class {get;set;}
 		public weak Repository repository {get;set;}
-		public weak Module module {get { return repository.module; }}
+		public weak TestModule module {get { return repository.module; }}
 
 		/**
 		 * Json.Serializable interface implementation

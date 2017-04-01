@@ -107,11 +107,11 @@ pkgconfig_DATA = \
 -include $(INTROSPECTION_MAKEFILE)
 if HAVE_INTROSPECTION
 
-Valadate-1.0.typelib:
+Valadate-1.0.typelib: Valadate-1.0.gir
 	g-ir-compiler \
 		--shared-library=libvaladate.so \
-		--output=Valadate-1.0.typelib \
-		Valadate-1.0.gir
+		--output=$@ \
+		$<
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = Valadate-1.0.gir

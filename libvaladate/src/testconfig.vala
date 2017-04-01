@@ -23,93 +23,57 @@ namespace Valadate {
 
 	public errordomain ConfigError {
 		MODULE,
-		TESTPLAN
+		TESTPLAN,
+		METHOD
 	}
-
 
 	public class TestConfig : Object {
 
-		private static string _seed;
-		private static string testplan;
-		internal static string _runtest;
-		private static string format = "tap";
-		private static bool list;
-		private static bool _keepgoing = true;
-		private static bool quiet;
-		private static bool _timed = true;
-		private static bool verbose;
-		private static bool version;
-		private static bool vala_version;
-
-		[CCode (array_length = false, array_null_terminated = true)]
-		private static string[] paths;
-		[CCode (array_length = false, array_null_terminated = true)]
-		private static string[] skip;
-
+		public TestOptions options {get;construct set;}
 
 		public string seed {
 			get {
-				return _seed;
+				return options.seed;
 			}
 		}
 
 		public string runtest {
 			get {
-				return _runtest;
+				return options.runtest;
 			}
 		}
 
 		public bool list_only {
 			get {
-				return list;
+				return options.list;
 			}
 		}
 
 		public bool keep_going {
 			get {
-				return _keepgoing;
+				return options.keepgoing;
 			}
 		}
 
 		public bool timed {
 			get {
-				return _timed;
+				return options.timed;
 			}
 		}
 
-		public TestSuite root {get;set;}
+		public TestSuite root {get;private set;}
 
-		public OptionContext opt_context;
 
-		public const OptionEntry[] options = {
-			{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
-			{ "format", 'f', 0, OptionArg.STRING, ref format, "Output test results using format", "FORMAT" },
-			{ "list", 'l', 0, OptionArg.NONE, ref list, "List test cases available in a test executable", null },
-			{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
-			{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref skip, "Skip all tests matching", "TESTPATH..." },
-			{ "quiet", 'q', 0, OptionArg.NONE, ref quiet, "Run tests quietly", null },
-			{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },
-			{ "testplan", 0, 0, OptionArg.STRING, ref testplan, "Run the specified TestPlan", "FILE" },
-			{ "", 'r', 0, OptionArg.STRING, ref _runtest, null, null },
-			{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Run tests verbosely", null },
-			{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
-			{ "vala-version", 0, 0, OptionArg.NONE, ref vala_version, "Display Vala version number", null },
-			{ "", 0, 0, OptionArg.STRING_ARRAY, ref paths, "Only start test cases matching", "TESTPATH..." },
-			{ null }
-		};
-
-		public static string? get_current_test_path() {
-			return _runtest;
+		construct {
+			root = new TestSuite("/");
 		}
 
-		public TestConfig() {
-			opt_context = new OptionContext ("- Valadate Testing Framework");
-			opt_context.set_help_enabled (true);
-			opt_context.add_main_entries (options, null);
+		public TestConfig(TestOptions options) {
+			Object(options : options);
 		}
 
 		public int parse(string[] args) {
-			var binary = args[0];
+			/*
 			GLib.Environment.set_prgname(binary);
 
 			try {
@@ -127,29 +91,9 @@ namespace Valadate {
 				stdout.printf ("Vala %s\n", Config.PACKAGE_SUFFIX.substring (1));
 				return 0;
 			}
-			
-			if(_seed == null)
-				_seed = "R02S%08x%08x%08x%08x".printf(
-					GLib.Random.next_int(),
-					GLib.Random.next_int(),
-					GLib.Random.next_int(),
-					GLib.Random.next_int());
-			
-			root = new TestSuite("/");
-			
-			try {
-				load(binary);
-			} catch (ConfigError e) {
-				stdout.printf ("%s\n", e.message);
-				return 1;
-			}
+			*/
 			
 			return -1;
-		}
-
-		private void load(string binary) throws ConfigError {
-			var testexplorer = new TestExplorer(binary, root);
-			testexplorer.load();
 		}
 
 	}

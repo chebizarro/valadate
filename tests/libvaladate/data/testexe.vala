@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate.Framework.Tests {
+namespace Valadate.Tests {
 	
 	
 	/*
@@ -73,6 +73,10 @@ namespace Valadate.Framework.Tests {
 			assert_true(false);
 		}
 		
+		public void test_throws_error() throws Error {
+			throw new FileError.NOSYS("This is a test error");
+		}
+		
 	}
 
 	[Test (name="Annotated Test Class With Name")]
@@ -83,5 +87,25 @@ namespace Valadate.Framework.Tests {
 		}
 
 	}
+
+	public abstract class TestAbstractClass : TestCase {
+
+		public void test_method() {
+			assert_true(true);
+		}
+
+		public abstract void test_abstract_method();
+
+		public virtual void test_virtual_method() {
+			assert_true(true);
+		}
+
+		public virtual void test_virtual_method_two() {
+			assert_not_reached();
+		}
+
+
+	}
+
 	
 }

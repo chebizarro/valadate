@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-namespace Valadate.Framework.Tests {
+namespace Valadate.Tests {
 
 	public class TestExeTwo : TestCase {
 		
@@ -48,5 +48,18 @@ namespace Valadate.Framework.Tests {
 			}
 			assert(found);
 		}
+	}
+	
+	public class TestExeAbstractImpl : TestAbstractClass {
+		
+		public override void test_abstract_method() {
+			assert_true(true);
+		}
+		
+		public override void test_virtual_method_two() {
+			assert_true(true);
+		}
+		
+		
 	}
 }

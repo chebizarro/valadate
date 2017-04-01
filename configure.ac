@@ -228,9 +228,8 @@ AC_CONFIG_FILES([
 	tests/genie/Makefile
 	tests/libvaladate/Makefile
 	tests/libvaladate/data/Makefile
-	tests/libvaladate/framework/Makefile
+	tests/libvaladate/src/Makefile
 	tests/libvaladate/utils/Makefile
-	tests/libvaladate/introspection/Makefile
 	tests/PIE/Makefile
 	vapi/Makefile
 	docs/Makefile

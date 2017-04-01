@@ -36,9 +36,9 @@ namespace Valadate.Framework {
 		public delegate void AsyncTestMethodResult(Framework.TestCase self, AsyncResult res);
 		
 		private string path;
-		private Test[] _tests;
+		private Valadate.Test[] _tests;
 		
-		public Test[] tests {
+		public Valadate.Test[] tests {
 			get {
 				return _tests;
 			}
@@ -72,13 +72,13 @@ namespace Valadate.Framework {
 		}
 		
 		public void load_tests() throws RunError {
-			Class[] testclasses = Repository.get_class_by_type(typeof(Framework.TestCase));
+			Class[] testclasses = Repository.get_class_by_type(typeof(Valadate.TestCase));
 
 			foreach (Class testcls in testclasses) {
 				if (testcls.abstract)
 					continue;
 
-				var test = testcls.get_instance() as Framework.TestCase; 
+				var test = testcls.get_instance() as Valadate.TestCase; 
 				test.name = testcls.name;
 
 				foreach (var an in testcls.annotations) {
@@ -157,17 +157,18 @@ namespace Valadate.Framework {
 								unowned AsyncTestMethodResult testmethodresult = 
 									(AsyncTestMethodResult)testcls.get_method(methods.end.identifier);
 								
+								/*
 								test.add_async_test(
 									method_name,
 									(cb) => {tmethod(test, cb);},
 									(res) => {testmethodresult(test, res);},
 									timeout
-								);
+								);*/
 							}
 						}
 					}
-					if (testmethod != null)
-						test.add_test(method_name, ()=> {testmethod(test); });
+					//if (testmethod != null)
+						//test.add_test(method_name, ()=> {testmethod(test); });
 				}
 			}
 		}

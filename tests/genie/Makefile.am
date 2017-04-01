@@ -11,6 +11,8 @@ testgenie_0_SOURCES = testgenie.c
 	
 testgenie_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
+	--vapidir $(top_srcdir)/libvaladate \
+	--vapidir $(top_srcdir)/vapi \
 	--gir testgenie-0.gir \
 	--library testgenie
 
@@ -26,16 +28,5 @@ testgenie_0_CPPFLAGS = \
 testgenie_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
 	-pie
-	
-CLEANFILES += \
-	$(testgenie_0_SOURCES:.gs=.c) \
-	*.stamp \
-	*.o \
-	*.gir \
-	*.gcda \
-	*.gcno \
-	*.vapi
-
-DISTCLEANFILES += $(CLEANFILES)
 
 -include $(top_srcdir)/git.mk

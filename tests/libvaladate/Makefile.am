@@ -1,2 +1,2 @@
-SUBDIRS = data framework utils introspection
+SUBDIRS = data src #utils
 -include $(top_srcdir)/git.mk

@@ -22,97 +22,123 @@
  
 namespace Valadate {
 
-	public class GIRTestPlan : Object, TestPlan {
+	public class GirTestPlan : Object, TestPlan {
+
+		public string plan {get;construct set;}
+
+		public string binary {get;set;}
+
+		public TestOptions options {get;construct set;}
+
+		public TestConfig config {get;protected set;}
+		public TestResult result {get;protected set;}
 
 		internal delegate Type GetType(); 
 		internal delegate void TestMethod(TestCase self);
 
-		private Xml.XPath.Context;
 		private TestSuite testsuite;
 		private TestCase testcase;
-		private Module module;
+		private TestModule module;
+		private string currpath;
 		
-		private string binary;
+		private XmlFile xmlfile; 
+		
 		private string? running;
 
-		public GIRTestPlan(string binary, TestSuite root, string? running = null) {
-			this.binary = binary;
-			this.testsuite = root;
-			this.running = running;
-		}
-
-		public void load() throws ConfigError {
-			string testdir = Path.get_dirname(binary).replace(".libs", "");
-			
-			string tplan = Path.get_basename(binary);
-			if(tplan.has_prefix("lt-"))
-				tplan = tplan.substring(3);
-			
-			string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + tplan + ".gir";
-			
-			if (!FileUtils.test (testplanfile, FileTest.EXISTS))
-				throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", testplanfile);
-			
+		construct {
 			try {
-				module = new Module(binary);
-				module.load_module();
-				setup_context(testplanfile);
-				parse();
-			} catch (ModuleError e) {
-				throw new ConfigError.MODULE(e.message);
+				binary = options.binary;
+				running = options.runtest;
+				load();
+				
+			} catch (Error e) {
+				error(e.message);
 			}
 		}
 
+		private void load() throws ConfigError {
+			module = new TestModule(binary);
+			module.load_module();
+			setup_context();
+			parse();
+		}
 
-		private void setup_context(string file) throws ConfigError {
-			var doc = Xml.Parser.parse_file (file);
-			if (doc == null)
-				throw new ConfigError.TESTPLAN("There was an error parsing the Test Plan at %s", testplanfile);
-
-			context = new Xml.XPath.Context (doc);
-			context.register_ns("xmlns", "http://www.gtk.org/introspection/core/1.0");
-			context.register_ns("c", "http://www.gtk.org/introspection/c/1.0");
-			context.register_ns("glib", "http://www.gtk.org/introspection/glib/1.0");
+		private void setup_context() throws ConfigError {
+			try {
+				xmlfile = new XmlFile(plan);
+				xmlfile.register_ns("xmlns", "http://www.gtk.org/introspection/core/1.0");
+				xmlfile.register_ns("c", "http://www.gtk.org/introspection/c/1.0");
+				xmlfile.register_ns("glib", "http://www.gtk.org/introspection/glib/1.0");
+			} catch (Error e) {
+				throw new ConfigError.TESTPLAN(e.message);
+			}
 		}
 		
-		public void parse() throws ConfigError {
+		private void parse() throws ConfigError {
+			visit_config();
+			visit_test_result();
 			visit_root();
 		}
 
-		public void visit_root() {
-			Xml.XPath.Object* res = cntx.eval_expression ("//xmlns:namespace");
+		private void visit_config() {
+			var conf = xmlfile.eval("//xmlns:class[@parent='ValadateTestConfig']");
+			Type ctype;
+			if(conf.size == 1) {
+				var node = conf[0];
+				string node_type_str = node->get_prop("get-type");
+				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				ctype = node_get_type();
+			} else {
+				ctype = typeof(TestConfig);
+			}
+			config = Object.new(ctype, "options", options, null) as TestConfig;
+			testsuite = config.root;
+		}
 
-			for (int i = 0; i < res->nodesetval->length (); i++) {
-				Xml.Node* node = res->nodesetval->item (i);
-				
+		private void visit_test_result() {
+			var res = xmlfile.eval("//xmlns:class[@parent='ValadateTestResult']");
+			Type ctype;
+			if(res.size == 1) {
+				var node = res[0];
+				string node_type_str = node->get_prop("get-type");
+				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				ctype = node_get_type();
+			} else {
+				ctype = typeof(TestResult);
+			}
+			result = Object.new(ctype, "config", config, null) as TestResult;
+		}
+
+		private void visit_root() {
+			var ns = xmlfile.eval("//xmlns:namespace");
+			
+			foreach (var node in ns) {
 				var tsname = node->get_prop("name");
+				currpath = "/" + tsname;
 				var ts = new TestSuite(tsname);
 				testsuite.add_test(ts);
 				testsuite = ts;
-				
 				visit_testsuite(node);
-				
 			}
-			delete res;
-			
 		}
 		
-		public void visit_testsuite(Xml.Node* suitenode) {
-			var expression = "%s/xmlns:class/xmlns:implements[@name='ValadateTest']/::parent".printf(suitenode->get_path());
-			Xml.XPath.Object* res = cntx.eval_expression (expression);
+		private void visit_testsuite(Xml.Node* suitenode) {
+			var expression = "%s/xmlns:class".printf(suitenode->get_path());
+			var res = xmlfile.eval (expression);
 
-			for (int i = 0; i < res->nodesetval->length (); i++) {
-				Xml.Node* node = res->nodesetval->item (i);
-				
+			foreach (var node in res) {
 				string node_type_str = node->get_prop("get-type");
 				GetType node_get_type = (GetType)module.get_method(node_type_str);
 				var node_type = node_get_type();
 
-				if(!node_type.is_a(typeof(Valadate.Test)))
-					return;
+				if(!node_type.is_a(typeof(Valadate.Test)) || node_type.is_abstract())
+					continue;
 
-				var testname = node.get_prop("name");
-				var test = GLib.Object.new(node_type, "name", tsname) as Test;
+				var testname = node->get_prop("name");
+				
+				var test = GLib.Object.new(node_type, "name", testname) as Test;
+				var oldpath = currpath;
+				currpath += "/" + testname;
 				testsuite.add_test(test);
 
 				if(node_type.is_a(typeof(TestSuite))) {
@@ -120,43 +146,86 @@ namespace Valadate {
 					//visit_testsuite(node);
 				} else if (node_type.is_a(typeof(TestCase))) {
 					testcase = test as TestCase;
-					visit_testcase(node);
+					visit_class(node_type);
 				}
-				
+				currpath = oldpath;
 			}
-			
 		}
 		
-		public void visit_testcase(Xml.Node* casenode) {
-			var expression = "%s/xmlns:method".printf(casenode->get_path());
-			Xml.XPath.Object* res = cntx.eval_expression (expression);
+		private void visit_class(Type classtype)
+			requires(classtype.is_a(typeof(Test)))
+		{
+			if(classtype == typeof(TestCase))
+				return;
 
-			for (int i = 0; i < res->nodesetval->length (); i++) {
-				Xml.Node* node = res->nodesetval->item (i);
+			var expression = "//xmlns:class[@glib:type-name='%s']/xmlns:method".printf(classtype.name());
+			var res = xmlfile.eval(expression);
+			
+			foreach (var method in res) {
 
-				var method_name = node->get_prop("name");
+				string name = method->get_prop("name");
+				var oldpath = currpath;
+				currpath += "/" + name; 
+
+				if (running != null && running != currpath) {
+					currpath = oldpath;
+					continue;
+				}
+
+				bool throwserr = (method->get_prop("throws") == null) ? false : true;
+				string label = name;
+				bool istest = false;
+				bool skip = false;
+
+				if(name.has_prefix("test_"))
+					istest = true;
+
+				if(name.has_prefix("_test_"))
+					skip = istest = true;
 				
-				// get signature
-				// get annotations
-				
-				if(method_name.has_prefix("test_")) {
-
-					unowned TestMethod testmethod = null;
-					var method_cname = node->get_prop("identifier");
-					testmethod = (TestMethod)module.get_method(method_cname);
-
-					if (testmethod != null) {
-						testcase.add_test(method_name, ()=> {
-							testmethod(current_test);
-						});
+				var child = method->children;
+				while(child != null) {
+					if(child->name == "attribute") {
+						var attname = child->get_prop("name");
+						if(attname.has_prefix("test."))
+							istest = true;
+						if(attname == "test.name")
+							label = child->get_prop("value");
+						if(attname == "test.skip")
+							skip = (child->get_prop("value") == "yes") ? true : false;
 					}
-					
+					if(child->name == "return-value") {
+						var retchild = child->children;
+						while(retchild->name != "type") { retchild = retchild->next; };
+						if(retchild->get_prop("name") != "none")
+							istest = false;
+					}
+					if(child->name == "parameters")
+						istest = false;
+					child = child->next;
 				}
-
-			}
 			
+				if(!istest) {
+					currpath = oldpath;
+					continue;
+				}
+			
+				unowned TestMethod testmethod = null;
+				if(skip) {
+					testmethod = () => { testcase.skip(@"Skipping Test $(name)"); };
+				} else {
+					var method_cname = method->get_prop("identifier");
+					testmethod = (TestMethod)module.get_method(method_cname);
+				}
+				
+				if(testmethod != null)
+					testcase.add_test(name, () => { testmethod(testcase); }, label);
+					
+				currpath = oldpath;
+			}
+
+			visit_class(classtype.parent());
 		}
-		
 
 		
 	}

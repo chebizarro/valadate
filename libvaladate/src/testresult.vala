@@ -55,14 +55,15 @@ namespace Valadate {
 		private Queue<TestReport> reports = new Queue<TestReport>();
 		private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
 		
-		private TestConfig config;
 		private TestRunner runner;
 		private MainLoop loop;
 
 		public int testcount {get;private set;default=0;}
 
+		public TestConfig config {get;construct set;}
+
 		public TestResult(TestConfig config) {
-			this.config = config;
+			Object(config : config);
 		}
 		
 		public void report() {

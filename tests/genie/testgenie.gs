@@ -20,7 +20,7 @@
 uses
 	Valadate
  
-namespace Valadate.Framework.Tests
+namespace Valadate.Tests
 
 	class TestGenie : TestCase
 		

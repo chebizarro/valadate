@@ -39,11 +39,21 @@ namespace Valadate {
 		public abstract string name { get; set; }
 
 		/**
+		 * The label of the test
+		 */
+		public abstract string label { get; set; }
+
+		/**
 		 * Returns the number of tests that will be run by this test
 		 */
 		public abstract int count {get;}
 
 		public abstract Test get_test(int index);
+
+		public abstract Test get(int index);
+
+		public abstract void set(int index, Test test);
+
 
 		public virtual TestIterator iterator() {
 			return new TestIterator(this);
