@@ -5,6 +5,7 @@ TESTS_ENVIRONMENT += \
 	G_MESSAGES_DEBUG=all \
 	G_SLICE=debug-blocks
 
+LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
 #SUBDIRS = data
 
 test_programs = tests_libvaladate

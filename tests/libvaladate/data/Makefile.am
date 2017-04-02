@@ -1,8 +1,8 @@
 include $(top_srcdir)/base.am
-#include $(top_srcdir)/build/autotools/glib-tap.mk
+include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # --- Test exe ---
-#test_programs = testexe-0
+test_programs = testexe-0
 bin_PROGRAMS = testexe-0
 
 testexe_0_SOURCES =  \

@@ -39,10 +39,11 @@ libvaladate_1_0include_HEADERS = \
 # The cli library which bootstraps cl tests
 
 libvaladate_cli_1_0_la_SOURCES = \
-	cli-main.vala
+	cli/cli-main.vala
 
 libvaladate_cli_1_0_la_CFLAGS = \
 	-I$(top_srcdir)/libvaladate \
+	-g -Og \
 	$(VALADATE_CLI_CFLAGS)
 
 libvaladate_cli_1_0_la_CPPLAGS = \
@@ -55,6 +56,7 @@ libvaladate_cli_1_0_la_VALAFLAGS = \
 	--library valadate-1.0 \
 	--vapi valadate-1.0.vapi \
 	-H valadate-1.0.h \
+	-g \
 	$(VALADATE_CLI_VALAFLAGS)
 
 libvaladate_cli_1_0_la_LIBADD = \

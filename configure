@@ -14490,7 +14490,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc libvaladate/valadate-1.0.pc tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/PIE/Makefile vapi/Makefile docs/Makefile"
+ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc libvaladate/valadate-1.0.pc tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/PIE/Makefile tests/abstract-tests/Makefile vapi/Makefile docs/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -15568,6 +15568,7 @@ do
     "tests/libvaladate/src/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libvaladate/src/Makefile" ;;
     "tests/libvaladate/utils/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libvaladate/utils/Makefile" ;;
     "tests/PIE/Makefile") CONFIG_FILES="$CONFIG_FILES tests/PIE/Makefile" ;;
+    "tests/abstract-tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/abstract-tests/Makefile" ;;
     "vapi/Makefile") CONFIG_FILES="$CONFIG_FILES vapi/Makefile" ;;
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
 

@@ -48,8 +48,6 @@ namespace Valadate {
 		 */
 		public abstract int count {get;}
 
-		public abstract Test get_test(int index);
-
 		public abstract Test get(int index);
 
 		public abstract void set(int index, Test test);
@@ -70,7 +68,7 @@ namespace Valadate {
 			}
 			
 			public Test get() {
-				current = this.test.get_test(index);
+				current = this.test.get(index);
 				index++;
 				return current;
 			}

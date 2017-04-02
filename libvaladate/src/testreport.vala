@@ -1,6 +1,6 @@
 /*
  * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
+ * Copyright (C) 2017  Chris Daley <chebizarro@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,32 +19,35 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
-
 namespace Valadate { 
 
-	public interface TestResult : Object {
+	public enum TestStatus {
+		NOT_RUN,
+		RUNNING,
+		PASSED,
+		SKIPPED,
+		ERROR,
+		FAILED
+	}
 
-		public abstract int testcount {get;internal set;default=0;}
 
-		public abstract TestConfig config {get;construct set;}
+	public class TestReport {
 
-		public abstract  void report();
+		public signal void report(TestStatus status);
 		
-		public abstract void add_error(Test test, string error);
-
-		public abstract void add_failure(Test test, string failure);
-
-		public abstract void add_success(Test test, string message);
+		public Test test {get;set;}
 		
-		public abstract void add_skip(Test test, string reason, string message);
+		public TestStatus status {get;set;}
 		
-		/**
-		 * Runs a the {@link Valadate.Test}s using the supplied
-		 * {@link Valadate.TestRunner}.
-		 * 
-		 * @param runner
-		 */
-		public abstract void run(TestRunner runner);
-
+		public int index {get;set;}
+		
+		public string message {get;set;}
+		
+		public TestReport(Test test, TestStatus status, int index, string? message = null) {
+			this.test = test;
+			this.status = status;
+			this.index = index;
+			this.message = message;
+		}
 	}
 }

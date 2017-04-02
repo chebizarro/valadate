@@ -24,12 +24,26 @@ namespace Valadate.Tests
 
 	class TestGenie : TestCase
 		
-		[Test (name="test_one")]
+		[Test (name="test one")]
 		def test_one ()
-			Assert.is_true(true)
+			assert(true)
 
-
-		[Test (name="test_two")]
 		def test_two ()
-			Assert.is_true(true)
+			assert(true)
+
+
+	class abstract GenieAbstract : TestCase
+		
+		def virtual test_virtual ()
+			assert(true)
+
+		def virtual test_virtual_two ()
+			assert(false)
+
+
+	class TestAbstract : GenieAbstract
+		
+		def override test_virtual_two ()
+			assert(true)
+
 

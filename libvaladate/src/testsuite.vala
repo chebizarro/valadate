@@ -62,6 +62,7 @@ namespace Valadate {
 		 */
 		public TestSuite(string? name = null) {
 			this.name = name ?? this.get_type().name();
+			this.label = name;
 		}
 
 		/**
@@ -71,12 +72,11 @@ namespace Valadate {
 			_tests.append(test);
 		}
 
+		/**
+		 * Runs all of the tests in the Suite
+		 */
 		public void run(TestResult result) {
 			_tests.foreach((t) => { t.run(result); });
-		}
-
-		public Test get_test(int index) {
-			return _tests.nth_data((uint)index);
 		}
 
 		public new Test get(int index) {
@@ -88,7 +88,6 @@ namespace Valadate {
 			var t = _tests.nth_data((uint)index++);
 			_tests.remove(t);
 		}
-
 
 		public virtual void set_up() {}
 		public virtual void tear_down() {}

@@ -20,5 +20,5 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-[CCode (gir_namespace = "Valadate", gir_version = "1.1")]
+[CCode (gir_namespace = "Valadate", gir_version = "1.0")]
 namespace Valadate { }

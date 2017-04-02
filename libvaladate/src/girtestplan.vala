@@ -104,7 +104,7 @@ namespace Valadate {
 				GetType node_get_type = (GetType)module.get_method(node_type_str);
 				ctype = node_get_type();
 			} else {
-				ctype = typeof(TestResult);
+				ctype = typeof(AsyncTestResult);
 			}
 			result = Object.new(ctype, "config", config, null) as TestResult;
 		}
@@ -113,7 +113,7 @@ namespace Valadate {
 			var ns = xmlfile.eval("//xmlns:namespace");
 			
 			foreach (var node in ns) {
-				var tsname = node->get_prop("name");
+				var tsname = node->get_prop("prefix");
 				currpath = "/" + tsname;
 				var ts = new TestSuite(tsname);
 				testsuite.add_test(ts);
@@ -136,7 +136,7 @@ namespace Valadate {
 
 				var testname = node->get_prop("name");
 				
-				var test = GLib.Object.new(node_type, "name", testname) as Test;
+				var test = GLib.Object.new(node_type, "name", testname, "label", testname) as Test;
 				var oldpath = currpath;
 				currpath += "/" + testname;
 				testsuite.add_test(test);
@@ -167,26 +167,35 @@ namespace Valadate {
 				var oldpath = currpath;
 				currpath += "/" + name; 
 
+				
 				if (running != null && running != currpath) {
 					currpath = oldpath;
 					continue;
 				}
+				
+				//debug("Current Path: %s, Running Path: %s", currpath, running);
 
 				bool throwserr = (method->get_prop("throws") == null) ? false : true;
 				string label = name;
 				bool istest = false;
 				bool skip = false;
 
-				if(name.has_prefix("test_"))
+				if(name.has_prefix("test_")) {
 					istest = true;
+					label = label.substring(5);
+				}
 
-				if(name.has_prefix("_test_"))
+				if(name.has_prefix("_test_")) {
 					skip = istest = true;
+					label = label.substring(6);
+				}
+
+				label = label.replace("_", " ");
 				
 				var child = method->children;
 				while(child != null) {
 					if(child->name == "attribute") {
-						var attname = child->get_prop("name");
+						var attname = child->get_prop("name") ?? child->get_prop("key");
 						if(attname.has_prefix("test."))
 							istest = true;
 						if(attname == "test.name")
@@ -210,12 +219,17 @@ namespace Valadate {
 					continue;
 				}
 			
-				unowned TestMethod testmethod = null;
+				TestMethod testmethod = null;
 				if(skip) {
-					testmethod = () => { testcase.skip(@"Skipping Test $(name)"); };
+					testmethod = () => { testcase.skip(@"Skipping Test $(label)"); };
 				} else {
-					var method_cname = method->get_prop("identifier");
-					testmethod = (TestMethod)module.get_method(method_cname);
+					if(running != null) {
+						var method_cname = method->get_prop("identifier");
+						//debug(method_cname);
+						testmethod = (TestMethod)module.get_method(method_cname);
+					} else {
+						testmethod = () => { assert_not_reached(); };
+					}
 				}
 				
 				if(testmethod != null)

@@ -26,14 +26,14 @@ namespace Valadate.Tests {
 
 	public class TestLoadPIE : TestCase {
 		
-		[Test (name="load_pie")]
+		[Test (name="test loading pie binary")]
 		public void load_pie () {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
 			var mod = GLib.Module.open (modname, ModuleFlags.BIND_LOCAL);
 			assert (mod != null);
 		}
 		
-		[Test (name="has_test_method")]
+		[Test (name="test if the binary has a test method")]
 		public void has_test_method() {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
 			var mod = GLib.Module.open (modname, ModuleFlags.BIND_LOCAL);

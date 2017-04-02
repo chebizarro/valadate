@@ -30,7 +30,7 @@ namespace Valadate {
 		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
 
 		/* Change this to change the cap on the number of concurrent operations. */
-		private const uint _max_n_ongoing_tests = 15;
+		private static uint _max_n_ongoing_tests = 1;
 
 		private class DelegateWrapper {
 			public SourceFunc cb;
@@ -47,6 +47,7 @@ namespace Valadate {
 		public TestRunner(TestPlan plan) {
 			this.plan = plan;
 			this.binary = plan.binary;
+			_max_n_ongoing_tests = GLib.get_num_processors();
 			this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
 			this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
 			this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
@@ -66,7 +67,7 @@ namespace Valadate {
 		private void log_func_stack_trace (
 			string? log_domain,
 			LogLevelFlags log_levels,
-			string message)	{
+			string? message)	{
 			Log.default_handler (log_domain, log_levels, message);
 
 			/* Print a stack trace for any message at the warning level or above */
@@ -87,9 +88,8 @@ namespace Valadate {
 		}
 
 
-		public int run_all() {
+		public void run_all() {
 			plan.result.run(this);
-			return -1;
 		}
 
 		public void run_test(Test test, TestResult result) {
@@ -116,10 +116,13 @@ namespace Valadate {
 				var process = launcher.spawnv(args);
 				yield process.communicate_utf8_async(null, null, out buffer, null);
 				
-				if(process.wait_check())
+				if(process.wait_check()) {
+					//debug("#### %s", buffer);
 					process_buffer(test, result, buffer);
+				}
 
 			} catch (Error e) {
+				//debug("!!!! %s : %s", buffer, e.message);
 				process_buffer(test, result, buffer, true);
 			} finally {
 				_n_ongoing_tests--;
@@ -148,16 +151,5 @@ namespace Valadate {
 					result.add_success(test, string.joinv("\n",message));
 		}
 
-		public static void main (string[] args) {
-			try {
-				Module.load_all();
-				var options = new TestOptions(args);
-				var testplan = TestPlan.new(options);
-				var runner = new TestRunner(testplan);
-				runner.run_all();
-			} catch (Error e) {
-				error(e.message);
-			}
-		}
 	}
 }

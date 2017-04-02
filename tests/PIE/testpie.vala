@@ -15,36 +15,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+[CCode (gir_namespace = "ValadateTests", gir_version = "1.0")]
 namespace Valadate.Tests {
 	
 	
 	public class TestPIE : TestCase {
-		/*
-		public TestPIE() {
-			//base("PIE");
-			add_test("test_pie_fail", test_pie_fail);
-			add_test("test_pie_pass", test_pie_pass);
-		}*/
 		
-		[Test (name="test_pie_fail")]
+		[Test (name="tests fails")]
 		public void test_pie_fail () {
 			assert_true(true);
 		}
 
-		[Test (name="test_pie_pass")]
+		[Test (name="tests passes")]
 		public void test_pie_pass () {
 			assert_true(true);
 		}
 		
 	}
-	
-	/*
-	static void main (string[] args) {
-		GLib.Test.init (ref args);
-		GLib.TestSuite.get_root ().add_suite (new TestPIE().suite);
-		GLib.Test.run ();
-	}*/
 	
 	
 }

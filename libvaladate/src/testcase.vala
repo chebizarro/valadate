@@ -77,15 +77,8 @@ namespace Valadate {
 			adaptor.label = label;
 			_tests.append(adaptor);
 		}
-
 		
 		public virtual void run(TestResult result) { }
-
-		public Test get_test(int index) {
-
-			return _tests.nth_data(index);
-
-		}
 
 		public void bug(string reference)
 			requires(bug_base != null)
@@ -111,7 +104,7 @@ namespace Valadate {
 		private class TestAdaptor : Object, Test {
 
 			private TestMethod test;
-			private unowned TestCase testcase;
+			private TestCase testcase;
 
 			public string name {get;set;}
 			public string label { get; set; }
@@ -122,7 +115,7 @@ namespace Valadate {
 				}
 			}
 			
-			public Test get_test(int index) {
+			public new Test get(int index) {
 				return this;
 			}
 			
@@ -133,6 +126,7 @@ namespace Valadate {
 			}
 
 			public void run(TestResult result) {
+				//debug("Running %s [%s]", name, label);
 				this.testcase.set_up();
 				this.test();
 				this.testcase.tear_down();

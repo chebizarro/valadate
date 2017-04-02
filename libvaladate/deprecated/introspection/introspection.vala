@@ -72,17 +72,17 @@ namespace Valadate.Introspection {
 			_class_type = meth();
 		}
 
-		[Version (experimental = true, experimental_until = "")]
+		[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 		public Method[] get_methods() {
 			return classdef.methods;
 		} 
 
-		[Version (experimental = true, experimental_until = "")]
+		[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 		public void* get_method(string methodname) {
 			return module.get_method(methodname);
 		}
 
-		[Version (experimental = true, experimental_until = "")]
+		[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 		public void* get_instance() {
 			unowned Constructor meth = (Constructor)module.get_method(classdef.constructor.identifier);
 			return meth();

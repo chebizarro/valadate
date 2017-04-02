@@ -41,7 +41,7 @@ namespace Valadate {
 			if (!File.new_for_path(lib_path).query_exists())
 				throw new ConfigError.MODULE("Module: %s does not exist", lib_path);
 			
-			module = GLib.Module.open (lib_path, ModuleFlags.BIND_LOCAL);
+			module = GLib.Module.open (lib_path, ModuleFlags.BIND_LAZY);
 			if (module == null)
 				throw new ConfigError.MODULE(GLib.Module.error());
 			module.make_resident();
