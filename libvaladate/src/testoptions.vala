@@ -27,6 +27,7 @@ namespace Valadate {
 		private static string _testplan;
 		private static string _runtest;
 		private static string _format = "tap";
+		private static bool _async = false;
 		private static bool _tap;
 		private static bool _list;
 		private static bool _keepgoing = true;
@@ -45,6 +46,7 @@ namespace Valadate {
 			{ "format", 'f', 0, OptionArg.STRING, ref _format, "Output test results using format", "FORMAT" },
 			{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
 			{ "list", 'l', 0, OptionArg.NONE, ref _list, "List test cases available in a test executable", null },
+			{ "async", 'a', 0, OptionArg.NONE, ref _async, "Run tests asynchronously in a separate subprocess [Experimental]", null },
 			{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
 			{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref _skip, "Skip all tests matching", "TESTPATH..." },
 			{ "quiet", 'q', 0, OptionArg.NONE, ref _quiet, "Run tests quietly", null },
@@ -53,14 +55,13 @@ namespace Valadate {
 			{ "", 'r', 0, OptionArg.STRING, ref _runtest, null, null },
 			{ "verbose", 0, 0, OptionArg.NONE, ref _verbose, "Run tests verbosely", null },
 			{ "version", 0, 0, OptionArg.NONE, ref _version, "Display version number", null },
-			{ "vala-version", 0, 0, OptionArg.NONE, ref _vala_version, "Display Vala version number", null },
 			{ "", 0, 0, OptionArg.STRING_ARRAY, ref _paths, "Only start test cases matching", "TESTPATH..." },
 			{ null }
 		};
 
 		public OptionContext opt_context;
 
-		public string binary {get;set;}
+		public Assembly assembly {get;set;}
 
 		public static string? get_current_test_path() {
 			return _runtest;
@@ -72,9 +73,15 @@ namespace Valadate {
 			}
 		}
 
-		public string? runtest {
+		public string? running_test {
 			get {
 				return _runtest;
+			}
+		}
+
+		public bool run_async {
+			get {
+				return _async;
 			}
 		}
 
@@ -97,7 +104,7 @@ namespace Valadate {
 		}
 
 		public TestOptions(string[] args) throws OptionError {
-			this.binary = args[0];
+			assembly = new TestAssembly(File.new_for_path(args[0]));
 			opt_context = new OptionContext ("- Valadate Testing Framework");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);

@@ -52,7 +52,7 @@ namespace Valadate.Introspection.Repository {
 	[Version (deprecated = true, deprecated_since = "1.1", replacement = "")]
 	public static void add_package(string modpath, string girpath) throws Error {
 		initialize();
-		var module = new TestModule(modpath);
+		var module = new TestModule(File.new_for_path(modpath));
 		module.load_module();
 		var repo = load_gir(girpath);
 		repo.module = module;

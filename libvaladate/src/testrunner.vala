@@ -22,134 +22,32 @@
 
 namespace Valadate {
 
-	public class TestRunner : Object {
+	public interface TestRunner : Object {
 
-		public int testcount {get;private set;default=0;}
+		private static Type default_type;
 
-		private uint _n_ongoing_tests = 0;
-		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
-
-		/* Change this to change the cap on the number of concurrent operations. */
-		private static uint _max_n_ongoing_tests = 1;
-
-		private class DelegateWrapper {
-			public SourceFunc cb;
+		public static void register_default(Type type)
+			requires(type.is_a(typeof(TestRunner)))
+		{
+			default_type = type;
 		}
 
-		private SubprocessLauncher launcher =
-			new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
-
-		private string binary;
-		private MainLoop loop;
-
-		private TestPlan plan;
-		
-		public TestRunner(TestPlan plan) {
-			this.plan = plan;
-			this.binary = plan.binary;
-			_max_n_ongoing_tests = GLib.get_num_processors();
-			this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
-			this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
-			this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
-			GLib.set_printerr_handler (printerr_func_stack_trace);
-			Log.set_default_handler (log_func_stack_trace);
-		}
-
-		private static void printerr_func_stack_trace (string? text) {
-			if (text == null || str_equal (text, ""))
-				return;
-			stderr.printf (text);
-
-			/* Print a stack trace since we've hit some major issue */
-			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-		}
-
-		private void log_func_stack_trace (
-			string? log_domain,
-			LogLevelFlags log_levels,
-			string? message)	{
-			Log.default_handler (log_domain, log_levels, message);
-
-			/* Print a stack trace for any message at the warning level or above */
-			if ((log_levels & (
-				LogLevelFlags.LEVEL_WARNING |
-				LogLevelFlags.LEVEL_ERROR |
-				LogLevelFlags.LEVEL_CRITICAL)) != 0) {
-				GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-			}
-		}
-
-		private void count_tests(Test test) {
-			if(test is TestSuite)
-				foreach(var subtest in test)
-					count_tests(subtest);
+		public static TestRunner @new(TestConfig config) {
+			Type runner_type;
+			
+			if(default_type != Type.INVALID)
+				runner_type = default_type;
+			else if(config.run_async)
+				runner_type = typeof(AsyncTestRunner);
 			else
-				testcount += test.count;
+				runner_type = typeof(SerialTestRunner);
+
+			return Object.new(runner_type) as TestRunner;
 		}
 
+		public abstract void run_all(TestPlan plan);
 
-		public void run_all() {
-			plan.result.run(this);
-		}
-
-		public void run_test(Test test, TestResult result) {
-			test.run(result);
-		}
-
-		public async void run(Test test, TestResult result) {
-			
-			string command = "%s -r %s".printf(binary, test.name);
-			string[] args;
-			string buffer = null;
-
-			if (_n_ongoing_tests > _max_n_ongoing_tests) {
-				var wrapper = new DelegateWrapper();
-				wrapper.cb = run.callback;
-				_pending_tests.push_tail((owned)wrapper);
-				yield;
-			}
-		
-			try {
-				_n_ongoing_tests++;
-				
-				Shell.parse_argv(command, out args);
-				var process = launcher.spawnv(args);
-				yield process.communicate_utf8_async(null, null, out buffer, null);
-				
-				if(process.wait_check()) {
-					//debug("#### %s", buffer);
-					process_buffer(test, result, buffer);
-				}
-
-			} catch (Error e) {
-				//debug("!!!! %s : %s", buffer, e.message);
-				process_buffer(test, result, buffer, true);
-			} finally {
-				_n_ongoing_tests--;
-				var wrapper = _pending_tests.pop_head ();
-				if(wrapper != null)
-					wrapper.cb();
-			}
-		}
-
-		public void process_buffer(Test test, TestResult result, string buffer, bool failed = false) {
-			string skip = null;
-			string[] message = {};
-			
-			foreach(string line in buffer.split("\n"))
-				if (line.has_prefix("SKIP "))
-					skip = line;
-				else
-					message += line;
-			
-			if (skip != null)
-				result.add_skip(test, skip, string.joinv("\n",message));
-			else
-				if(failed)
-					result.add_failure(test, string.joinv("\n",message));
-				else
-					result.add_success(test, string.joinv("\n",message));
-		}
+		public abstract void run(Test test, TestResult result);
 
 	}
 }

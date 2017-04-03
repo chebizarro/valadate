@@ -30,7 +30,7 @@ namespace Valadate.Tests {
 		 * test_ prefix
 		 */
 		public void test_simple () {
-			Assert.is_true(true);
+			assert(true);
 		}
 
 		/*

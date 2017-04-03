@@ -9,7 +9,8 @@ libvaladate_1_0_la_SOURCES = \
 	$(libvaladate_sources)
 
 libvaladate_1_0_la_CFLAGS = \
-	$(VALADATE_CFLAGS)
+	$(VALADATE_CFLAGS) \
+	-g -Og
 	
 libvaladate_1_0_la_CPPLAGS = \
 	-fPIE \

@@ -27,7 +27,8 @@ namespace Valadate {
 		PASSED,
 		SKIPPED,
 		ERROR,
-		FAILED
+		FAILED,
+		STATUS
 	}
 
 

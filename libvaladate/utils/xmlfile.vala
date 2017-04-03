@@ -61,12 +61,12 @@ namespace Valadate {
 		private Xml.Doc* document;
 		private Xml.XPath.Context context;
 		
-		public XmlFile(string path) throws Error {
-			document = Xml.Parser.parse_file(path);
+		public XmlFile(File path) throws Error {
+			document = Xml.Parser.parse_file(path.get_path());
 
 			if (document == null)
 				throw new XmlFileError.ERROR(
-					"There was an error parsing the file at %s", path);
+					"There was an error parsing the file at %s", path.get_path());
 
 			context = new Xml.XPath.Context (document);
 		}

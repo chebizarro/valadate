@@ -36,14 +36,16 @@ namespace Valadate {
 
 		}
 
-		public static TestPlan @new(TestOptions options) {
+		public static TestPlan @new(TestOptions options) throws ConfigError {
 
 			initialise();
 
 			string currdir = Environment.get_current_dir();
-			string plan_name = Path.get_basename(options.binary);
-			string srcdir = Environment.get_variable("G_TEST_SRCDIR") ?? Environment.get_variable("srcdir");
-			string builddir = Path.get_dirname(options.binary);
+			string plan_name = Path.get_basename(options.assembly.binary.get_path());
+			string builddir = Path.get_dirname(options.assembly.binary.get_path());
+			string srcdir = Environment.get_variable("G_TEST_SRCDIR") ??
+				Environment.get_variable("srcdir") ??
+				currdir;
 			
 			if(plan_name.has_prefix("lt-"))
 				plan_name = plan_name.substring(3);
@@ -60,26 +62,32 @@ namespace Valadate {
 			foreach(var key in plan_types.get_keys()) {
 				var plan_file = File.new_for_path(Path.build_filename(srcdir, plan_name + "." + key));
 	 			if(plan_file.query_exists()) {
-					return Object.new(plan_types[key], "options", options, "plan", plan_file.get_path(), null) as TestPlan;
+					return Object.new(plan_types[key], "options", options, "plan", plan_file) as TestPlan;
 				} else {
 					plan_file = File.new_for_path(Path.build_filename(builddir, plan_name + "." + key));
 					if(plan_file.query_exists()) {
-						return Object.new(plan_types[key], "options", options, "plan", plan_file.get_path(), null) as TestPlan;
+						return Object.new(plan_types[key], "options", options, "plan", plan_file) as TestPlan;
 					}
 				}
 			}
 			throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", plan_name);
 		}
 		
-		public abstract string plan {get;construct set;}
+		public abstract File plan {get;construct set;}
 
-		public abstract string binary {get;set;}
+		public abstract Assembly assembly {get;protected set;}
 
 		public abstract TestOptions options {get;construct set;}
 
 		public abstract TestConfig config {get;protected set;}
 
 		public abstract TestResult result {get;protected set;}
+		
+		public abstract TestRunner runner {get;protected set;}
+
+		public abstract TestSuite root {get;protected set;}
+
+		public abstract void run();
 		
 	}
 

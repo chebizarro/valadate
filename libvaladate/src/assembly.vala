@@ -19,6 +19,14 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+ 
+namespace Valadate {
 
-[CCode (gir_namespace = "Valadate", gir_version = "1.0")]
-namespace Valadate { }
+	public interface Assembly : Object {
+	
+		public abstract File binary {get;construct set;}
+
+		public abstract void run();
+	
+	}
+}

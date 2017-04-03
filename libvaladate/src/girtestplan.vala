@@ -24,14 +24,13 @@ namespace Valadate {
 
 	public class GirTestPlan : Object, TestPlan {
 
-		public string plan {get;construct set;}
-
-		public string binary {get;set;}
-
+		public Assembly assembly {get;protected set;}
 		public TestOptions options {get;construct set;}
-
 		public TestConfig config {get;protected set;}
 		public TestResult result {get;protected set;}
+		public TestRunner runner {get;protected set;}
+		public TestSuite root {get;protected set;}
+		public File plan {get;construct set;}
 
 		internal delegate Type GetType(); 
 		internal delegate void TestMethod(TestCase self);
@@ -42,25 +41,27 @@ namespace Valadate {
 		private string currpath;
 		
 		private XmlFile xmlfile; 
-		
 		private string? running;
 
 		construct {
 			try {
-				binary = options.binary;
-				running = options.runtest;
+				assembly = options.assembly;
+				running = options.running_test;
+				testsuite = root = new TestSuite("/");
 				load();
-				
 			} catch (Error e) {
 				error(e.message);
 			}
 		}
 
 		private void load() throws ConfigError {
-			module = new TestModule(binary);
+			module = new TestModule(assembly.binary);
 			module.load_module();
 			setup_context();
-			parse();
+			visit_config();
+			visit_test_result();
+			visit_test_runner();
+			visit_root();
 		}
 
 		private void setup_context() throws ConfigError {
@@ -72,12 +73,6 @@ namespace Valadate {
 			} catch (Error e) {
 				throw new ConfigError.TESTPLAN(e.message);
 			}
-		}
-		
-		private void parse() throws ConfigError {
-			visit_config();
-			visit_test_result();
-			visit_root();
 		}
 
 		private void visit_config() {
@@ -92,7 +87,6 @@ namespace Valadate {
 				ctype = typeof(TestConfig);
 			}
 			config = Object.new(ctype, "options", options, null) as TestConfig;
-			testsuite = config.root;
 		}
 
 		private void visit_test_result() {
@@ -104,9 +98,22 @@ namespace Valadate {
 				GetType node_get_type = (GetType)module.get_method(node_type_str);
 				ctype = node_get_type();
 			} else {
-				ctype = typeof(AsyncTestResult);
+				ctype = typeof(TapTestResult);
 			}
-			result = Object.new(ctype, "config", config, null) as TestResult;
+			result = Object.new(ctype, "config", config) as TestResult;
+		}
+		
+		private void visit_test_runner() {
+			var res = xmlfile.eval("//xmlns:class[@implements='ValadateTestRunner']");
+			Type ctype;
+			if(res.size == 1) {
+				var node = res[0];
+				string node_type_str = node->get_prop("get-type");
+				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				ctype = node_get_type();
+				TestRunner.register_default(ctype);
+			}
+			runner = TestRunner.new(config);
 		}
 
 		private void visit_root() {
@@ -136,9 +143,9 @@ namespace Valadate {
 
 				var testname = node->get_prop("name");
 				
-				var test = GLib.Object.new(node_type, "name", testname, "label", testname) as Test;
 				var oldpath = currpath;
 				currpath += "/" + testname;
+				var test = GLib.Object.new(node_type, "name", testname, "label", currpath) as Test;
 				testsuite.add_test(test);
 
 				if(node_type.is_a(typeof(TestSuite))) {
@@ -168,7 +175,7 @@ namespace Valadate {
 				currpath += "/" + name; 
 
 				
-				if (running != null && running != currpath) {
+				if (running != null && running != currpath && config.run_async) {
 					currpath = oldpath;
 					continue;
 				}
@@ -223,7 +230,7 @@ namespace Valadate {
 				if(skip) {
 					testmethod = () => { testcase.skip(@"Skipping Test $(label)"); };
 				} else {
-					if(running != null) {
+					if(running != null || !config.run_async) {
 						var method_cname = method->get_prop("identifier");
 						//debug(method_cname);
 						testmethod = (TestMethod)module.get_method(method_cname);
@@ -233,7 +240,7 @@ namespace Valadate {
 				}
 				
 				if(testmethod != null)
-					testcase.add_test(name, () => { testmethod(testcase); }, label);
+					testcase.add_test(name, () => { testmethod(testcase); }, oldpath + "/" + label);
 					
 				currpath = oldpath;
 			}
@@ -241,6 +248,9 @@ namespace Valadate {
 			visit_class(classtype.parent());
 		}
 
+		public void run() {
+			runner.run_all(this);
+		}
 		
 	}
 

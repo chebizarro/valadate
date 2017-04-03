@@ -19,12 +19,18 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+ 
+namespace Valadate {
 
-namespace Valadate.TestPlanFactory {
+	public class TestAssembly : Object, Assembly {
 	
-	public static TestPlan @new(TestConfig config) {
-		
-		
-	}
+		public File binary {get;construct set;}
 
+		public void run() { }
+	
+		public TestAssembly(File binary) {
+			Object(binary : binary);
+		}
+	
+	}
 }

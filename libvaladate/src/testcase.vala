@@ -78,7 +78,13 @@ namespace Valadate {
 			_tests.append(adaptor);
 		}
 		
-		public virtual void run(TestResult result) { }
+		public virtual void run(TestResult result) {
+			result.add_test_start(this);
+			_tests.foreach((t) => {
+				t.run(result);
+			});
+			result.add_test_end(this);
+		}
 
 		public void bug(string reference)
 			requires(bug_base != null)
@@ -88,20 +94,35 @@ namespace Valadate {
 		}
 
 		public void skip(string message) {
-			stderr.printf("SKIP %s", message);
-			stdout.flush();
+			debug("SKIP %s", message);
 		}
 
 		public void fail(string? message = null) {
-			error("FAIL %s", message ?? "");
+			critical("FAIL %s", message ?? "");
 		}
 
 		public virtual void set_up() {}
 
 		public virtual void tear_down() {}
 
+		public virtual void assert(bool expr) {
+			
+		}
+
+		public virtual void assert_not_reached() {
+			
+		}
+
+		public virtual void assert_null(void* expr) {
+			
+		}
+
+	
 
 		private class TestAdaptor : Object, Test {
+
+			[CCode (cname = "fmemopen")]
+			private extern static FileStream memopen(void* buffer, size_t size, string mode);
 
 			private TestMethod test;
 			private TestCase testcase;
@@ -118,6 +139,9 @@ namespace Valadate {
 			public new Test get(int index) {
 				return this;
 			}
+
+			private TestResult result;
+			private bool skipped = false;
 			
 			public TestAdaptor(string name, owned TestMethod test, TestCase testcase) {
 				this.test = (owned)test;
@@ -126,10 +150,49 @@ namespace Valadate {
 			}
 
 			public void run(TestResult result) {
+				this.result = result;
+				Log.set_default_handler (log_func);
+
 				//debug("Running %s [%s]", name, label);
+				var oldstdout = (owned)stdout;
+				char buffer[4096] = { }; 
+				var buf = memopen(buffer, sizeof(uint8)*4096, "w");
+				stdout = (owned)buf;
+				
+				result.add_test(this);
 				this.testcase.set_up();
 				this.test();
 				this.testcase.tear_down();
+				if(!skipped)
+					result.add_success(this, (string)buffer);
+				stdout = (owned)oldstdout;
+			}
+
+			private void log_func (
+				string? log_domain,
+				LogLevelFlags log_levels,
+				string? message)	{
+
+				Log.default_handler (log_domain, log_levels, message);
+
+				/* Print a stack trace for any message at the warning level or above */
+				if ((log_levels & (
+					LogLevelFlags.LEVEL_WARNING |
+					LogLevelFlags.LEVEL_ERROR |
+					LogLevelFlags.LEVEL_CRITICAL)) != 0) {
+
+					result.add_failure(this, message);
+
+					//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+
+				}
+				if ((log_levels & (LogLevelFlags.LEVEL_INFO)) != 0) {
+					if(message.has_prefix("SKIP "))
+						result.add_skip(this, message.substring(5), "");
+
+					//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+
+				}
 			}
 
 		}

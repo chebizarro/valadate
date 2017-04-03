@@ -1,20 +1,24 @@
 libvaladate_sources = \
 	src/assembly.vala \
-	src/asynctestresult.vala \
+	src/assemblyinfo.vala \
+	src/asynctestrunner.vala \
 	src/driver.vala \
 	src/girtestplan.vala \
 	src/pluginmodule.vala \
-	src/testmodule.vala \
+	src/serialtestrunner.vala \
+	src/taptestresult.vala \
 	src/test.vala \
+	src/testassembly.vala \
 	src/testcase.vala \
-	src/testerror.vala \
 	src/testconfig.vala \
+	src/testerror.vala \
 	src/testfixture.vala \
+	src/testmodule.vala \
 	src/testoptions.vala \
 	src/testplan.vala \
-	src/testrunner.vala \
-	src/testresult.vala \
 	src/testreport.vala \
+	src/testresult.vala \
+	src/testrunner.vala \
 	src/testsuite.vala \
 	deprecated/assert.vala \
 	deprecated/runner.vala \

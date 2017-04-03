@@ -15,47 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
- *
+ * 
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-
-namespace Valadate {
-
-	/**
-	 * Represents a loadable module containing {@link Valadate.Test}s
-	 */
-	public class TestModule : Object {
-		
-		private File binary;
-		private GLib.Module module;
-
-		public TestModule (File binary) {
-			this.binary = binary;
-		} 
-		
-		public void load_module() throws ConfigError
-			requires(binary != null)
-		{
-			if (!binary.query_exists())
-				throw new ConfigError.MODULE("Module: %s does not exist", binary.get_path());
-			
-			module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
-			if (module == null)
-				throw new ConfigError.MODULE(GLib.Module.error());
-			module.make_resident();
-		}
-		
-		internal void* get_method(string method_name) throws Error {
-			void* function;
-			if(module.symbol (method_name, out function))
-				if (function != null)
-					return function;
-			throw new ConfigError.METHOD(GLib.Module.error());
-		}
-
-		
-	}
-
-}
+[CCode (gir_namespace = "Valadate", gir_version = "1.0")]
+namespace Valadate { }

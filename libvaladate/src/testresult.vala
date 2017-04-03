@@ -24,11 +24,13 @@ namespace Valadate {
 
 	public interface TestResult : Object {
 
-		public abstract int testcount {get;internal set;default=0;}
-
 		public abstract TestConfig config {get;construct set;}
 
-		public abstract  void report();
+		public abstract int testcount {get;internal set;default=0;}
+
+		public abstract void start(Test test);
+
+		public abstract bool report();
 		
 		public abstract void add_error(Test test, string error);
 
@@ -38,13 +40,11 @@ namespace Valadate {
 		
 		public abstract void add_skip(Test test, string reason, string message);
 		
-		/**
-		 * Runs a the {@link Valadate.Test}s using the supplied
-		 * {@link Valadate.TestRunner}.
-		 * 
-		 * @param runner
-		 */
-		public abstract void run(TestRunner runner);
+		public abstract void add_test(Test test);
+
+		public abstract void add_test_start(Test test);
+		
+		public abstract void add_test_end(Test test);
 
 	}
 }

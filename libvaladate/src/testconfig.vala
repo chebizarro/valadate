@@ -31,51 +31,48 @@ namespace Valadate {
 
 		public TestOptions options {get;construct set;}
 
-		public string seed {
+		public virtual string seed {
 			get {
 				return options.seed;
 			}
 		}
 
-		public string runtest {
+		public string running_test {
 			get {
-				return options.runtest;
+				return options.running_test;
 			}
 		}
 
-		public bool list_only {
+		public virtual bool run_async {
+			get {
+				return options.run_async;
+			}
+		}
+
+		public virtual bool list_only {
 			get {
 				return options.list;
 			}
 		}
 
-		public bool keep_going {
+		public virtual bool keep_going {
 			get {
 				return options.keepgoing;
 			}
 		}
 
-		public bool timed {
+		public virtual bool timed {
 			get {
 				return options.timed;
 			}
-		}
-
-		public TestSuite root {get;private set;}
-
-
-		construct {
-			root = new TestSuite("/");
 		}
 
 		public TestConfig(TestOptions options) {
 			Object(options : options);
 		}
 
+		/*
 		public int parse(string[] args) {
-			/*
-			GLib.Environment.set_prgname(binary);
-
 			try {
 				opt_context.parse (ref args);
 			} catch (OptionError e) {
@@ -87,14 +84,11 @@ namespace Valadate {
 			if (version) {
 				stdout.printf ("Valadate %s\n", "1.0");
 				return 0;
-			} else if (vala_version) {
-				stdout.printf ("Vala %s\n", Config.PACKAGE_SUFFIX.substring (1));
-				return 0;
 			}
-			*/
 			
 			return -1;
 		}
+		*/
 
 	}
 
