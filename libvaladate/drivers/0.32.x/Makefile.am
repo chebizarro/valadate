@@ -40,3 +40,5 @@ driver_la_LIBADD = \
 	$(top_builddir)/libvaladate/libvaladate-1.0.la \
 	$(LIBVALADATE_LIBS) \
 	$(LIBVALA_0_32_X_LIBS)
+
+-include $(top_srcdir)/git.mk

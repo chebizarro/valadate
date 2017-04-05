@@ -33,3 +33,5 @@ endif
 
 SUBDIRS = \
 	$(DRIVER_0_32_X_DIR)
+
+-include $(top_srcdir)/git.mk

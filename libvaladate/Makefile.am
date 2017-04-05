@@ -125,7 +125,7 @@ gir_DATA = Valadate-1.0.gir
 typelibdir = $(libdir)/girepository-1.0
 typelib_DATA = Valadate-1.0.typelib
 
-#CLEANFILES += $(gir_DATA) $(typelib_DATA)
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 

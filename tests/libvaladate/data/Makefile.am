@@ -29,4 +29,9 @@ testexe_0_CFLAGS = \
 	-I$(top_srcdir)/libvaladate/src \
 	-pie
 	
+CLEANFILES += \
+	*.vapi \
+	*.gir
+
+
 -include $(top_srcdir)/git.mk
