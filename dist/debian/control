@@ -11,16 +11,14 @@ Build-Depends:
  libtool-bin,
  libglib2.0-dev (>= 2.40.0),
  libxml2-dev,
- libjson-glib-dev,
- libxslt1-dev,
  gtk-doc-tools,
  valac,
  valadoc,
  libgirepository1.0-dev
 Standards-Version: 3.9.6
-Homepage: https://github.com/chebizarro/valadate
-#Vcs-Git: git@github.com:chebizarro/valadate.git
-#Vcs-Browser: https://github.com/chebizarro/valadate
+Homepage: https://github.com/valadate-project/valadate
+#Vcs-Git: git@github.com:valadate-project/valadate.git
+#Vcs-Browser: https://github.com/valadate-project/valadate
 
 Package: valadate
 Architecture: any
@@ -28,9 +26,7 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  libglib2.0-0 (>= 2.40.0),
- libjson-glib-1.0-0,
  libxml2,
- libxslt1.1
 Description: Unit testing framework for GObject-based code
  For Vala developers who need to test their code, Valadate is a powerful
  testing framework that provides behavioral, functional and unit testing
