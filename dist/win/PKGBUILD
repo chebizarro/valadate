@@ -1,0 +1,57 @@
+# Maintainer: Chris Daley <chebizarro@gmail.com>
+
+_realname=valadate
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.0.0
+pkgrel=1
+arch=('any')
+pkgdesc="A testing framework for GObject (mingw-w64)"
+depends=("${MINGW_PACKAGE_PREFIX}-adwaita-icon-theme"
+         )
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config"
+             "${MINGW_PACKAGE_PREFIX}-python3"
+             "${MINGW_PACKAGE_PREFIX}-vala"
+             "${MINGW_PACKAGE_PREFIX}-gobject-introspection"
+             "intltool"
+             "itstool"
+             "gettext-devel"
+             "yelp-tools")
+options=('strip' 'staticlibs')
+license=("GPL")
+url="https://www.valadate.org"
+install=${_realname}-${CARCH}.install
+source=(https://download.gnome.org/sources/${_realname}/${pkgver%.*}/${_realname}-${pkgver}.tar.xz)
+sha256sums=('063b5a0b5dcc8f540f6e8c3ea1c22cf8a3a19edffc25315a1b6bc51d462b3f45')
+
+prepare() {
+  cd "${srcdir}"/${_realname}-${pkgver}
+  #autopoint --force
+  AUTOPOINT='intltoolize --automake --copy' autoreconf -f -i
+}
+
+build() {
+  [[ -d build-${MINGW_CHOST} ]] && rm -rf build-${MINGW_CHOST}
+  mkdir -p build-${MINGW_CHOST}
+  cd build-${MINGW_CHOST}
+
+  export PYTHON=${MINGW_PREFIX}/bin/python3
+  ../${_realname}-${pkgver}/configure \
+    --host=${MINGW_CHOST} \
+    --target=${MINGW_CHOST} \
+    --build=${MINGW_CHOST} \
+    --prefix=${MINGW_PREFIX} \
+    --libexecdir=${MINGW_PREFIX}/lib \
+    --disable-updater \
+    --disable-schemas-compile \
+    --enable-python
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR=${pkgdir} install
+
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}

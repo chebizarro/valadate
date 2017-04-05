@@ -128,6 +128,32 @@ typelib_DATA = Valadate-2.0.typelib
 CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
+# install gdb scripts
+gdbdir = $(datadir)/valadate/gdb
+dist_gdb_SCRIPTS = valadate_gdb.py
+
+libvaladate-gdb.py: libvaladate-gdb.py.in
+	$(AM_V_GEN) $(SED) -e "s|\@datadir\@|$(datadir)|" $(srcdir)/src/libvaladate-gdb.py.in > $(builddir)/src/libvaladate-gdb.py
+
+if HAVE_GLIB_RUNTIME_LIBDIR
+ABS_GLIB_RUNTIME_LIBDIR = $(realpath $(libdir)/$(GLIB_RUNTIME_LIBDIR))
+else
+ABS_GLIB_RUNTIME_LIBDIR = $(libdir)
+endif
+
+install-data-hook: libvaladate-gdb.py
+	mkdir -p $(DESTDIR)$(datadir)/gdb/auto-load$(ABS_GLIB_RUNTIME_LIBDIR)
+	$(INSTALL) $(builddir)/src/libvaladate-gdb.py $(DESTDIR)$(datadir)/gdb/auto-load$(ABS_GLIB_RUNTIME_LIBDIR)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION)-gdb.py
+if HAVE_GLIB_RUNTIME_LIBDIR
+	mkdir -p $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
+	mv $(DESTDIR)$(libdir)/libvaladate-2.0.so.0 $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
+	mv $(DESTDIR)$(libdir)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION) $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
+	rm -f $(DESTDIR)$(libdir)/libvaladate-2.0.so
+	ln -s $(GLIB_RUNTIME_LIBDIR)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION) $(DESTDIR)$(libdir)/libvaladate-2.0.so
+endif
+
+uninstall-gdb:
+	-rm -r $(DESTDIR)$(datadir)/gdb
 
 EXTRA_DIST = \
 	libvaladate-2.0.pc.in \
