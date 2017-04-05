@@ -1,12 +1,12 @@
 %define build_timestamp %(date +"%Y%m%d%H%M")
 
 Name:           valadate
-Version:        1.0
-Release:        1%{?dist}.%{build_timestamp}
+Version:        2.0
+Release:        2%{?dist}.%{build_timestamp}
 Summary:        Valadate
 
-License:        LGPL-3.0+
-URL:            https://github.com/chebizarro/valadate
+License:        LGPL-2.0+
+URL:            https://github.com/valadate-project/valadate
 Group:          Development/Tools
 Packager:       Jenkins User <jenkins@valadate.org>
 Source0:        valadate.tar.gz
@@ -46,5 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Wed Apr 5 2017 Chris Daley <chebizarro@gmail.com> - 2.0.0-1
+- RPM release
 * Tue Feb 23 2016 Chris Daley <chebizarro@gmail.com> - 1.0.0-1
 - Initial RPM release

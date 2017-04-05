@@ -22,7 +22,8 @@ options=('strip' 'staticlibs')
 license=("GPL")
 url="https://www.valadate.org"
 install=${_realname}-${CARCH}.install
-source=(https://download.gnome.org/sources/${_realname}/${pkgver%.*}/${_realname}-${pkgver}.tar.xz)
+#source=(https://download.gnome.org/sources/${_realname}/${pkgver%.*}/${_realname}-${pkgver}.tar.xz)
+source=(https://codeload.github.com/valadate-project/valadate/tar.gz/master)
 sha256sums=('063b5a0b5dcc8f540f6e8c3ea1c22cf8a3a19edffc25315a1b6bc51d462b3f45')
 
 prepare() {

@@ -4,8 +4,8 @@
 
 class Valadate < Formula
   desc ""
-  homepage "https://github.com/chebizarro/valadate"
-  url "https://codeload.github.com/chebizarro/valadate/tar.gz/master"
+  homepage "https://github.com/valadate-project/valadate"
+  url "https://codeload.github.com/valadate-project/valadate/tar.gz/master"
   sha256 "4f3e55cb9726f174331b90ebcc7b63484734952df8f87e6a35ec4162178095d8"
   version "1.0.0"
 
