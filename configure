@@ -653,6 +653,39 @@ GTKDOC_CFLAGS
 VALADOC
 ENABLE_DOCS_FALSE
 ENABLE_DOCS_TRUE
+HAVE_LIBVALA_0_22_X_FALSE
+HAVE_LIBVALA_0_22_X_TRUE
+LIBVALA_0_22_X_LIBS
+LIBVALA_0_22_X_CFLAGS
+HAVE_LIBVALA_0_24_X_FALSE
+HAVE_LIBVALA_0_24_X_TRUE
+LIBVALA_0_24_X_LIBS
+LIBVALA_0_24_X_CFLAGS
+HAVE_LIBVALA_0_26_X_FALSE
+HAVE_LIBVALA_0_26_X_TRUE
+LIBVALA_0_26_X_LIBS
+LIBVALA_0_26_X_CFLAGS
+HAVE_LIBVALA_0_28_X_FALSE
+HAVE_LIBVALA_0_28_X_TRUE
+LIBVALA_0_28_X_LIBS
+LIBVALA_0_28_X_CFLAGS
+HAVE_LIBVALA_0_30_X_FALSE
+HAVE_LIBVALA_0_30_X_TRUE
+LIBVALA_0_30_X_LIBS
+LIBVALA_0_30_X_CFLAGS
+HAVE_LIBVALA_0_32_X_FALSE
+HAVE_LIBVALA_0_32_X_TRUE
+LIBVALA_0_32_X_LIBS
+LIBVALA_0_32_X_CFLAGS
+HAVE_LIBVALA_0_34_X_FALSE
+HAVE_LIBVALA_0_34_X_TRUE
+LIBVALA_0_34_X_LIBS
+LIBVALA_0_34_X_CFLAGS
+HAVE_LIBVALA_0_36_X_FALSE
+HAVE_LIBVALA_0_36_X_TRUE
+LIBVALA_0_36_X_LIBS
+LIBVALA_0_36_X_CFLAGS
+VALAFLAGS
 ENABLE_GCOV_FALSE
 ENABLE_GCOV_TRUE
 VALADATE_GCOV_LDADD
@@ -677,6 +710,7 @@ pkg_cli_modules
 VALADATE_LIBS
 VALADATE_CFLAGS
 pkg_modules
+VALADATE_DRIVER_DIR
 VALADATE_LIB_DIR
 CPP
 LT_SYS_LIBRARY_PATH
@@ -853,6 +887,22 @@ VALADATE_CLI_CFLAGS
 VALADATE_CLI_LIBS
 TESTS_CFLAGS
 TESTS_LIBS
+LIBVALA_0_36_X_CFLAGS
+LIBVALA_0_36_X_LIBS
+LIBVALA_0_34_X_CFLAGS
+LIBVALA_0_34_X_LIBS
+LIBVALA_0_32_X_CFLAGS
+LIBVALA_0_32_X_LIBS
+LIBVALA_0_30_X_CFLAGS
+LIBVALA_0_30_X_LIBS
+LIBVALA_0_28_X_CFLAGS
+LIBVALA_0_28_X_LIBS
+LIBVALA_0_26_X_CFLAGS
+LIBVALA_0_26_X_LIBS
+LIBVALA_0_24_X_CFLAGS
+LIBVALA_0_24_X_LIBS
+LIBVALA_0_22_X_CFLAGS
+LIBVALA_0_22_X_LIBS
 GTKDOC_CFLAGS
 GTKDOC_LIBS'
 
@@ -1536,6 +1586,38 @@ Some influential environment variables:
   TESTS_CFLAGS
               C compiler flags for TESTS, overriding pkg-config
   TESTS_LIBS  linker flags for TESTS, overriding pkg-config
+  LIBVALA_0_36_X_CFLAGS
+              C compiler flags for LIBVALA_0_36_X, overriding pkg-config
+  LIBVALA_0_36_X_LIBS
+              linker flags for LIBVALA_0_36_X, overriding pkg-config
+  LIBVALA_0_34_X_CFLAGS
+              C compiler flags for LIBVALA_0_34_X, overriding pkg-config
+  LIBVALA_0_34_X_LIBS
+              linker flags for LIBVALA_0_34_X, overriding pkg-config
+  LIBVALA_0_32_X_CFLAGS
+              C compiler flags for LIBVALA_0_32_X, overriding pkg-config
+  LIBVALA_0_32_X_LIBS
+              linker flags for LIBVALA_0_32_X, overriding pkg-config
+  LIBVALA_0_30_X_CFLAGS
+              C compiler flags for LIBVALA_0_30_X, overriding pkg-config
+  LIBVALA_0_30_X_LIBS
+              linker flags for LIBVALA_0_30_X, overriding pkg-config
+  LIBVALA_0_28_X_CFLAGS
+              C compiler flags for LIBVALA_0_28_X, overriding pkg-config
+  LIBVALA_0_28_X_LIBS
+              linker flags for LIBVALA_0_28_X, overriding pkg-config
+  LIBVALA_0_26_X_CFLAGS
+              C compiler flags for LIBVALA_0_26_X, overriding pkg-config
+  LIBVALA_0_26_X_LIBS
+              linker flags for LIBVALA_0_26_X, overriding pkg-config
+  LIBVALA_0_24_X_CFLAGS
+              C compiler flags for LIBVALA_0_24_X, overriding pkg-config
+  LIBVALA_0_24_X_LIBS
+              linker flags for LIBVALA_0_24_X, overriding pkg-config
+  LIBVALA_0_22_X_CFLAGS
+              C compiler flags for LIBVALA_0_22_X, overriding pkg-config
+  LIBVALA_0_22_X_LIBS
+              linker flags for LIBVALA_0_22_X, overriding pkg-config
   GTKDOC_CFLAGS
               C compiler flags for GTKDOC, overriding pkg-config
   GTKDOC_LIBS linker flags for GTKDOC, overriding pkg-config
@@ -13644,6 +13726,9 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
 
 VALADATE_LIB_DIR=${PWD}/libvaladate
+VALADATE_DRIVER_DIR=${PWD}/libvaladate/drivers
+
+
 
 
 pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
@@ -14197,6 +14282,650 @@ fi
 
 
 
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_36_X" >&5
+$as_echo_n "checking for LIBVALA_0_36_X... " >&6; }
+
+if test -n "$LIBVALA_0_36_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_36_X_CFLAGS="$LIBVALA_0_36_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.36 > 0.35.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.36 > 0.35.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_36_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.36 > 0.35.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_36_X_LIBS"; then
+    pkg_cv_LIBVALA_0_36_X_LIBS="$LIBVALA_0_36_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.36 > 0.35.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.36 > 0.35.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_36_X_LIBS=`$PKG_CONFIG --libs "libvala-0.36 > 0.35.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_36_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.36 > 0.35.0" 2>&1`
+        else
+	        LIBVALA_0_36_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.36 > 0.35.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_36_X_PKG_ERRORS" >&5
+
+	have_libvala_0_36_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_36_x="no"
+else
+	LIBVALA_0_36_X_CFLAGS=$pkg_cv_LIBVALA_0_36_X_CFLAGS
+	LIBVALA_0_36_X_LIBS=$pkg_cv_LIBVALA_0_36_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_36_x="yes"
+fi
+ if test "$have_libvala_0_36_x" = "yes"; then
+  HAVE_LIBVALA_0_36_X_TRUE=
+  HAVE_LIBVALA_0_36_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_36_X_TRUE='#'
+  HAVE_LIBVALA_0_36_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_34_X" >&5
+$as_echo_n "checking for LIBVALA_0_34_X... " >&6; }
+
+if test -n "$LIBVALA_0_34_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_34_X_CFLAGS="$LIBVALA_0_34_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.34 > 0.33.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.34 > 0.33.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_34_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.34 > 0.33.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_34_X_LIBS"; then
+    pkg_cv_LIBVALA_0_34_X_LIBS="$LIBVALA_0_34_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.34 > 0.33.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.34 > 0.33.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_34_X_LIBS=`$PKG_CONFIG --libs "libvala-0.34 > 0.33.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_34_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.34 > 0.33.0" 2>&1`
+        else
+	        LIBVALA_0_34_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.34 > 0.33.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_34_X_PKG_ERRORS" >&5
+
+	have_libvala_0_34_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_34_x="no"
+else
+	LIBVALA_0_34_X_CFLAGS=$pkg_cv_LIBVALA_0_34_X_CFLAGS
+	LIBVALA_0_34_X_LIBS=$pkg_cv_LIBVALA_0_34_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_34_x="yes"
+fi
+ if test "$have_libvala_0_34_x" = "yes"; then
+  HAVE_LIBVALA_0_34_X_TRUE=
+  HAVE_LIBVALA_0_34_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_34_X_TRUE='#'
+  HAVE_LIBVALA_0_34_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_32_X" >&5
+$as_echo_n "checking for LIBVALA_0_32_X... " >&6; }
+
+if test -n "$LIBVALA_0_32_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_32_X_CFLAGS="$LIBVALA_0_32_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.32 > 0.31.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.32 > 0.31.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_32_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.32 > 0.31.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_32_X_LIBS"; then
+    pkg_cv_LIBVALA_0_32_X_LIBS="$LIBVALA_0_32_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.32 > 0.31.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.32 > 0.31.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_32_X_LIBS=`$PKG_CONFIG --libs "libvala-0.32 > 0.31.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_32_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.32 > 0.31.0" 2>&1`
+        else
+	        LIBVALA_0_32_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.32 > 0.31.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_32_X_PKG_ERRORS" >&5
+
+	have_libvala_0_32_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_32_x="no"
+else
+	LIBVALA_0_32_X_CFLAGS=$pkg_cv_LIBVALA_0_32_X_CFLAGS
+	LIBVALA_0_32_X_LIBS=$pkg_cv_LIBVALA_0_32_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_32_x="yes"
+fi
+ if test "$have_libvala_0_32_x" = "yes"; then
+  HAVE_LIBVALA_0_32_X_TRUE=
+  HAVE_LIBVALA_0_32_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_32_X_TRUE='#'
+  HAVE_LIBVALA_0_32_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_30_X" >&5
+$as_echo_n "checking for LIBVALA_0_30_X... " >&6; }
+
+if test -n "$LIBVALA_0_30_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_30_X_CFLAGS="$LIBVALA_0_30_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.30 > 0.29.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.30 > 0.29.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_30_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.30 > 0.29.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_30_X_LIBS"; then
+    pkg_cv_LIBVALA_0_30_X_LIBS="$LIBVALA_0_30_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.30 > 0.29.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.30 > 0.29.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_30_X_LIBS=`$PKG_CONFIG --libs "libvala-0.30 > 0.29.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_30_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.30 > 0.29.0" 2>&1`
+        else
+	        LIBVALA_0_30_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.30 > 0.29.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_30_X_PKG_ERRORS" >&5
+
+	have_libvala_0_30_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_30_x="no"
+else
+	LIBVALA_0_30_X_CFLAGS=$pkg_cv_LIBVALA_0_30_X_CFLAGS
+	LIBVALA_0_30_X_LIBS=$pkg_cv_LIBVALA_0_30_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_30_x="yes"
+fi
+ if test "$have_libvala_0_30_x" = "yes"; then
+  HAVE_LIBVALA_0_30_X_TRUE=
+  HAVE_LIBVALA_0_30_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_30_X_TRUE='#'
+  HAVE_LIBVALA_0_30_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_28_X" >&5
+$as_echo_n "checking for LIBVALA_0_28_X... " >&6; }
+
+if test -n "$LIBVALA_0_28_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_28_X_CFLAGS="$LIBVALA_0_28_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.28 > 0.27.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.28 > 0.27.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_28_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.28 > 0.27.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_28_X_LIBS"; then
+    pkg_cv_LIBVALA_0_28_X_LIBS="$LIBVALA_0_28_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.28 > 0.27.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.28 > 0.27.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_28_X_LIBS=`$PKG_CONFIG --libs "libvala-0.28 > 0.27.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_28_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.28 > 0.27.0" 2>&1`
+        else
+	        LIBVALA_0_28_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.28 > 0.27.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_28_X_PKG_ERRORS" >&5
+
+	have_libvala_0_28_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_28_x="no"
+else
+	LIBVALA_0_28_X_CFLAGS=$pkg_cv_LIBVALA_0_28_X_CFLAGS
+	LIBVALA_0_28_X_LIBS=$pkg_cv_LIBVALA_0_28_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_28_x="yes"
+fi
+ if test "$have_libvala_0_28_x" = "yes"; then
+  HAVE_LIBVALA_0_28_X_TRUE=
+  HAVE_LIBVALA_0_28_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_28_X_TRUE='#'
+  HAVE_LIBVALA_0_28_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_26_X" >&5
+$as_echo_n "checking for LIBVALA_0_26_X... " >&6; }
+
+if test -n "$LIBVALA_0_26_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_26_X_CFLAGS="$LIBVALA_0_26_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.26 > 0.25.2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.26 > 0.25.2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_26_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.26 > 0.25.2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_26_X_LIBS"; then
+    pkg_cv_LIBVALA_0_26_X_LIBS="$LIBVALA_0_26_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.26 > 0.25.2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.26 > 0.25.2") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_26_X_LIBS=`$PKG_CONFIG --libs "libvala-0.26 > 0.25.2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_26_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.26 > 0.25.2" 2>&1`
+        else
+	        LIBVALA_0_26_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.26 > 0.25.2" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_26_X_PKG_ERRORS" >&5
+
+	have_libvala_0_26_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_26_x="no"
+else
+	LIBVALA_0_26_X_CFLAGS=$pkg_cv_LIBVALA_0_26_X_CFLAGS
+	LIBVALA_0_26_X_LIBS=$pkg_cv_LIBVALA_0_26_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_26_x="yes"
+fi
+ if test "$have_libvala_0_26_x" = "yes"; then
+  HAVE_LIBVALA_0_26_X_TRUE=
+  HAVE_LIBVALA_0_26_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_26_X_TRUE='#'
+  HAVE_LIBVALA_0_26_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_24_X" >&5
+$as_echo_n "checking for LIBVALA_0_24_X... " >&6; }
+
+if test -n "$LIBVALA_0_24_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_24_X_CFLAGS="$LIBVALA_0_24_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.24 > 0.23.1\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.24 > 0.23.1") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_24_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.24 > 0.23.1" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_24_X_LIBS"; then
+    pkg_cv_LIBVALA_0_24_X_LIBS="$LIBVALA_0_24_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.24 > 0.23.1\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.24 > 0.23.1") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_24_X_LIBS=`$PKG_CONFIG --libs "libvala-0.24 > 0.23.1" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_24_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.24 > 0.23.1" 2>&1`
+        else
+	        LIBVALA_0_24_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.24 > 0.23.1" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_24_X_PKG_ERRORS" >&5
+
+	have_libvala_0_24_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_24_x="no"
+else
+	LIBVALA_0_24_X_CFLAGS=$pkg_cv_LIBVALA_0_24_X_CFLAGS
+	LIBVALA_0_24_X_LIBS=$pkg_cv_LIBVALA_0_24_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_24_x="yes"
+fi
+ if test "$have_libvala_0_24_x" = "yes"; then
+  HAVE_LIBVALA_0_24_X_TRUE=
+  HAVE_LIBVALA_0_24_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_24_X_TRUE='#'
+  HAVE_LIBVALA_0_24_X_FALSE=
+fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LIBVALA_0_22_X" >&5
+$as_echo_n "checking for LIBVALA_0_22_X... " >&6; }
+
+if test -n "$LIBVALA_0_22_X_CFLAGS"; then
+    pkg_cv_LIBVALA_0_22_X_CFLAGS="$LIBVALA_0_22_X_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.22 >= 0.21.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.22 >= 0.21.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_22_X_CFLAGS=`$PKG_CONFIG --cflags "libvala-0.22 >= 0.21.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LIBVALA_0_22_X_LIBS"; then
+    pkg_cv_LIBVALA_0_22_X_LIBS="$LIBVALA_0_22_X_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libvala-0.22 >= 0.21.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libvala-0.22 >= 0.21.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LIBVALA_0_22_X_LIBS=`$PKG_CONFIG --libs "libvala-0.22 >= 0.21.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LIBVALA_0_22_X_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libvala-0.22 >= 0.21.0" 2>&1`
+        else
+	        LIBVALA_0_22_X_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libvala-0.22 >= 0.21.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LIBVALA_0_22_X_PKG_ERRORS" >&5
+
+	have_libvala_0_22_x="no"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	have_libvala_0_22_x="no"
+else
+	LIBVALA_0_22_X_CFLAGS=$pkg_cv_LIBVALA_0_22_X_CFLAGS
+	LIBVALA_0_22_X_LIBS=$pkg_cv_LIBVALA_0_22_X_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	have_libvala_0_22_x="yes"
+fi
+ if test "$have_libvala_0_22_x" = "yes"; then
+  HAVE_LIBVALA_0_22_X_TRUE=
+  HAVE_LIBVALA_0_22_X_FALSE='#'
+else
+  HAVE_LIBVALA_0_22_X_TRUE='#'
+  HAVE_LIBVALA_0_22_X_FALSE=
+fi
+
+
+
+
 # Documentation with Valadoc
 # Check whether --enable-docs was given.
 if test "${enable_docs+set}" = set; then :
@@ -14465,7 +15194,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc libvaladate/valadate-1.0.pc tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/PIE/Makefile tests/abstract-tests/Makefile vapi/Makefile docs/Makefile"
+ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-1.0.pc libvaladate/valadate-1.0.pc libvaladate/drivers/Makefile libvaladate/drivers/0.32.x/Makefile tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/PIE/Makefile tests/abstract-tests/Makefile vapi/Makefile docs/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -14635,6 +15364,38 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_GCOV_TRUE}" && test -z "${ENABLE_GCOV_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_GCOV\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_36_X_TRUE}" && test -z "${HAVE_LIBVALA_0_36_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_36_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_34_X_TRUE}" && test -z "${HAVE_LIBVALA_0_34_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_34_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_32_X_TRUE}" && test -z "${HAVE_LIBVALA_0_32_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_32_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_30_X_TRUE}" && test -z "${HAVE_LIBVALA_0_30_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_30_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_28_X_TRUE}" && test -z "${HAVE_LIBVALA_0_28_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_28_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_26_X_TRUE}" && test -z "${HAVE_LIBVALA_0_26_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_26_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_24_X_TRUE}" && test -z "${HAVE_LIBVALA_0_24_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_24_X\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${HAVE_LIBVALA_0_22_X_TRUE}" && test -z "${HAVE_LIBVALA_0_22_X_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_LIBVALA_0_22_X\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_DOCS_TRUE}" && test -z "${ENABLE_DOCS_FALSE}"; then
@@ -15536,6 +16297,8 @@ do
     "libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/Makefile" ;;
     "libvaladate/libvaladate-1.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/libvaladate-1.0.pc" ;;
     "libvaladate/valadate-1.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/valadate-1.0.pc" ;;
+    "libvaladate/drivers/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/Makefile" ;;
+    "libvaladate/drivers/0.32.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.32.x/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "tests/genie/Makefile") CONFIG_FILES="$CONFIG_FILES tests/genie/Makefile" ;;
     "tests/libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libvaladate/Makefile" ;;

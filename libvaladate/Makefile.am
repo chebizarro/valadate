@@ -1,6 +1,8 @@
 include $(top_srcdir)/base.am
 include $(top_srcdir)/libvaladate/libvaladate.am
 
+SUBDIRS = . drivers
+
 lib_LTLIBRARIES = libvaladate-1.0.la libvaladate-cli-1.0.la
 
 # The main valadate library which contains the framework and utilities
@@ -9,6 +11,7 @@ libvaladate_1_0_la_SOURCES = \
 	$(libvaladate_sources)
 
 libvaladate_1_0_la_CFLAGS = \
+	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
 	$(VALADATE_CFLAGS) \
 	-g -Og
 	
@@ -122,7 +125,7 @@ gir_DATA = Valadate-1.0.gir
 typelibdir = $(libdir)/girepository-1.0
 typelib_DATA = Valadate-1.0.typelib
 
-CLEANFILES += $(gir_DATA) $(typelib_DATA)
+#CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 
@@ -130,18 +133,6 @@ EXTRA_DIST = \
 	libvaladate-1.0.pc.in \
 	valadate-1.0.pc.in
 
-CLEANFILES += \
-	$(libvaladate_1_0_la_SOURCES:.vala=.c) \
-	$(libvaladate_cli_1_0_la_SOURCES:.vala=.c) \
-	data/*.c \
-	*.vapi \
-	*.h \
-	*.gir \
-	*.pc
-
-DISTCLEANFILES += $(CLEANFILES)
-
-MAINTAINERCLEANFILES = $(DISTCLEANFILES)
 
 .NOTPARALLEL: noinst_LTLIBRARIES
 

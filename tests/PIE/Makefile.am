@@ -58,12 +58,4 @@ testload_PIE_0_CFLAGS = \
 	-pie \
 	$(TESTS_CFLAGS)
 
-CLEANFILES += \
-	$(tests_PIE_0_SOURCES:.vala=.c) \
-	$(testload_PIE_0_SOURCES:.vala=.c) \
-	*.gir \
-	*.vapi
-
-DISTCLEANFILES += $(CLEANFILES)
-
 -include $(top_srcdir)/git.mk

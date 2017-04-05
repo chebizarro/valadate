@@ -23,7 +23,9 @@
 namespace Valadate {
 	
 	public errordomain TestError {
-		NOT_FOUND
+		NOT_FOUND,
+		MODULE,
+		METHOD
 	}
 	
 }

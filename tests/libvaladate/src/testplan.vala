@@ -13,9 +13,9 @@ namespace Valadate.Tests {
 		
 		Environment.set_variable("G_TEST_SRCDIR", newenv.get_path(), true);
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 		
 		assert(tplan is TestPlan);
 		assert(tplan is GirTestPlan);
@@ -28,13 +28,13 @@ namespace Valadate.Tests {
 		var binary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		assert(conf.root[0].count == 4);
+		assert(tplan.root[0].count == 4);
 	}
 
 	public static void test_plan_no_of_tests() {
@@ -44,14 +44,14 @@ namespace Valadate.Tests {
 		var binary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		assert(conf.root[0][0].name == "TestsTestExe");
-		assert(conf.root[0][0].count == 5);
+		assert(tplan.root[0][0].name == "TestsTestExe");
+		assert(tplan.root[0][0].count == 5);
 	}
 
 	public static void test_plan_tests_abstract() {
@@ -61,14 +61,14 @@ namespace Valadate.Tests {
 		var binary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		assert(conf.root[0][3].name == "TestsTestExeAbstractImpl");
-		assert(conf.root[0][3].count == 4);
+		assert(tplan.root[0][3].name == "TestsTestExeAbstractImpl");
+		assert(tplan.root[0][3].count == 4);
 	}
 
 	public static void test_plan_no_of_inherited_tests() {
@@ -78,14 +78,14 @@ namespace Valadate.Tests {
 		var binary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		assert(conf.root[0][1].name == "TestsTestExeSubClass");
-		assert(conf.root[0][1].count == 6);
+		assert(tplan.root[0][1].name == "TestsTestExeSubClass");
+		assert(tplan.root[0][1].count == 6);
 	}
 
 	public static void test_plan_tests_with_label() {
@@ -95,16 +95,16 @@ namespace Valadate.Tests {
 		var binary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
 		
-		var options = new TestOptions({ binary.get_path() });
+		var assembly = new TestAssembly({ binary.get_path() });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		assert(conf.root[0][2].name == "TestsTestExeTwo");
-		assert(conf.root[0][2].count == 2);
-		assert(conf.root[0][2][0].label == "Test One");
-		assert(conf.root[0][2][1].label == "Test Two");
+		assert(tplan.root[0][2].name == "TestsTestExeTwo");
+		assert(tplan.root[0][2].count == 2);
+		assert(tplan.root[0][2][0].label == "/Valadate/TestsTestExeTwo/Test One");
+		assert(tplan.root[0][2][1].label == "/Valadate/TestsTestExeTwo/Test Two");
 	}
 
 	public static void test_plan_run_single_test() {
@@ -116,14 +116,14 @@ namespace Valadate.Tests {
 		
 		var testpath = "/Valadate/TestsTestExe/test_simple";
 		
-		var options = new TestOptions({ binary.get_path(), "-r", testpath });
+		var assembly = new TestAssembly({ binary.get_path(), "-r", testpath });
 		
-		var tplan = TestPlan.new(options); 
+		var tplan = TestPlan.new(assembly); 
 
 		var conf = tplan.config;
 		
-		//assert(conf.root[0][0].count == 1);
-		//assert(conf.root[0][1].count == 0);
+		//assert(tplan.root[0][0].count == 1);
+		//assert(tplan.root[0][1].count == 0);
 	}
 
 }

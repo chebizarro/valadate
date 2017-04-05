@@ -8,4 +8,5 @@ namespace Config {
 	public const string VERSION;
 	public const string VALADATE_TESTS_DIR;
 	public const string VALADATE_LIB_DIR;
+	public const string VALADATE_DRIVER_DIR;
 }

@@ -13,7 +13,7 @@ testexe_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
-	--library Tests
+	--library testexe-0
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
@@ -26,13 +26,7 @@ testexe_0_CPPFLAGS = \
 	
 testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
+	-I$(top_srcdir)/libvaladate/src \
 	-pie
 	
-CLEANFILES += \
-	$(testexe_0_SOURCES:.vala=.c) \
-	*.vapi \
-	*.gir
-
-DISTCLEANFILES += $(CLEANFILES)
-
 -include $(top_srcdir)/git.mk

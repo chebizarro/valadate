@@ -37,7 +37,7 @@ namespace Valadate {
 			}
 		}
 
-		public string running_test {
+		public string? running_test {
 			get {
 				return options.running_test;
 			}

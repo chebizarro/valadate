@@ -73,7 +73,10 @@ ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 dnl === Valadate =======================================================
 
 VALADATE_LIB_DIR=[${PWD}/libvaladate]
+VALADATE_DRIVER_DIR=[${PWD}/libvaladate/drivers]
 AC_SUBST(VALADATE_LIB_DIR)
+AC_SUBST(VALADATE_DRIVER_DIR)
+
 
 pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
 AC_SUBST(pkg_modules)
@@ -188,6 +191,35 @@ AS_IF([test "x$use_gcov" = "xyes"],
 
 AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
 
+dnl === Vala Drivers ===================================================
+
+AC_SUBST(VALAFLAGS)
+
+PKG_CHECK_MODULES(LIBVALA_0_36_X, libvala-0.36 > 0.35.0, have_libvala_0_36_x="yes", have_libvala_0_36_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_36_X, test "$have_libvala_0_36_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_34_X, libvala-0.34 > 0.33.0, have_libvala_0_34_x="yes", have_libvala_0_34_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_34_X, test "$have_libvala_0_34_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_32_X, libvala-0.32 > 0.31.0, have_libvala_0_32_x="yes", have_libvala_0_32_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_32_X, test "$have_libvala_0_32_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_30_X, libvala-0.30 > 0.29.0, have_libvala_0_30_x="yes", have_libvala_0_30_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_30_X, test "$have_libvala_0_30_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_28_X, libvala-0.28 > 0.27.0, have_libvala_0_28_x="yes", have_libvala_0_28_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_28_X, test "$have_libvala_0_28_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_26_X, libvala-0.26 > 0.25.2, have_libvala_0_26_x="yes", have_libvala_0_26_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_26_X, test "$have_libvala_0_26_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_24_X, libvala-0.24 > 0.23.1, have_libvala_0_24_x="yes", have_libvala_0_24_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_24_X, test "$have_libvala_0_24_x" = "yes")
+
+PKG_CHECK_MODULES(LIBVALA_0_22_X, libvala-0.22 >= 0.21.0, have_libvala_0_22_x="yes", have_libvala_0_22_x="no")
+AM_CONDITIONAL(HAVE_LIBVALA_0_22_X, test "$have_libvala_0_22_x" = "yes")
+
+
 dnl === Docs ===========================================================
 
 # Documentation with Valadoc
@@ -224,6 +256,8 @@ AC_CONFIG_FILES([
 	libvaladate/Makefile
 	libvaladate/libvaladate-1.0.pc
 	libvaladate/valadate-1.0.pc
+	libvaladate/drivers/Makefile
+	libvaladate/drivers/0.32.x/Makefile
 	tests/Makefile
 	tests/genie/Makefile
 	tests/libvaladate/Makefile

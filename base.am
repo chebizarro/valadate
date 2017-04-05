@@ -21,6 +21,7 @@ VALADATE_VALAFLAGS = \
 	-g
 
 VALADATE_CPPFLAGS = \
+	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
 	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
 	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
 

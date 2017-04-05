@@ -23,7 +23,7 @@
 
 namespace Valadate {
 
-	public class Module : TypeModule {
+	public class PluginModule : TypeModule {
 		
 		private static string search_path;
 
@@ -39,7 +39,7 @@ namespace Valadate {
 
 		private string name = null;
 		
-		public Module (string name) {
+		public PluginModule (string name) {
 			this.name = name;
 		}
 		

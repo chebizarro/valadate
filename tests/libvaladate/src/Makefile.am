@@ -5,7 +5,7 @@ TESTS_ENVIRONMENT += \
 	G_MESSAGES_DEBUG=all \
 	G_SLICE=debug-blocks
 
-LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
+#LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
 #SUBDIRS = data
 
 test_programs = tests_libvaladate
@@ -30,17 +30,5 @@ tests_libvaladate_CPPFLAGS = \
 	
 tests_libvaladate_CFLAGS = \
 	$(TESTS_CFLAGS)
-
-CLEANFILES += \
-	$(tests_libvaladate_SOURCES:.vala=.c) \
-	*.stamp \
-	*.html \
-	*.xml \
-	*.gcda \
-	*.gcno
-
-DISTCLEANFILES += $(CLEANFILES)
-
-
 
 -include $(top_srcdir)/git.mk

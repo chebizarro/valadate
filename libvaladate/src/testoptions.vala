@@ -27,10 +27,10 @@ namespace Valadate {
 		private static string _testplan;
 		private static string _runtest;
 		private static string _format = "tap";
-		private static bool _async = false;
+		private static bool _async = true;
 		private static bool _tap;
 		private static bool _list;
-		private static bool _keepgoing = true;
+		private static bool _keepgoing = false;
 		private static bool _quiet;
 		private static bool _timed = true;
 		private static bool _verbose;
@@ -60,8 +60,6 @@ namespace Valadate {
 		};
 
 		public OptionContext opt_context;
-
-		public Assembly assembly {get;set;}
 
 		public static string? get_current_test_path() {
 			return _runtest;
@@ -104,7 +102,6 @@ namespace Valadate {
 		}
 
 		public TestOptions(string[] args) throws OptionError {
-			assembly = new TestAssembly(File.new_for_path(args[0]));
 			opt_context = new OptionContext ("- Valadate Testing Framework");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);

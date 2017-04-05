@@ -56,6 +56,9 @@ namespace Valadate {
 			}
 		}
 
+		public bool skipped {get;set;default=false;}
+		public bool failed {get;set;default=false;}
+
 		/**
 		 * The public constructor takes an optional string parameter for the
 		 * TestSuite's name
@@ -75,8 +78,13 @@ namespace Valadate {
 		/**
 		 * Runs all of the tests in the Suite
 		 */
-		public void run(TestResult result) {
-			_tests.foreach((t) => { t.run(result); });
+		public void run (TestResult result) {
+			_tests.foreach((t) => {
+				if(failed && !result.config.keep_going)
+					return;
+				t.run(result);
+				failed = t.failed;
+			});
 		}
 
 		public new Test get(int index) {

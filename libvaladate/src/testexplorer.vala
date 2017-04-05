@@ -20,123 +20,132 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
  
-namespace Valadate {
- 
-	internal class TestExplorer : Vala.CodeVisitor {
+internal class Valadate.TestExplorer : Vala.CodeVisitor {
 
-		internal delegate void* Constructor(); 
-		internal delegate void TestMethod(TestCase self);
+	internal delegate void* Constructor(); 
+	internal delegate void TestMethod(TestCase self);
 
-		private TestSuite current;
-		private Module module;
-		private TestPlan testplan;
-		private string binary;
-		private string? running;
+	private TestSuite current;
+	private Vala.CodeContext context;
+	private Module module;
+	private string binary;
+	private string? running;
+	
+	public TestExplorer(string binary, TestSuite root) {
+		this.binary = binary;
+		this.current = root;
+		this.running = Valadate.get_current_test_path();
+	}
+
+	public void load() throws ConfigError {
+		string testdir = Path.get_dirname(binary).replace(".libs", "");
 		
-		public TestExplorer(string binary, TestSuite root) {
-			this.binary = binary;
-			this.current = root;
-			this.running = Valadate.get_current_test_path();
-		}
-
-		public void load() throws ConfigError {
-			string testdir = Path.get_dirname(binary).replace(".libs", "");
-			
-			string tplan = Path.get_basename(binary);
-			if(tplan.has_prefix("lt-"))
-				tplan = tplan.substring(3);
-			
-			string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + tplan + ".gir";
-			
-			if (!FileUtils.test (testplanfile, FileTest.EXISTS))
-				throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", testplanfile);
-			
-			try {
-				module = new Module(binary);
-				module.load_module();
-				testplan = new TestPlan();
-				testplan.parse(testplanfile);
-				testplan.accept(this);
-				
-			} catch (ModuleError e) {
-				throw new ConfigError.MODULE(e.message);
-			}
-		}
+		string testplan = Path.get_basename(binary);
+		if(testplan.has_prefix("lt-"))
+			testplan = testplan.substring(3);
 		
-
-		public override void visit_class(Vala.Class class) {
-			
-			try {
-				if (is_subtype_of(class, "Valadate.TestCase") &&
-					class.is_abstract != true)
-					current.add_test(visit_testcase(class));
-				
-				else if (is_subtype_of(class, "Valadate.TestSuite") &&
-					class.is_abstract != true)			
-					current.add_test(visit_testsuite(class));
-
-			} catch (ModuleError e) {
-				error(e.message);
-			}
-			class.accept_children(this);
+		string testplanfile = testdir + GLib.Path.DIR_SEPARATOR_S + testplan + ".vapi";
+		
+		if (!FileUtils.test (testplanfile, FileTest.EXISTS))
+			throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", testplanfile);
+		
+		try {
+			module = new Module(binary);
+			module.load_module();
+			load_test_plan(testplanfile);
+		} catch (ModuleError e) {
+			throw new ConfigError.MODULE(e.message);
 		}
+	}
 
-		private bool is_subtype_of(Vala.Class class, string typename) {
-			foreach(var basetype in class.get_base_types())
-				if(((Vala.UnresolvedType)basetype).to_qualified_string() == typename)
-					return true;
-			return false;
-		}
+	internal void load_test_plan(string path) throws ConfigError {
+		setup_context();
+		context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, path));
+		var parser = new Vala.Parser ();
+		parser.parse (context);
+		context.accept(this);
+	}
+	
+	private void setup_context() {
+		context = new Vala.CodeContext ();
+		Vala.CodeContext.push (context);
+		context.report.enable_warnings = false;
+		context.report.set_verbose_errors (false);
+		context.verbose_mode = false;
+	}
 
-		private unowned Constructor get_constructor(Vala.Class class) throws ModuleError {
-			var attr = new Vala.CCodeAttribute (class.default_construction_method);
-			return (Constructor)module.get_method(attr.name);
-		}
-
-		public TestCase visit_testcase(Vala.Class testclass) throws ModuleError {
+	public override void visit_class(Vala.Class class) {
+		
+		try {
+			if (is_subtype_of(class, "Valadate.TestCase") &&
+				class.is_abstract != true)
+				current.add_test(visit_testcase(class));
 			
-			unowned Constructor meth = get_constructor(testclass); 
-			var current_test = meth() as TestCase;		
-			current_test.name = testclass.name;
-			
-			foreach(var method in testclass.get_methods()) {
-				if( method.name.has_prefix("test_") &&
-					method.has_result != true &&
-					method.get_parameters().size == 0) {
+			else if (is_subtype_of(class, "Valadate.TestSuite") &&
+				class.is_abstract != true)			
+				current.add_test(visit_testsuite(class));
 
-					if (running != null &&
-						running != "/" + method.get_full_name().replace(".","/"))
-						continue;
+		} catch (ModuleError e) {
+			error(e.message);
+		}
+		class.accept_children(this);
+	}
 
-					unowned TestMethod testmethod = null;
-					var attr = new Vala.CCodeAttribute(method);
-					testmethod = (TestMethod)module.get_method(attr.name);
+	private bool is_subtype_of(Vala.Class class, string typename) {
+		foreach(var basetype in class.get_base_types())
+			if(((Vala.UnresolvedType)basetype).to_qualified_string() == typename)
+				return true;
+		return false;
+	}
 
-					if (testmethod != null) {
-						current_test.add_test(method.name, ()=> {
-							testmethod(current_test);
-						});
-					}
+	private unowned Constructor get_constructor(Vala.Class class) throws ModuleError {
+		var attr = new Vala.CCodeAttribute (class.default_construction_method);
+		return (Constructor)module.get_method(attr.name);
+	}
+
+	public TestCase visit_testcase(Vala.Class testclass) throws ModuleError {
+		
+		unowned Constructor meth = get_constructor(testclass); 
+		var current_test = meth() as TestCase;		
+		current_test.name = testclass.name;
+		
+		foreach(var method in testclass.get_methods()) {
+			if( method.name.has_prefix("test_") &&
+				method.has_result != true &&
+				method.get_parameters().size == 0) {
+
+				if (running != null &&
+					running != "/" + method.get_full_name().replace(".","/"))
+					continue;
+
+				unowned TestMethod testmethod = null;
+				var attr = new Vala.CCodeAttribute(method);
+				testmethod = (TestMethod)module.get_method(attr.name);
+
+				if (testmethod != null) {
+					current_test.add_test(method.name, ()=> {
+						testmethod(current_test);
+					});
 				}
 			}
-			return current_test;
 		}
+		return current_test;
+	}
 
-		public TestSuite visit_testsuite(Vala.Class testclass) throws ModuleError {
-			unowned Constructor meth = get_constructor(testclass); 
-			var current_test = meth() as TestSuite;
-			current_test.name = testclass.name;
-			return current_test;
+	public TestSuite visit_testsuite(Vala.Class testclass) throws ModuleError {
+		unowned Constructor meth = get_constructor(testclass); 
+		var current_test = meth() as TestSuite;
+		current_test.name = testclass.name;
+		return current_test;
+	}
+
+	public override void visit_namespace(Vala.Namespace ns) {
+
+		if (ns.name != null) {
+			var testsuite = new TestSuite(ns.name);
+			current.add_test(testsuite);
+			current = testsuite;
 		}
-
-		public override void visit_namespace(Vala.Namespace ns) {
-
-			if (ns.name != null) {
-				var testsuite = new TestSuite(ns.name);
-				current.add_test(testsuite);
-				current = testsuite;
-			}
-			ns.accept_children(this);
-		}
+		ns.accept_children(this);
 	}
 }

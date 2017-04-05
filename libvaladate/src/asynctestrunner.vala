@@ -24,8 +24,6 @@ namespace Valadate {
 
 	public class AsyncTestRunner : Object, TestRunner {
 
-		public int testcount {get;protected set;default=0;}
-
 		private class DelegateWrapper {
 			public SourceFunc cb;
 		}
@@ -78,24 +76,36 @@ namespace Valadate {
 		}
 
 		public void run(Test test, TestResult result) {
-			
+			result.start(test);
+			test.run(result);
+			result.report();
 		}
 
 
 		public void run_all(TestPlan plan) {
 
+			Environment.set_variable("G_MESSAGES_DEBUG", "all", true);
+
+			if(!plan.config.keep_going) {
+				Environment.set_variable("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
+				Environment.set_variable("G_SLICE","always-malloc debug-blocks", true);
+			}
+
+
 			this.plan = plan;
 
-			count_tests(plan.root);
-
-			run_test_internal(plan.root, plan.result, "/");
+			plan.result.start(plan.root);
+			run_test_internal(plan.root, plan.result, "");
 
 			if (plan.config.running_test == null) {
 				loop = new MainLoop();
 				var time = new TimeoutSource (15);
 				time.set_callback (() => {
-					plan.result.report();
-					return true;
+					var res = plan.result.report();
+					if(!res)
+						loop.quit();
+					return res;
+					
 				});
 				time.attach (loop.get_context ());
 				loop.run();
@@ -105,14 +115,6 @@ namespace Valadate {
 
 		public void run_test(Test test, TestResult result) {
 			test.run(result);
-		}
-
-		private void count_tests(Test test) {
-			if(test is TestSuite)
-				foreach(var subtest in test)
-					count_tests(subtest);
-			else
-				testcount += test.count;
 		}
 
 		private void run_test_internal(Test test, TestResult result, string path) {
@@ -157,13 +159,14 @@ namespace Valadate {
 
 				} else if (plan.config.running_test != null) {
 
-					if(plan.config.running_test == testpath)
-						subtest.run(result);
-
+					if(plan.config.running_test == testpath) {
+						test.run(result);
+						result.report();
+					}
 				} else {
 
 					subtest.name = testpath;
-					subtest.label = labelpath;
+					//subtest.label = labelpath;
 					
 					result.add_test(subtest);
 					run_async.begin(subtest, result);
@@ -193,12 +196,12 @@ namespace Valadate {
 				yield process.communicate_utf8_async(null, null, out buffer, null);
 				
 				if(process.wait_check()) {
-					//debug("#### %s", buffer);
+					//debug("\n#{\n#%s\n#}\n", string.joinv("\n#", buffer.split("\n")));
 					process_buffer(test, result, buffer);
 				}
 
 			} catch (Error e) {
-				//debug("!!!! %s : %s", buffer, e.message);
+				//debug("!!!! %s : { %s }", test.name, buffer);
 				process_buffer(test, result, buffer, true);
 			} finally {
 				_n_ongoing_tests--;
@@ -210,21 +213,32 @@ namespace Valadate {
 
 		private void process_buffer(Test test, TestResult result, string buffer, bool failed = false) {
 			string skip = null;
+			string err = null;
+			string pass = null;
 			string[] message = {};
 			
-			foreach(string line in buffer.split("\n"))
-				if (line.has_prefix("SKIP "))
-					skip = line;
-				else
-					message += line;
+			foreach(string line in buffer.split("\n")) {
+				if(line.has_prefix("ok ")) {
+					if("# SKIP:" in line) {
+						skip = line.split("# ")[1];
+					} else {
+						pass = line;
+					}
+				} else if (line.has_prefix("# FAIL:")) {
+					err = line.substring(2);
+				} else {
+					var mes = line.strip();
+					if (mes.length > 0)
+						message += mes;
+				}
+			}
 			
 			if (skip != null)
-				result.add_skip(test, skip, string.joinv("\n",message));
-			else
-				if(failed)
-					result.add_failure(test, string.joinv("\n",message));
-				else
-					result.add_success(test, string.joinv("\n",message));
+				result.add_skip(test, skip, "");
+			else if(err != null)
+				result.add_failure(test, string.joinv("\n",err.strip().split("\n")));
+			else if(pass != null)
+				result.add_success(test, string.joinv("\n",message));
 		}
 
 	}

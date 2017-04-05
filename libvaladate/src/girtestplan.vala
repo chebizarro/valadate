@@ -24,29 +24,26 @@ namespace Valadate {
 
 	public class GirTestPlan : Object, TestPlan {
 
-		public Assembly assembly {get;protected set;}
-		public TestOptions options {get;construct set;}
-		public TestConfig config {get;protected set;}
-		public TestResult result {get;protected set;}
-		public TestRunner runner {get;protected set;}
+		public Assembly assembly {get;construct set;}
+		public TestOptions options {get;set;}
+		public TestConfig config {get;set;}
+		public TestResult result {get;set;}
+		public TestRunner runner {get;set;}
 		public TestSuite root {get;protected set;}
 		public File plan {get;construct set;}
 
 		internal delegate Type GetType(); 
-		internal delegate void TestMethod(TestCase self);
 
 		private TestSuite testsuite;
 		private TestCase testcase;
-		private TestModule module;
 		private string currpath;
 		
 		private XmlFile xmlfile; 
-		private string? running;
 
 		construct {
 			try {
-				assembly = options.assembly;
-				running = options.running_test;
+				//assembly = options.assembly;
+				options = ((TestAssembly)assembly).options;
 				testsuite = root = new TestSuite("/");
 				load();
 			} catch (Error e) {
@@ -55,8 +52,6 @@ namespace Valadate {
 		}
 
 		private void load() throws ConfigError {
-			module = new TestModule(assembly.binary);
-			module.load_module();
 			setup_context();
 			visit_config();
 			visit_test_result();
@@ -81,7 +76,7 @@ namespace Valadate {
 			if(conf.size == 1) {
 				var node = conf[0];
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
 			} else {
 				ctype = typeof(TestConfig);
@@ -95,7 +90,7 @@ namespace Valadate {
 			if(res.size == 1) {
 				var node = res[0];
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
 			} else {
 				ctype = typeof(TapTestResult);
@@ -109,7 +104,7 @@ namespace Valadate {
 			if(res.size == 1) {
 				var node = res[0];
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
 				TestRunner.register_default(ctype);
 			}
@@ -121,6 +116,9 @@ namespace Valadate {
 			
 			foreach (var node in ns) {
 				var tsname = node->get_prop("prefix");
+				if(options.running_test != null)
+					if(tsname != options.running_test.split("/")[1])
+						continue;
 				currpath = "/" + tsname;
 				var ts = new TestSuite(tsname);
 				testsuite.add_test(ts);
@@ -135,7 +133,7 @@ namespace Valadate {
 
 			foreach (var node in res) {
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)module.get_method(node_type_str);
+				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				var node_type = node_get_type();
 
 				if(!node_type.is_a(typeof(Valadate.Test)) || node_type.is_abstract())
@@ -143,6 +141,10 @@ namespace Valadate {
 
 				var testname = node->get_prop("name");
 				
+				if(options.running_test != null)
+					if(testname != options.running_test.split("/")[2])
+						continue;
+
 				var oldpath = currpath;
 				currpath += "/" + testname;
 				var test = GLib.Object.new(node_type, "name", testname, "label", currpath) as Test;
@@ -171,16 +173,13 @@ namespace Valadate {
 			foreach (var method in res) {
 
 				string name = method->get_prop("name");
+
+				if(options.running_test != null)
+					if(name != options.running_test.split("/")[3])
+						continue;
+
 				var oldpath = currpath;
 				currpath += "/" + name; 
-
-				
-				if (running != null && running != currpath && config.run_async) {
-					currpath = oldpath;
-					continue;
-				}
-				
-				//debug("Current Path: %s, Running Path: %s", currpath, running);
 
 				bool throwserr = (method->get_prop("throws") == null) ? false : true;
 				string label = name;
@@ -201,7 +200,7 @@ namespace Valadate {
 				
 				var child = method->children;
 				while(child != null) {
-					if(child->name == "attribute") {
+					if(child->name == "annotation") {
 						var attname = child->get_prop("name") ?? child->get_prop("key");
 						if(attname.has_prefix("test."))
 							istest = true;
@@ -226,25 +225,23 @@ namespace Valadate {
 					continue;
 				}
 			
-				TestMethod testmethod = null;
+				var tcase = testcase;
+				TestPlan.TestMethod testmethod = null;
 				if(skip) {
-					testmethod = () => { testcase.skip(@"Skipping Test $(label)"); };
+					testmethod = () => { tcase.skip(@"Skipping Test $(label)"); };
 				} else {
-					if(running != null || !config.run_async) {
+					if(options.running_test != null || !config.run_async) {
 						var method_cname = method->get_prop("identifier");
-						//debug(method_cname);
-						testmethod = (TestMethod)module.get_method(method_cname);
+						testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
 					} else {
 						testmethod = () => { assert_not_reached(); };
 					}
 				}
-				
-				if(testmethod != null)
-					testcase.add_test(name, () => { testmethod(testcase); }, oldpath + "/" + label);
-					
+				if(testmethod != null) {
+					tcase.add_test(name, () => { testmethod(tcase); }, oldpath + "/" + label);
+				}
 				currpath = oldpath;
 			}
-
 			visit_class(classtype.parent());
 		}
 

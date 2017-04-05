@@ -48,10 +48,13 @@ namespace Valadate {
 		 */
 		public abstract int count {get;}
 
+		public abstract bool skipped {get;set;default=false;}
+
+		public abstract bool failed {get;set;default=false;}
+
 		public abstract Test get(int index);
 
 		public abstract void set(int index, Test test);
-
 
 		public virtual TestIterator iterator() {
 			return new TestIterator(this);

@@ -24,6 +24,8 @@ namespace Valadate {
 
 	public interface TestPlan : Object {
 
+		public delegate void TestMethod(TestCase self);
+
 		private static HashTable<string, Type> plan_types;
 		
 		private static void initialise() {
@@ -36,13 +38,13 @@ namespace Valadate {
 
 		}
 
-		public static TestPlan @new(TestOptions options) throws ConfigError {
+		public static TestPlan @new(Assembly assembly) throws ConfigError {
 
 			initialise();
 
 			string currdir = Environment.get_current_dir();
-			string plan_name = Path.get_basename(options.assembly.binary.get_path());
-			string builddir = Path.get_dirname(options.assembly.binary.get_path());
+			string plan_name = Path.get_basename(assembly.binary.get_path());
+			string builddir = Path.get_dirname(assembly.binary.get_path());
 			string srcdir = Environment.get_variable("G_TEST_SRCDIR") ??
 				Environment.get_variable("srcdir") ??
 				currdir;
@@ -62,11 +64,11 @@ namespace Valadate {
 			foreach(var key in plan_types.get_keys()) {
 				var plan_file = File.new_for_path(Path.build_filename(srcdir, plan_name + "." + key));
 	 			if(plan_file.query_exists()) {
-					return Object.new(plan_types[key], "options", options, "plan", plan_file) as TestPlan;
+					return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
 				} else {
 					plan_file = File.new_for_path(Path.build_filename(builddir, plan_name + "." + key));
 					if(plan_file.query_exists()) {
-						return Object.new(plan_types[key], "options", options, "plan", plan_file) as TestPlan;
+						return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
 					}
 				}
 			}
@@ -75,15 +77,15 @@ namespace Valadate {
 		
 		public abstract File plan {get;construct set;}
 
-		public abstract Assembly assembly {get;protected set;}
+		public abstract Assembly assembly {get;construct set;}
 
-		public abstract TestOptions options {get;construct set;}
+		public abstract TestOptions options {get;set;}
 
-		public abstract TestConfig config {get;protected set;}
+		public abstract TestConfig config {get;set;}
 
-		public abstract TestResult result {get;protected set;}
+		public abstract TestResult result {get;set;}
 		
-		public abstract TestRunner runner {get;protected set;}
+		public abstract TestRunner runner {get;set;}
 
 		public abstract TestSuite root {get;protected set;}
 

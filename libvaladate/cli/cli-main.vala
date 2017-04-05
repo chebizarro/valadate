@@ -1,15 +1,12 @@
 namespace Valadate {
 
-	public int main (string[] args) {
-
+	public static void main (string[] args) {
 		try {
-			Module.load_all();
-			var options = new TestOptions(args);
-			var testplan = TestPlan.new(options);
+			var assembly = new TestAssembly(args);
+			var testplan = TestPlan.new(assembly);
 			testplan.run();
 		} catch (Error e) {
 			error(e.message);
 		}
-		return 0;
 	}
 }

@@ -1,12 +1,7 @@
 include $(top_srcdir)/base.am
 
 noinst_DATA = \
-	config.vapi
-
-vapidir = \
-	$(datadir)/vala/vapi
-
-dist_vapi_DATA = \
+	config.vapi \
 	libxslt.deps \
 	libxslt.vapi
 

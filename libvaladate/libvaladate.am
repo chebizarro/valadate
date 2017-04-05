@@ -13,25 +13,13 @@ libvaladate_sources = \
 	src/testconfig.vala \
 	src/testerror.vala \
 	src/testfixture.vala \
-	src/testmodule.vala \
 	src/testoptions.vala \
 	src/testplan.vala \
 	src/testreport.vala \
 	src/testresult.vala \
 	src/testrunner.vala \
 	src/testsuite.vala \
-	deprecated/assert.vala \
-	deprecated/runner.vala \
-	deprecated/framework/test.vala \
-	deprecated/framework/testcase.vala \
-	deprecated/framework/testfixture.vala \
-	deprecated/framework/testsuite.vala \
-	deprecated/framework/testresult.vala \
-	deprecated/framework/testrunner.vala \
-	deprecated/introspection/girparser.vala \
-	deprecated/introspection/introspection.vala \
-	deprecated/introspection/namespace.vala \
-	deprecated/introspection/repository.vala \
+	src/vapitestplan.vala \
 	utils/xmlfile.vala \
 	utils/tempdir.vala \
 	utils/wait.vala \

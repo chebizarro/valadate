@@ -22,11 +22,18 @@
  
 namespace Valadate {
 
+	public errordomain AssemblyError {
+		NOT_FOUND,
+		LOAD,
+		METHOD
+	}
+
 	public interface Assembly : Object {
 	
-		public abstract File binary {get;construct set;}
+		public abstract File binary {get;set;}
 
-		public abstract void run();
-	
+		//public abstract void run();
+		public abstract void* get_method(string method_name) throws AssemblyError;
+
 	}
 }

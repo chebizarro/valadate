@@ -62,6 +62,8 @@ namespace Valadate {
 		
 		public void start(Test test) {
 			count_tests(test);
+			if(config.running_test != null)
+				return;
 			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
 				"# random seed: %s\n1..%d\n".printf(config.seed, testcount)));
 		}
@@ -73,7 +75,12 @@ namespace Valadate {
 
 		public void add_failure(Test test, string failure) {
 			update_test(test, TestStatus.FAILED,
-				"# %s\nnot ok %s %s\n".printf(failure, "%d", test.label));
+				"# %s\nnot ok %s %s\n".printf(
+					string.joinv("\n#",failure.split("\n")),
+					"%d",
+					test.label
+				)
+			);
 		}
 
 		public void add_success(Test test, string message) {
@@ -92,17 +99,23 @@ namespace Valadate {
 		}
 
 		public void add_test_start(Test test) {
+			if(config.running_test != null)
+				return;
 			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
 				"# Start of %s tests\n".printf(test.label)));
 		}
 
 		public void add_test_end(Test test) {
+			if(config.running_test != null)
+				return;
 			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
-				"# End of %s tests\n".printf(test.label)));
+			"# End of %s tests\n".printf(test.label)));
 		}
 
 		private void update_test(Test test, TestStatus status, string message) {
 			var rept = tests.get(test);
+			if(rept == null)
+				return;
 			rept.status = status;
 			rept.message = message.printf(rept.index);
 		}

@@ -26,7 +26,7 @@
 
 
 namespace Valadate {
-	
+
 	public abstract class TestCase : Object, Test, TestFixture {
 
 		/**
@@ -58,6 +58,10 @@ namespace Valadate {
 			}
 		}
 
+		public bool skipped {get;set;default=false;}
+
+		public bool failed {get;set;default=false;}
+
 		public string bug_base {get;set;}
 		
 		private List<Test> _tests = new List<Test>();
@@ -78,10 +82,21 @@ namespace Valadate {
 			_tests.append(adaptor);
 		}
 		
+		
+		private Test current_test;
+		private TestResult current_result;
+		
 		public virtual void run(TestResult result) {
+			current_result = result;
 			result.add_test_start(this);
+			
 			_tests.foreach((t) => {
+				current_test = t;
+				if(failed && !result.config.keep_going)
+					return;
+				result.add_test(t);
 				t.run(result);
+				failed = t.failed;
 			});
 			result.add_test_end(this);
 		}
@@ -94,30 +109,48 @@ namespace Valadate {
 		}
 
 		public void skip(string message) {
-			debug("SKIP %s", message);
+			current_test.skipped = true;
+			current_result.add_skip(current_test, "SKIP: " + message, "");
 		}
 
 		public void fail(string? message = null) {
-			critical("FAIL %s", message ?? "");
+			current_test.failed = true;
+			current_result.add_failure(current_test, "FAIL: " + message ?? "");
+		}
+
+		[CCode (cheader_filename="asserts.h")]
+		public extern void assert(bool expr);
+
+		//[CCode (cname = "_valadate_assert", cheader_filename="asserts.h")]
+		//public extern void assert_true(bool expr);
+
+		//[CCode (cname = "_valadate_assert", cheader_filename="asserts.h")]
+		//public extern void assert_not_null(void* expr);
+
+		//[CCode (cname = "_valadate_assert", cheader_filename="asserts.h")]
+		//public extern void assert_not_reached();
+
+		protected void assertion_message_expr(
+			string? domain, string file, int line, string func, string? expr) {
+			string s;
+			if(expr == null)
+				s = "code should not be reached";
+			else
+				s = "assertion failed: (%s)".printf(expr);
+			assertion_message(domain, file, line, func, s);
+		}
+
+		protected void assertion_message(
+			string? domain, string file, int line, string func, string message) {
+			var mess = "FAIL: %s:%d: %s".printf(Path.get_basename(file),line,message);
+
+			current_test.failed = true;
+			current_result.add_failure(current_test, mess);
 		}
 
 		public virtual void set_up() {}
 
 		public virtual void tear_down() {}
-
-		public virtual void assert(bool expr) {
-			
-		}
-
-		public virtual void assert_not_reached() {
-			
-		}
-
-		public virtual void assert_null(void* expr) {
-			
-		}
-
-	
 
 		private class TestAdaptor : Object, Test {
 
@@ -129,6 +162,8 @@ namespace Valadate {
 
 			public string name {get;set;}
 			public string label { get; set; }
+			public bool skipped {get;set;default=false;}
+			public bool failed {get;set;default=false;}
 
 			public int count {
 				get {
@@ -140,9 +175,6 @@ namespace Valadate {
 				return this;
 			}
 
-			private TestResult result;
-			private bool skipped = false;
-			
 			public TestAdaptor(string name, owned TestMethod test, TestCase testcase) {
 				this.test = (owned)test;
 				this.name = name;
@@ -151,48 +183,87 @@ namespace Valadate {
 
 			public void run(TestResult result) {
 				this.result = result;
-				Log.set_default_handler (log_func);
 
-				//debug("Running %s [%s]", name, label);
-				var oldstdout = (owned)stdout;
+				/*
+				var log = Log.set_handler(null,
+					LogLevelFlags.FLAG_FATAL |
+					LogLevelFlags.FLAG_RECURSION |
+					LogLevelFlags.LEVEL_ERROR,
+					log_err_func);
+
+				Log.set_always_fatal(
+					LogLevelFlags.FLAG_FATAL |
+					LogLevelFlags.FLAG_RECURSION |
+					LogLevelFlags.LEVEL_ERROR);
+
+				var oldstderr = (owned)stderr;
 				char buffer[4096] = { }; 
 				var buf = memopen(buffer, sizeof(uint8)*4096, "w");
-				stdout = (owned)buf;
-				
-				result.add_test(this);
+				stderr = (owned)buf;
+				*/
+				sthis = this;
+				GLib.set_printerr_handler (printerr_func);
 				this.testcase.set_up();
 				this.test();
 				this.testcase.tear_down();
-				if(!skipped)
-					result.add_success(this, (string)buffer);
-				stdout = (owned)oldstdout;
+				if(!skipped && !failed)
+					result.add_success(this, ""); //(string)buffer);
+				
+				/*
+				stderr = (owned)oldstderr;
+				Log.remove_handler(null, log);
+				*/
 			}
+
+			private static TestResult result;
+			private static Test sthis;
+
+			private static void printerr_func (string? text) {
+				if (text == null || str_equal (text, ""))
+					return;
+				var fields = text.split(":");
+				result.add_error(sthis, "FAIL: %s: %s:%s:%s:%s:%s".printf(
+					fields[0].substring(3), Path.get_basename(fields[1]), fields[2],
+					sthis.name, fields[4], fields[5]
+				));
+				result.report();
+				/* Print a stack trace since we've hit some major issue */
+				GLib.on_error_stack_trace ("libtool --mode=execute gdb");
+			}
+
 
 			private void log_func (
 				string? log_domain,
 				LogLevelFlags log_levels,
 				string? message)	{
 
-				Log.default_handler (log_domain, log_levels, message);
 
 				/* Print a stack trace for any message at the warning level or above */
 				if ((log_levels & (
 					LogLevelFlags.LEVEL_WARNING |
-					LogLevelFlags.LEVEL_ERROR |
 					LogLevelFlags.LEVEL_CRITICAL)) != 0) {
-
+					//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
 					result.add_failure(this, message);
+					result.report();
+					//return;
 
-					//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-
+				} else if ((log_levels &
+					(LogLevelFlags.LEVEL_ERROR)) != 0) {
+					result.add_error(this, message);
+					result.report();
+					return;
+				} else if ((log_levels &
+					(LogLevelFlags.LEVEL_INFO)) != 0) {
+					
+					var str = message.split(":")[2];
+					if(str.has_prefix("#SKIP ")) {
+						skipped = true;
+						result.add_skip(this, str, "");
+						//return;
+					}
 				}
-				if ((log_levels & (LogLevelFlags.LEVEL_INFO)) != 0) {
-					if(message.has_prefix("SKIP "))
-						result.add_skip(this, message.substring(5), "");
+				Log.default_handler (log_domain, log_levels, message);
 
-					//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-
-				}
 			}
 
 		}

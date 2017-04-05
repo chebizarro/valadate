@@ -9,7 +9,7 @@ TESTS_ENVIRONMENT= \
 	maybe_errexit='-k --tap -l'
 LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build/autotools/tap-driver.sh
 #LOG_COMPILER = $(builddir)/$(test_programs)
-#LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
+LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
 
 NULL =
 

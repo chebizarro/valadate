@@ -24,47 +24,23 @@ namespace Valadate {
 
 	public class SerialTestRunner : Object, TestRunner {
 
-		construct {
-			
-			Environment.set_variable("G_MESSAGES_DEBUG", "all", true);
-			
-			//GLib.set_printerr_handler (printerr_func_stack_trace);
-			//Log.set_default_handler (log_func_stack_trace);
-		}
-
-		private static void printerr_func_stack_trace (string? text) {
-			if (text == null || str_equal (text, ""))
-				return;
-			stderr.printf (text);
-
-			/* Print a stack trace since we've hit some major issue */
-			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-		}
-
-		private void log_func_stack_trace (
-			string? log_domain,
-			LogLevelFlags log_levels,
-			string? message)	{
-			Log.default_handler (log_domain, log_levels, message);
-
-			/* Print a stack trace for any message at the warning level or above */
-			if ((log_levels & (
-				LogLevelFlags.LEVEL_WARNING |
-				LogLevelFlags.LEVEL_ERROR |
-				LogLevelFlags.LEVEL_CRITICAL)) != 0) {
-				GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-			}
-		}
-
-
 		public void run_all(TestPlan plan) {
+			Environment.set_variable("G_MESSAGES_DEBUG", "all", true);
+
+			if(!plan.config.keep_going) {
+				Environment.set_variable("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
+				Environment.set_variable("G_SLICE","always-malloc debug-blocks", true);
+			}
+
 			plan.result.start(plan.root);
 			plan.root.run(plan.result);
 			plan.result.report();
 		}
 
 		public void run(Test test, TestResult result) {
+			result.start(test);
 			test.run(result);
+			result.report();
 		}
 
 	}

@@ -22,8 +22,32 @@
  
 namespace Valadate {
 
-	public interface Driver : Object {
+	public interface VapiDriver : Object {
 		
+		[CCode (has_target = false)]
+		private delegate Type RegisterDriverFunction (Module module);
+		
+		public static VapiDriver @new(string version) {
+			
+			var driverfile = File.new_for_path(
+				Path.build_filename(
+					Config.VALADATE_DRIVER_DIR,
+					version + ".x", ".libs", "driver.so"));
+			
+			var module = Module.open (driverfile.get_path(), ModuleFlags.BIND_LAZY);
+			
+			void* loader;
+			module.symbol("vala_driver_register_type", out loader);
+			
+			RegisterDriverFunction method = (RegisterDriverFunction)loader;
+			
+			Type t = method(module);
+			
+			return Object.new(t) as VapiDriver;
+		}
+		
+		
+		public abstract void load_test_plan(File file, VapiTestPlan plan);
 		
 	}
 

@@ -40,7 +40,7 @@ namespace Valadate.Tests {
 		 * _test_ prefix
 		 */
 		public void _test_simple_skip () {
-			Assert.is_true(false);
+			assert(false);
 		}
 		
 		/*
@@ -49,7 +49,7 @@ namespace Valadate.Tests {
 		 */
 		[Test (name="Annotated Test With Name")]
 		public void annotated_test_with_name () {
-			Assert.is_true(true);
+			assert_true(true);
 		}
 
 		/*

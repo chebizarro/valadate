@@ -24,12 +24,38 @@ namespace Valadate {
 
 	public class TestAssembly : Object, Assembly {
 	
-		public File binary {get;construct set;}
+		public File binary {get;set;}
+
+		public TestOptions options {get;set;}
+
+		private GLib.Module module;
+
+		public TestAssembly(string[] args) throws AssemblyError {
+			binary = File.new_for_path(args[0]);
+			options = new TestOptions(args);
+			load_module();
+		}
 
 		public void run() { }
-	
-		public TestAssembly(File binary) {
-			Object(binary : binary);
+
+		private void load_module() throws AssemblyError
+			requires(binary != null)
+		{
+			if (!binary.query_exists())
+				throw new AssemblyError.NOT_FOUND("Assembly: %s does not exist", binary.get_path());
+			
+			module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
+			if (module == null)
+				throw new AssemblyError.LOAD(GLib.Module.error());
+			module.make_resident();
+		}
+		
+		public void* get_method(string method_name) throws AssemblyError {
+			void* function;
+			if(module.symbol (method_name, out function))
+				if (function != null)
+					return function;
+			throw new AssemblyError.METHOD(GLib.Module.error());
 		}
 	
 	}
