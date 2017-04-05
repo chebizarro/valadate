@@ -27,6 +27,7 @@
 
 namespace Valadate {
 
+	[CCode (cheader_filename="testcase.h")]
 	public abstract class TestCase : Object, Test, TestFixture {
 
 		/**
@@ -118,7 +119,6 @@ namespace Valadate {
 			current_result.add_failure(current_test, "FAIL: " + message ?? "");
 		}
 
-		[CCode (cheader_filename="asserts.h")]
 		public extern void assert(bool expr);
 
 		//[CCode (cname = "_valadate_assert", cheader_filename="asserts.h")]

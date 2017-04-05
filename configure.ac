@@ -1,5 +1,5 @@
 AC_INIT([Valadate],
-        [1.0.0],
+        [2.0.0],
         [https://github.com/chebizarro/valadate/issues],
         [valadate],
         [https://github.com/chebizarro/valadate])
@@ -78,7 +78,7 @@ AC_SUBST(VALADATE_LIB_DIR)
 AC_SUBST(VALADATE_DRIVER_DIR)
 
 
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0 libxslt"
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
 AC_SUBST(pkg_modules)
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
@@ -98,7 +98,7 @@ dnl === Valadate Tests =================================================
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)
 
-tests_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0 json-glib-1.0"
+tests_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
 
 AC_SUBST(tests_pkg_modules)
 
@@ -254,8 +254,8 @@ AC_CONFIG_FILES([
 	build/Makefile
 	build/autotools/Makefile
 	libvaladate/Makefile
-	libvaladate/libvaladate-1.0.pc
-	libvaladate/valadate-1.0.pc
+	libvaladate/libvaladate-2.0.pc
+	libvaladate/valadate-2.0.pc
 	libvaladate/drivers/Makefile
 	libvaladate/drivers/0.32.x/Makefile
 	tests/Makefile

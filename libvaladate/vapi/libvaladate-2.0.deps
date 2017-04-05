@@ -3,5 +3,3 @@ glib-2.0
 gtk+-3.0
 gmodule-2.0
 libxml-2.0
-libxslt
-json-glib-1.0
