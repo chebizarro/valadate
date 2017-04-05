@@ -47,6 +47,7 @@ GITIGNOREFILES = \
 	depcomp \
 	install-sh \
 	ltmain.sh \
-	missing
+	missing \
+	config.h.in
 
 -include $(top_srcdir)/git.mk
