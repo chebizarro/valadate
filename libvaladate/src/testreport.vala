@@ -44,6 +44,8 @@ namespace Valadate {
 		
 		public string message {get;set;}
 		
+		public string buffer {get;set;}
+		
 		public TestReport(Test test, TestStatus status, int index, string? message = null) {
 			this.test = test;
 			this.status = status;

@@ -11,6 +11,7 @@ libvaladate_2_0_la_SOURCES = \
 	$(libvaladate_sources)
 
 libvaladate_2_0_la_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(VALADATE_CFLAGS) \
 	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
 	-g \
@@ -25,7 +26,8 @@ libvaladate_2_0_la_VALAFLAGS = \
 	--library libvaladate \
 	--vapi vapi/libvaladate-2.0.vapi \
 	-H include/libvaladate.h \
-	--gir=Valadate-2.0.gir
+	--gir=Valadate-2.0.gir \
+	-g
 
 libvaladate_2_0_la_LDFLAGS = \
 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
@@ -33,6 +35,7 @@ libvaladate_2_0_la_LDFLAGS = \
 	-shared
 	
 libvaladate_2_0_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	$(VALADATE_LIBS)
 
 # includes
@@ -48,6 +51,7 @@ libvaladate_cli_2_0_la_SOURCES = \
 	cli/cli-main.vala
 
 libvaladate_cli_2_0_la_CFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(VALADATE_CLI_CFLAGS) \
 	-I$(top_srcdir)/libvaladate/include \
 	-g -Og
@@ -65,6 +69,7 @@ libvaladate_cli_2_0_la_VALAFLAGS = \
 	-g
 
 libvaladate_cli_2_0_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	-dlopen	$(VALADATELIB) \
 	$(VALADATE_CLI_LIBS)
 

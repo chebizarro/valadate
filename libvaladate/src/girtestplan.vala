@@ -215,8 +215,8 @@ namespace Valadate {
 						if(retchild->get_prop("name") != "none")
 							istest = false;
 					}
-					if(child->name == "parameters")
-						istest = false;
+					//if(child->name == "parameters")
+					//	istest = false;
 					child = child->next;
 				}
 			
@@ -228,7 +228,7 @@ namespace Valadate {
 				var tcase = testcase;
 				TestPlan.TestMethod testmethod = null;
 				if(skip) {
-					testmethod = () => { tcase.skip(@"Skipping Test $(label)"); };
+					testmethod = () => { stdout.printf("SKIP: Skipping Test"); };
 				} else {
 					if(options.running_test != null || !config.run_async) {
 						var method_cname = method->get_prop("identifier");
@@ -238,7 +238,13 @@ namespace Valadate {
 					}
 				}
 				if(testmethod != null) {
-					tcase.add_test(name, () => { testmethod(tcase); }, oldpath + "/" + label);
+					tcase.add_test(name, () => {
+						try {
+							testmethod(tcase);
+						} catch (Error e) {
+							throw e;
+						}
+					}, oldpath + "/" + label);
 				}
 				currpath = oldpath;
 			}

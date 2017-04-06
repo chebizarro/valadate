@@ -24,6 +24,11 @@ namespace Valadate.Tests {
 	 */
 	public class TestExe : TestCase {
 		
+		public void test_throws_error() throws Error {
+			throw new FileError.NOSYS("This is a test error");
+		}
+
+		
 		/*
 		 * this is the most simple use case
 		 * the name of the test will be the method name less the
@@ -57,7 +62,7 @@ namespace Valadate.Tests {
 		 * timeout for an async test. This has no effect on non-async tests
 		 */
 		[Test (name="Asynchronous Test", timeout=1000)]
-		public async void test_async () throws ThreadError {
+		public async void _test_async () throws ThreadError {
 			debug("Async Test called");
 			assert_true(true);
 		}
@@ -73,9 +78,6 @@ namespace Valadate.Tests {
 			assert_true(false);
 		}
 		
-		public void test_throws_error() throws Error {
-			throw new FileError.NOSYS("This is a test error");
-		}
 		
 	}
 

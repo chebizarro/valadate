@@ -119,6 +119,44 @@ namespace Valadate {
 			rept.status = status;
 			rept.message = message.printf(rept.index);
 		}
+
+		public bool process_buffer(Test test, string buffer) {
+			
+			string skip = null;
+			string err = null;
+			string pass = null;
+			string[] message = buffer.strip().split("\n");
+			
+			if(message[0] == "\n")
+				message = message[1:message.length];
+
+			if(message[message.length-1] == "\n")
+				message = message[0:message.length-1];
+
+			foreach(string line in message) {
+
+				if(line.has_prefix("ok "))
+					if("# SKIP:" in line)
+						skip = line.split("# ")[1];
+					else
+						pass = line;
+				else if (line.has_prefix("# FAIL:"))
+					err = line.substring(2);
+				else if (line.has_prefix("FAIL:"))
+					err = line;
+				
+			}
+			
+			if (skip != null)
+				add_skip(test, skip, "");
+			else if(err != null)
+				add_failure(test, string.joinv("\n",err.strip().split("\n")));
+			else if(pass != null)
+				add_success(test, string.joinv("\n",message));
+
+			return (err == null) ? true : false;
+
+		}
 		
 	}
 }

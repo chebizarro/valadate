@@ -1,7 +1,7 @@
 m4_define([valadate_major_version], [2])
 m4_define([valadate_minor_version], [0])
-m4_define([valadate_micro_version], [1])
-m4_define([valadate_interface_age], [1])
+m4_define([valadate_micro_version], [0])
+m4_define([valadate_interface_age], [0])
 m4_define([valadate_binary_age],
           [m4_eval(100 * valadate_minor_version + valadate_micro_version)])
 m4_define([valadate_version],
@@ -161,82 +161,22 @@ GLIB_TESTS
 
 dnl === Test coverage ==================================================
 
-AC_ARG_ENABLE([gcov],
-              [AS_HELP_STRING([--enable-gcov], [Enable gcov])],
-              [use_gcov=$enableval],
-              [use_gcov=no])
-
-AS_IF([test "x$use_gcov" = "xyes"],
-      [
-        dnl we need gcc:
-        AS_IF([test "$GCC" != "yes"], [AC_MSG_ERROR([GCC is required for --enable-gcov])])
-
-        dnl Check if ccache is being used
-        AC_CHECK_PROG(SHTOOL, shtool, shtool)
-        AS_CASE([`$SHTOOL path $CC`],
-                [*ccache*], [gcc_ccache=yes],
-                [gcc_ccache=no])
-
-        if test "$gcc_ccache" = "yes" && (test -z "$CCACHE_DISABLE" || test "$CCACHE_DISABLE" != "1"); then
-          AC_MSG_ERROR([ccache must be disabled when --enable-gcov option is used. You can disable ccache by setting environment variable CCACHE_DISABLE=1.])
-        fi
-
-        ltp_version_list="1.6 1.7 1.8 1.9 1.10 1.11"
-        AC_CHECK_PROG(LTP, lcov, lcov)
-        AC_CHECK_PROG(LTP_GENHTML, genhtml, genhtml)
-
-        if test "$LTP"; then
-          AC_CACHE_CHECK([for ltp version], valadate_cv_ltp_version,
-                         [
-                           valadate_cv_ltp_version=invalid
-                           ltp_version=`$LTP -v 2>/dev/null | $SED -e 's/^.* //'`
-                           for ltp_check_version in $ltp_version_list; do
-                             if test "$ltp_version" = "$ltp_check_version"; then
-                               valadate_cv_ltp_version="$ltp_check_version (ok)"
-                             fi
-                           done
-                         ])
-        else
-          ltp_msg="To enable code coverage reporting you must have one of the following LTP versions installed: $ltp_version_list"
-          AC_MSG_ERROR([$ltp_msg])
-        fi
-
-        case $valadate_cv_ltp_version in
-          ""|invalid[)]
-          ltp_msg="You must have one of the following versions of LTP: $ltp_version_list (found: $ltp_version)."
-          AC_MSG_ERROR([$ltp_msg])
-          LTP="exit 0;"
-          ;;
-        esac
-
-        if test -z "$LTP_GENHTML"; then
-          AC_MSG_ERROR([Could not find genhtml from the LTP package])
-        fi
-
-        AC_DEFINE(HAVE_GCOV, 1, [Whether you have gcov])
-
-        dnl Remove all optimization flags from CFLAGS
-        changequote({,})
-        CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
-        VALADATE_CFLAGS=`echo "$VALADATE_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
-        TESTS_CFLAGS=`echo "$TESTS_CFLAGS" | $SED -e 's/-O[0-9]*//g'`
-        changequote([,])
-
-        dnl Define the special gcc flags
-        VALADATE_GCOV_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
-        VALADATE_GCOV_LDADD="-lgcov"
-
-        AC_SUBST(VALADATE_GCOV_CFLAGS)
-        AC_SUBST(VALADATE_GCOV_LDADD)
-
-        VALADATE_CFLAGS="$VALADATE_CFLAGS $VALADATE_GCOV_CFLAGS"
-        VALADATE_LIBS="$VALADATE_LIBS $VALADATE_GCOV_LDADD"
-        
-        TESTS_CFLAGS="$TESTS_CFLAGS $VALADATE_GCOV_CFLAGS"
-        TESTS_LIBS="$TESTS_LIBS $VALADATE_GCOV_LDADD"
-      ])
-
-AM_CONDITIONAL(ENABLE_GCOV, test "x$use_gcov" = "xyes")
+AC_ARG_ENABLE(coverage,
+	AS_HELP_STRING([--enable-coverage],
+	[compile with coverage profiling and debug (gcc only)]),
+	enable_coverage=$enableval,enable_coverage=no)
+AM_CONDITIONAL(ENABLE_COVERAGE, test x$enable_coverage != xno)
+AS_IF([test "x$enable_coverage" != xno],
+	[COVERAGE_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
+	 COVERAGE_VALAFLAGS="-g"
+	 COVERAGE_LIBS="-lgcov"
+	 AC_SUBST(COVERAGE_CFLAGS)
+	 AC_SUBST(COVERAGE_VALAFLAGS)
+	 AC_SUBST(COVERAGE_LIBS)
+	 AC_PATH_PROG(LCOV, lcov, :)
+	 AC_SUBST(LCOV)
+	 AS_IF([test "$LCOV" = :],
+		[AC_MSG_ERROR([lcov is necessary for testing code coverage (http://ltp.sourceforge.net/coverage/lcov.php)])])])
 
 dnl === Vala Drivers ===================================================
 
@@ -328,7 +268,7 @@ echo " • Prefix: ${prefix}"
 echo ""
 echo " • Compiler flags: ${CFLAGS} ${MAINTAINER_CFLAGS} ${VALADATE_CFLAGS}"
 echo ""
-echo " • Enable code coverage: ${use_gcov}"
+echo " • Enable code coverage: ${enable_coverage}"
 echo ""
 echo " • Building on: ${host_os}"
 echo ""

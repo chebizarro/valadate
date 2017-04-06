@@ -14,8 +14,7 @@ VALADATE_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--pkg config \
 	--target-glib=2.40.0 \
-	--hide-internal \
-	-g
+	--hide-internal
 
 VALADATE_CPPFLAGS = \
 	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
@@ -62,31 +61,3 @@ CLEANFILES = \
 DISTCLEANFILES = \
 	$(CLEANFILES) \
 	*.log
-
-
-if ENABLE_GCOV
-# use recursive makes in order to ignore errors during check/perf
-lcov:
-	-$(MAKE) $(AM_MAKEFLAGS) check
-	$(MAKE) $(AM_MAKEFLAGS) genlcov
-
-# we have to massage the lcov.info file slightly to hide the effect of libtool
-# placing the objects files in the .libs/ directory separate from the *.c
-genlcov:
-	$(LTP) --directory $(top_builddir) --capture --output-file $(top_builddir)/tests/results/valadate-lcov.info --test-name VALADATE_TEST --no-checksum
-	$(SED) -e 's#.libs/##' < $(top_builddir)/tests/results/valadate-lcov.info > $(top_builddir)/tests/results/valadate-lcov.info.tmp
-	LANG=C $(LTP_GENHTML) --output-directory $(top_builddir)/tests/results/valadate-lcov --title "Valadate Code Coverage" --show-details $(top_builddir)/tests/results/valadate-lcov.info.tmp
-	rm -f $(top_builddir)/tests/results/valadate-lcov.info.tmp
-
-lcov-clean:
-	-$(LTP) --directory $(top_builddir) -z
-	-$(RM) -rf $(top_builddir)/tests/results/valadate-lcov.info $(top_builddir)/tests/results/valadate-lcov
-else
-lcov genlcov lcov-clean:
-	@echo You need to configure Valadate with support for gcov enabled.
-	@echo e.g., ./configure --enable-gcov
-endif
-
-.PHONY: lcov genlcov lcov-clean
-
-

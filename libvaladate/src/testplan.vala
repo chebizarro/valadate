@@ -24,7 +24,8 @@ namespace Valadate {
 
 	public interface TestPlan : Object {
 
-		public delegate void TestMethod(TestCase self);
+		[CCode (has_target = false)]
+		public delegate void TestMethod(TestCase self) throws Error;
 
 		private static HashTable<string, Type> plan_types;
 		
