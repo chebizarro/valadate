@@ -69,28 +69,19 @@ namespace Valadate {
 		}
 
 		public void add_error(Test test, string error) {
-			update_test(test, TestStatus.ERROR,
-				"# %s\nnot ok %s %s\n".printf(error, "%d", test.label));
+			update_test(test, TestStatus.ERROR, error);
 		}
 
 		public void add_failure(Test test, string failure) {
-			update_test(test, TestStatus.FAILED,
-				"# %s\nnot ok %s %s\n".printf(
-					string.joinv("\n#",failure.split("\n")),
-					"%d",
-					test.label
-				)
-			);
+			update_test(test, TestStatus.FAILED, failure);
 		}
 
-		public void add_success(Test test, string message) {
-			update_test(test, TestStatus.PASSED,
-				"# %s\nok %s %s\n".printf(message, "%d", test.label));
+		public void add_success(Test test, string? message = null) {
+			update_test(test, TestStatus.PASSED, message);
 		}
 		
-		public void add_skip(Test test, string reason, string message) {
-			update_test(test, TestStatus.SKIPPED,
-				"# %s\nok %s %s # %s\n".printf(message, "%d", test.label, reason));
+		public void add_skip(Test test, string message) {
+			update_test(test, TestStatus.SKIPPED, message));
 		}
 
 		public void add_test(Test test) {
@@ -112,12 +103,14 @@ namespace Valadate {
 			"# End of %s tests\n".printf(test.label)));
 		}
 
-		private void update_test(Test test, TestStatus status, string message) {
+		private void update_test(Test test, TestStatus status, string? message) {
+
 			var rept = tests.get(test);
 			if(rept == null)
 				return;
 			rept.status = status;
 			rept.message = message.printf(rept.index);
+
 		}
 
 		public bool process_buffer(Test test, string buffer) {

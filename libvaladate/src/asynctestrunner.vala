@@ -166,11 +166,8 @@ namespace Valadate {
 				} else {
 
 					subtest.name = testpath;
-					//subtest.label = labelpath;
-					
 					result.add_test(subtest);
 					run_async.begin(subtest, result);
-
 				}
 			}
 		}
@@ -196,18 +193,24 @@ namespace Valadate {
 				yield process.communicate_utf8_async(null, null, out buffer, null);
 				
 				if(process.wait_check()) {
-					//debug("\n#{\n#%s\n#}\n", string.joinv("\n#", buffer.split("\n")));
-					process_buffer(test, result, buffer);
+					result.process_buffer(test, buffer);
 				}
 
 			} catch (Error e) {
-				//debug("!!!! %s : { %s }", test.name, buffer);
-				process_buffer(test, result, buffer, true);
+				result.add_error(test, e.message);
+				result.process_buffer(test, buffer);
+
 			} finally {
-				_n_ongoing_tests--;
-				var wrapper = _pending_tests.pop_head ();
-				if(wrapper != null)
-					wrapper.cb();
+				
+				if(test.passed || test.skipped || plan.config.keep_going) {
+					_n_ongoing_tests--;
+					var wrapper = _pending_tests.pop_head ();
+					if(wrapper != null)
+						wrapper.cb();
+				} else {
+					_n_ongoing_tests = 0;
+					_pending_tests.clear();
+				}
 			}
 		}
 

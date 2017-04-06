@@ -8,6 +8,7 @@ libvaladate_sources = \
 	src/serialtestrunner.vala \
 	src/taptestresult.vala \
 	src/test.vala \
+	src/testdapter.vala \
 	src/testassembly.vala \
 	src/testcase.vala \
 	src/testconfig.vala \

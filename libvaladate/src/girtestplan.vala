@@ -238,7 +238,7 @@ namespace Valadate {
 					}
 				}
 				if(testmethod != null) {
-					tcase.add_test(name, () => {
+					tcase.add_test_method(name, () => {
 						try {
 							testmethod(tcase);
 						} catch (Error e) {
