@@ -201,16 +201,10 @@ namespace Valadate {
 				result.process_buffer(test, buffer);
 
 			} finally {
-				
-				if(test.passed || test.skipped || plan.config.keep_going) {
-					_n_ongoing_tests--;
-					var wrapper = _pending_tests.pop_head ();
-					if(wrapper != null)
-						wrapper.cb();
-				} else {
-					_n_ongoing_tests = 0;
-					_pending_tests.clear();
-				}
+				_n_ongoing_tests--;
+				var wrapper = _pending_tests.pop_head ();
+				if(wrapper != null)
+					wrapper.cb();
 			}
 		}
 

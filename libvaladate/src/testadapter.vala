@@ -37,6 +37,7 @@ namespace Valadate {
 
 		private TestMethod test;
 		private TestCase testcase;
+
 		private static TestResult result;
 		private static Test sthis;
 
@@ -58,9 +59,7 @@ namespace Valadate {
 			try {
 				this.test();
 			} catch (Error e) {
-				//result.add_failure(this, e.message);
-				//this.failed = true;
-				stderr.printf("FAIL: %s", e.message);
+				result.add_failure(this, e.message);
 			}
 			this.testcase.tear_down();
 			if(!skipped && !failed)
@@ -71,13 +70,13 @@ namespace Valadate {
 			if (text == null || str_equal (text, ""))
 				return;
 
-			
-
+			/*
 			var fields = text.split(":");
 			result.add_error(sthis, "FAIL: %s: %s:%s:%s:%s:%s".printf(
 				fields[0].substring(3), Path.get_basename(fields[1]), fields[2],
 				sthis.name, fields[4], fields[5]
-			));
+			));*/
+			result.add_failure(sthis, text);
 			result.report();
 			/* Print a stack trace since we've hit some major issue */
 			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
@@ -92,15 +91,10 @@ namespace Valadate {
 				LogLevelFlags.LEVEL_WARNING |
 				LogLevelFlags.LEVEL_CRITICAL)) != 0) {
 				//GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-				result.add_failure(this, message);
-				result.report();
+				result.add_error(this, message);
+				//result.report();
 				//return;
 
-			} else if ((log_levels &
-				(LogLevelFlags.LEVEL_ERROR)) != 0) {
-				result.add_error(this, message);
-				result.report();
-				return;
 			} else if ((log_levels &
 				(LogLevelFlags.LEVEL_INFO)) != 0) {
 				

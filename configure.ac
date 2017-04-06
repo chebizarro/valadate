@@ -67,6 +67,7 @@ AC_CONFIG_HEADER([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([build/autotools])
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 
 AM_INIT_AUTOMAKE([1.11 foreign subdir-objects])
 

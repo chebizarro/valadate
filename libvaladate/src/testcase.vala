@@ -109,12 +109,12 @@ namespace Valadate {
 		}
 
 		public void skip(string message) {
-			current_test.skipped = true;
+			//current_test.skipped = true;
 			current_result.add_skip(current_test, "SKIP: " + message, "");
 		}
 
 		public void fail(string? message = null) {
-			current_test.failed = true;
+			//current_test.failed = true;
 			current_result.add_failure(current_test, "FAIL: " + message ?? "");
 		}
 
@@ -134,7 +134,7 @@ namespace Valadate {
 			string? domain, string file, int line, string func, string message) {
 			var mess = "FAIL: %s:%d: %s".printf(Path.get_basename(file),line,message);
 
-			current_test.failed = true;
+			//current_test.failed = true;
 			current_result.add_failure(current_test, mess);
 		}
 
