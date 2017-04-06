@@ -1,7 +1,7 @@
 VERSIONED_VAPI_DIR = $(shell pkg-config libvala-0.32 --variable vapidir)
 
 AM_CFLAGS = \
-	-I $(top_builddir)/libvaladate/ \
+	-I $(top_builddir)/libvaladate/include \
 	$(LIBVALA_0_32_X_CFLAGS) \
 	-g \
 	-w
@@ -9,10 +9,10 @@ AM_CFLAGS = \
 AM_VALAFLAGS = \
 	$(VALAFLAGS) \
 	--pkg libvala-0.32 \
-	--pkg libvaladate-1.0 \
+	--pkg libvaladate-2.0 \
 	--vapidir $(VERSIONED_VAPI_DIR) \
 	--vapidir $(top_srcdir)/vapi \
-	--vapidir $(top_srcdir)/libvaladate \
+	--vapidir $(top_srcdir)/libvaladate/vapi \
 	--basedir $(srcdir) \
 	--directory $(builddir) \
 	-C \
@@ -37,7 +37,7 @@ driver.vala.stamp: $(driver_la_SOURCES) Makefile
 	touch $@
 
 driver_la_LIBADD = \
-	$(top_builddir)/libvaladate/libvaladate-1.0.la \
+	$(top_builddir)/libvaladate/libvaladate-2.0.la \
 	$(LIBVALADATE_LIBS) \
 	$(LIBVALA_0_32_X_LIBS)
 

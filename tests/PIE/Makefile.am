@@ -58,4 +58,8 @@ testload_PIE_0_CFLAGS = \
 	-pie \
 	$(TESTS_CFLAGS)
 
+CLEANFILES += \
+	*.vapi \
+	*.gir
+
 -include $(top_srcdir)/git.mk

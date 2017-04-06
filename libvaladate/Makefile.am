@@ -11,22 +11,24 @@ libvaladate_2_0_la_SOURCES = \
 	$(libvaladate_sources)
 
 libvaladate_2_0_la_CFLAGS = \
-	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
 	$(VALADATE_CFLAGS) \
-	-g -Og
+	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
+	-g \
+	-Og
 	
 libvaladate_2_0_la_CPPLAGS = \
-	-fPIE \
-	$(VALADATE_CPPFLAGS)
+	$(VALADATE_CPPFLAGS) \
+	-fPIE
 
 libvaladate_2_0_la_VALAFLAGS = \
+	$(VALADATE_VALAFLAGS) \
 	--library libvaladate \
 	--vapi vapi/libvaladate-2.0.vapi \
 	-H include/libvaladate.h \
-	--gir=Valadate-2.0.gir \
-	$(VALADATE_VALAFLAGS)
+	--gir=Valadate-2.0.gir
 
 libvaladate_2_0_la_LDFLAGS = \
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 	-export-dynamic \
 	-shared
 	
@@ -46,9 +48,9 @@ libvaladate_cli_2_0_la_SOURCES = \
 	cli/cli-main.vala
 
 libvaladate_cli_2_0_la_CFLAGS = \
+	$(VALADATE_CLI_CFLAGS) \
 	-I$(top_srcdir)/libvaladate/include \
-	-g -Og \
-	$(VALADATE_CLI_CFLAGS)
+	-g -Og
 
 libvaladate_cli_2_0_la_CPPLAGS = \
 	$(VALADATE_CLI_CPPFLAGS)
@@ -60,17 +62,16 @@ libvaladate_cli_2_0_la_VALAFLAGS = \
 	--library valadate-2.0 \
 	--vapi vapi/valadate-2.0.vapi \
 	-H include/valadate.h \
-	-g \
-	$(VALADATE_CLI_VALAFLAGS)
+	-g
 
 libvaladate_cli_2_0_la_LIBADD = \
 	-dlopen	$(VALADATELIB) \
 	$(VALADATE_CLI_LIBS)
 
 libvaladate_cli_2_0_la_LDFLAGS = \
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
 	-export-dynamic \
 	-shared
-
 
 # includes
 libvaladate_cli_1_0includedir = \
@@ -113,9 +114,12 @@ pkgconfig_DATA = \
 -include $(INTROSPECTION_MAKEFILE)
 if HAVE_INTROSPECTION
 
+libvaladate_dlname = \
+	`$(SED) -nE "s/^dlname='([A-Za-z0-9.+-]+)'/\1/p" libvaladate-2.0.la`
+
 Valadate-2.0.typelib: Valadate-2.0.gir
 	g-ir-compiler \
-		--shared-library=libvaladate.so \
+		--shared-library=$(libvaladate_dlname) \
 		--output=$@ \
 		$<
 
@@ -130,34 +134,29 @@ endif
 
 # install gdb scripts
 gdbdir = $(datadir)/valadate/gdb
-dist_gdb_SCRIPTS = valadate_gdb.py
+dist_gdb_SCRIPTS = src/valadate_gdb.py
 
-libvaladate-gdb.py: libvaladate-gdb.py.in
+src/libvaladate-gdb.py: src/libvaladate-gdb.py.in
 	$(AM_V_GEN) $(SED) -e "s|\@datadir\@|$(datadir)|" $(srcdir)/src/libvaladate-gdb.py.in > $(builddir)/src/libvaladate-gdb.py
 
-if HAVE_GLIB_RUNTIME_LIBDIR
-ABS_GLIB_RUNTIME_LIBDIR = $(realpath $(libdir)/$(GLIB_RUNTIME_LIBDIR))
-else
-ABS_GLIB_RUNTIME_LIBDIR = $(libdir)
-endif
-
-install-data-hook: libvaladate-gdb.py
-	mkdir -p $(DESTDIR)$(datadir)/gdb/auto-load$(ABS_GLIB_RUNTIME_LIBDIR)
-	$(INSTALL) $(builddir)/src/libvaladate-gdb.py $(DESTDIR)$(datadir)/gdb/auto-load$(ABS_GLIB_RUNTIME_LIBDIR)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION)-gdb.py
-if HAVE_GLIB_RUNTIME_LIBDIR
-	mkdir -p $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
-	mv $(DESTDIR)$(libdir)/libvaladate-2.0.so.0 $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
-	mv $(DESTDIR)$(libdir)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION) $(DESTDIR)$(libdir)/$(GLIB_RUNTIME_LIBDIR)
-	rm -f $(DESTDIR)$(libdir)/libvaladate-2.0.so
-	ln -s $(GLIB_RUNTIME_LIBDIR)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION) $(DESTDIR)$(libdir)/libvaladate-2.0.so
-endif
+install-data-hook: src/libvaladate-gdb.py
+	mkdir -p $(DESTDIR)$(datadir)/gdb/auto-load/$(libdir)
+	$(INSTALL) $(builddir)/src/libvaladate-gdb.py $(DESTDIR)$(datadir)/gdb/auto-load/$(libdir)/libvaladate-2.0.so.0.$(LT_CURRENT).$(LT_REVISION)-gdb.py
 
 uninstall-gdb:
 	-rm -r $(DESTDIR)$(datadir)/gdb
 
+CLEANFILES += src/libvaladate-gdb.py
+
 EXTRA_DIST = \
 	libvaladate-2.0.pc.in \
 	valadate-2.0.pc.in
+
+MAINTAINERCLEANFILES = \
+	vapi/libvaladate-2.0.vapi \
+	vapi/valadate-2.0.vapi \
+	include/libvaladate.h \
+	include/valadate.h
 
 
 .NOTPARALLEL: noinst_LTLIBRARIES

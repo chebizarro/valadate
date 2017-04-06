@@ -31,4 +31,8 @@ tests_abstract_tests_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
 	-pie
 
+CLEANFILES += \
+	*.vapi \
+	*.gir
+
 -include $(top_srcdir)/git.mk

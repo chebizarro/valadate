@@ -1,10 +1,65 @@
+m4_define([valadate_major_version], [2])
+m4_define([valadate_minor_version], [0])
+m4_define([valadate_micro_version], [1])
+m4_define([valadate_interface_age], [1])
+m4_define([valadate_binary_age],
+          [m4_eval(100 * valadate_minor_version + valadate_micro_version)])
+m4_define([valadate_version],
+          [valadate_major_version.valadate_minor_version.valadate_micro_version])
+
+# libtool version related macros
+m4_define([valadate_lt_release], [valadate_major_version.valadate_minor_version])
+m4_define([valadate_lt_current],
+          [m4_eval(100 * valadate_minor_version + valadate_micro_version - valadate_interface_age)])
+m4_define([valadate_lt_revision], [valadate_interface_age])
+m4_define([valadate_lt_age], [m4_eval(valadate_binary_age - valadate_interface_age)])
+m4_define([valadate_lt_current_minus_age],
+          [m4_eval(valadate_lt_current - valadate_lt_age)])
+
 AC_INIT([Valadate],
-        [2.0.0],
+        [valadate_version],
         [https://github.com/chebizarro/valadate/issues],
         [valadate],
         [https://github.com/chebizarro/valadate])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
+VALADATE_MAJOR_VERSION=valadate_major_version
+VALADATE_MINOR_VERSION=valadate_minor_version
+VALADATE_MICRO_VERSION=valadate_micro_version
+VALADATE_INTERFACE_AGE=valadate_interface_age
+VALADATE_BINARY_AGE=valadate_binary_age
+VALADATE_VERSION=valadate_version
+
+AC_SUBST(VALADATE_MAJOR_VERSION)
+AC_SUBST(VALADATE_MINOR_VERSION)
+AC_SUBST(VALADATE_MICRO_VERSION)
+AC_SUBST(VALADATE_VERSION)
+AC_SUBST(VALADATE_INTERFACE_AGE)
+AC_SUBST(VALADATE_BINARY_AGE)
+
+AC_DEFINE(VALADATE_MAJOR_VERSION, [valadate_major_version],
+	  [Define to the GLIB major version])
+AC_DEFINE(VALADATE_MINOR_VERSION, [valadate_minor_version],
+	  [Define to the GLIB minor version])
+AC_DEFINE(VALADATE_MICRO_VERSION, [valadate_micro_version],
+	  [Define to the GLIB micro version])
+AC_DEFINE(VALADATE_INTERFACE_AGE, [valadate_interface_age],
+	  [Define to the GLIB interface age])
+AC_DEFINE(VALADATE_BINARY_AGE, [valadate_binary_age],
+	  [Define to the GLIB binary age])
+
+# libtool versioning
+LT_RELEASE=valadate_lt_release
+LT_CURRENT=valadate_lt_current
+LT_REVISION=valadate_lt_revision
+LT_AGE=valadate_lt_age
+LT_CURRENT_MINUS_AGE=valadate_lt_current_minus_age
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+AC_SUBST(LT_CURRENT_MINUS_AGE)
 
 AC_PREREQ([2.65])
 
@@ -78,17 +133,14 @@ AC_SUBST(VALADATE_LIB_DIR)
 AC_SUBST(VALADATE_DRIVER_DIR)
 
 
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 libxml-2.0"
 AC_SUBST(pkg_modules)
 PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
 
 AC_SUBST(VALADATE_CFLAGS)
 AC_SUBST(VALADATE_LIBS)
 
-# CLI
-pkg_cli_modules="glib-2.0"
-AC_SUBST(pkg_cli_modules)
-PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_cli_modules])
+PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_modules])
 
 AC_SUBST(VALADATE_CLI_CFLAGS)
 AC_SUBST(VALADATE_CLI_LIBS)
@@ -98,14 +150,9 @@ dnl === Valadate Tests =================================================
 VALADATE_TESTS_DIR=[${PWD}/tests]
 AC_SUBST(VALADATE_TESTS_DIR)
 
-tests_pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 libxml-2.0"
-
-AC_SUBST(tests_pkg_modules)
-
-PKG_CHECK_MODULES([TESTS], [$tests_pkg_modules])
+PKG_CHECK_MODULES([TESTS], [$pkg_modules])
 
 AC_SUBST(TESTS_CFLAGS)
-AC_SUBST(TESTS_VALAFLAGS)
 AC_SUBST(TESTS_LIBS)
 
 dnl === Test suite =====================================================

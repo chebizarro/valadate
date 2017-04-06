@@ -17,8 +17,7 @@ testexe_0_VALAFLAGS = \
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
-	$(TEST_RUNNER) \
-	-lgio-2.0
+	$(TEST_RUNNER)
 	
 testexe_0_CPPFLAGS = \
 	$(TESTS_CPPFLAGS) \
@@ -26,7 +25,7 @@ testexe_0_CPPFLAGS = \
 	
 testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
-	-I$(top_srcdir)/libvaladate/src \
+	-I$(top_srcdir)/libvaladate/include \
 	-pie
 	
 CLEANFILES += \

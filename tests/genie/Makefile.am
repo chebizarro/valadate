@@ -29,4 +29,9 @@ testgenie_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
 	-pie
 
+MAINTAINERCLEANFILES += \
+	testgenie.c \
+	*.vapi \
+	*.gir
+
 -include $(top_srcdir)/git.mk

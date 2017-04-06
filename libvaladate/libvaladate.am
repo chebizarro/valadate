@@ -21,6 +21,5 @@ libvaladate_sources = \
 	src/testsuite.vala \
 	src/vapitestplan.vala \
 	utils/xmlfile.vala \
-	utils/tempdir.vala \
 	utils/wait.vala \
 	utils/signalwaiter.vala
