@@ -32,19 +32,23 @@ namespace Valadate {
 
 		public abstract bool report();
 		
+		/*
 		public abstract void add_error(Test test, string error);
 
 		public abstract void add_failure(Test test, string failure);
 
-		public abstract void add_success(Test test, string message);
+		public abstract void add_success(Test test, string? message = null);
 		
-		public abstract void add_skip(Test test, string reason, string message);
-		
+		public abstract void add_skip(Test test, string message);
+		*/
+
 		public abstract void add_test(Test test);
 
 		public abstract void add_test_start(Test test);
 		
 		public abstract void add_test_end(Test test);
+
+		public abstract void process_buffer(Test test, string buffer);
 
 	}
 }

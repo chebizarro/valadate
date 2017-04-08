@@ -24,11 +24,6 @@ namespace Valadate.Tests {
 	 */
 	public class TestExe : TestCase {
 		
-		public void test_throws_error() throws Error {
-			throw new FileError.NOSYS("This is a test error");
-		}
-
-		
 		/*
 		 * this is the most simple use case
 		 * the name of the test will be the method name less the
@@ -38,11 +33,12 @@ namespace Valadate.Tests {
 			assert(true);
 		}
 
-		/*
+		/**
+		 * _test_simple_skip:
+		 * 
 		 * this is the most simple use case
-		 * the test will be skipped
-		 * the name of the test will be the method name less the
-		 * _test_ prefix
+		 * the test will be skipped and the name of the test will be the
+		 * method name less the _test_ prefix
 		 */
 		public void _test_simple_skip () {
 			assert(false);
@@ -68,16 +64,29 @@ namespace Valadate.Tests {
 		}
 
 		/*
-		 * The [Test (skip=yes|no)] annotation allows you to skip the
-		 * test. The no parameter is redundant.
-		 * the name of the test will be the function name less
-		 * any test_ prefix
+		 * The [Test (skip="reason")] annotation allows you to skip the
+		 * test. The reason parameter will be given as the reason for 
+		 * skipping the test.
+		 * The name of the test will be the function name less
+		 * any test_ prefix and any underscores converted to spaces
 		 */
-		[Test (skip="yes")]
+		[Test (skip="Skipping")]
 		public void skip_test () {
 			assert_true(false);
 		}
 		
+
+		/*
+		 * The [Test (todo="reason")] annotation allows a test to fail
+		 * but be marked as OK. The reason parameter will be given as the
+		 * reason why the test is failing.
+		 * The name of the test will be the function name less
+		 * any test_ prefix and any underscores converted to spaces
+		 */
+		[Test (todo="always throws an error")]
+		public void test_throws_error() throws Error {
+			throw new FileError.NOSYS("This is a test error");
+		}
 		
 	}
 

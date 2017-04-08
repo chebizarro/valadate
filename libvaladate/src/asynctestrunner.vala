@@ -30,8 +30,6 @@ namespace Valadate {
 
 		private uint _n_ongoing_tests = 0;
 		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
-		private Queue<TestReport> reports = new Queue<TestReport>();
-		private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
 
 		/* Change this to change the cap on the number of concurrent operations. */
 		private static uint _max_n_ongoing_tests = 1;
@@ -47,40 +45,13 @@ namespace Valadate {
 			this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
 			this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
 			this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
-			GLib.set_printerr_handler (printerr_func_stack_trace);
-			Log.set_default_handler (log_func_stack_trace);
 		}
 		
-		private static void printerr_func_stack_trace (string? text) {
-			if (text == null || str_equal (text, ""))
-				return;
-			stderr.printf (text);
-
-			/* Print a stack trace since we've hit some major issue */
-			GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-		}
-
-		private void log_func_stack_trace (
-			string? log_domain,
-			LogLevelFlags log_levels,
-			string? message)	{
-			Log.default_handler (log_domain, log_levels, message);
-
-			/* Print a stack trace for any message at the warning level or above */
-			if ((log_levels & (
-				LogLevelFlags.LEVEL_WARNING |
-				LogLevelFlags.LEVEL_ERROR |
-				LogLevelFlags.LEVEL_CRITICAL)) != 0) {
-				GLib.on_error_stack_trace ("libtool --mode=execute gdb");
-			}
-		}
-
 		public void run(Test test, TestResult result) {
 			result.start(test);
 			test.run(result);
 			result.report();
 		}
-
 
 		public void run_all(TestPlan plan) {
 
@@ -90,7 +61,6 @@ namespace Valadate {
 				Environment.set_variable("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
 				Environment.set_variable("G_SLICE","always-malloc debug-blocks", true);
 			}
-
 
 			this.plan = plan;
 
@@ -126,7 +96,7 @@ namespace Valadate {
 
 				if(subtest is TestCase) {
 
-					if(plan.config.running_test == null && !plan.config.list_only) {
+					if(!plan.config.in_subprocess && !plan.config.list_only) {
 
 						result.add_test_start(subtest);
 
@@ -145,7 +115,7 @@ namespace Valadate {
 
 					run_test_internal(subtest, result, testpath);
 
-					if(plan.config.running_test == null) {
+					if(!plan.config.in_subprocess) {
 						/*
 						var rpt = new TestReport(subtest, TestStatus.PASSED,-1);
 						rpt.report.connect((s)=> ((TestSuite)subtest).tear_down());
@@ -157,7 +127,7 @@ namespace Valadate {
 					
 					stdout.printf("%s\n", labelpath);
 
-				} else if (plan.config.running_test != null) {
+				} else if (plan.config.in_subprocess) {
 
 					if(plan.config.running_test == testpath) {
 						test.run(result);
@@ -193,12 +163,20 @@ namespace Valadate {
 				yield process.communicate_utf8_async(null, null, out buffer, null);
 				
 				if(process.wait_check()) {
-					result.process_buffer(test, buffer);
+					if(test.status == TestStatus.RUNNING)
+						test.status = TestStatus.PASSED;
+
+					//result.process_buffer(test, buffer);
+
 				}
 
 			} catch (Error e) {
-				result.add_error(test, e.message);
-				result.process_buffer(test, buffer);
+
+				test.status = TestStatus.FAILED;
+				test.status_message = e.message;
+
+				//result.add_error(test, e.message);
+
 
 			} finally {
 				_n_ongoing_tests--;
@@ -206,36 +184,6 @@ namespace Valadate {
 				if(wrapper != null)
 					wrapper.cb();
 			}
-		}
-
-		private void process_buffer(Test test, TestResult result, string buffer, bool failed = false) {
-			string skip = null;
-			string err = null;
-			string pass = null;
-			string[] message = {};
-			
-			foreach(string line in buffer.split("\n")) {
-				if(line.has_prefix("ok ")) {
-					if("# SKIP:" in line) {
-						skip = line.split("# ")[1];
-					} else {
-						pass = line;
-					}
-				} else if (line.has_prefix("# FAIL:")) {
-					err = line.substring(2);
-				} else {
-					var mes = line.strip();
-					if (mes.length > 0)
-						message += mes;
-				}
-			}
-			
-			if (skip != null)
-				result.add_skip(test, skip, "");
-			else if(err != null)
-				result.add_failure(test, string.joinv("\n",err.strip().split("\n")));
-			else if(pass != null)
-				result.add_success(test, string.joinv("\n",message));
 		}
 
 	}

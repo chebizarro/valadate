@@ -48,9 +48,15 @@ namespace Valadate {
 		 */
 		public abstract int count {get;}
 
-		public abstract bool skipped {get;set;default=false;}
+		/**
+		 * The #TestStatus of the test
+		 */
+		public abstract TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 
-		public abstract bool failed {get;set;default=false;}
+		/**
+		 * The status message of the test
+		 */
+		public abstract string status_message {get;set;}
 
 		public abstract Test get(int index);
 

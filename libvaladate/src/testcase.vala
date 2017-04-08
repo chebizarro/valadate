@@ -55,9 +55,8 @@ namespace Valadate {
 			}
 		}
 
-		public bool skipped {get;set;default=false;}
-
-		public bool failed {get;set;default=false;}
+		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
+		public string status_message {get;set;}
 
 		public string bug_base {get;set;}
 		
@@ -77,28 +76,43 @@ namespace Valadate {
 		}
 
 		public void add_test(Test test) {
-			_tests.append(adaptor);
+			_tests.append(test);
 		}
 
 		public void add_test_method(string testname, owned TestMethod test, string? label = null) {
-			var adaptor = new TestAdaptor (testname, (owned)test, this);
-			adaptor.label = label;
-			_tests.append(adaptor);
+			var adapter = new TestAdapter (testname, (owned)test, this);
+			adapter.label = label;
+			_tests.append(adapter);
 		}
 		
 		public virtual void run(TestResult result) {
+			if(status != TestStatus.NOT_RUN)
+				return;
+
 			current_result = result;
+			status = TestStatus.RUNNING;
+
 			result.add_test_start(this);
-			
+
 			_tests.foreach((t) => {
+
 				current_test = t;
-				if(failed && !result.config.keep_going)
+
+				if(status == TestStatus.FAILED && !result.config.keep_going)
 					return;
+
 				result.add_test(t);
+
 				t.run(result);
-				failed = t.failed;
+
+				if(t.status == TestStatus.FAILED) status = TestStatus.FAILED;
 			});
+
+			if(status == TestStatus.RUNNING)
+				status = TestStatus.PASSED;
+
 			result.add_test_end(this);
+
 		}
 
 		public void bug(string reference)
@@ -109,13 +123,19 @@ namespace Valadate {
 		}
 
 		public void skip(string message) {
-			//current_test.skipped = true;
-			current_result.add_skip(current_test, "SKIP: " + message, "");
+			current_test.status = TestStatus.SKIPPED;
+			current_test.status_message = message;
+
+			current_result.add_skip(current_test, message);
+
 		}
 
 		public void fail(string? message = null) {
-			//current_test.failed = true;
-			current_result.add_failure(current_test, "FAIL: " + message ?? "");
+			current_test.status = TestStatus.FAILED;
+			current_test.status_message = message;
+
+			current_result.add_failure(current_test, message);
+
 		}
 
 		public extern void assert(bool expr);
@@ -134,7 +154,6 @@ namespace Valadate {
 			string? domain, string file, int line, string func, string message) {
 			var mess = "FAIL: %s:%d: %s".printf(Path.get_basename(file),line,message);
 
-			//current_test.failed = true;
 			current_result.add_failure(current_test, mess);
 		}
 

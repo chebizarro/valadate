@@ -42,7 +42,6 @@ namespace Valadate {
 
 		construct {
 			try {
-				//assembly = options.assembly;
 				options = ((TestAssembly)assembly).options;
 				testsuite = root = new TestSuite("/");
 				load();
@@ -71,44 +70,36 @@ namespace Valadate {
 		}
 
 		private void visit_config() {
-			var conf = xmlfile.eval("//xmlns:class[@parent='ValadateTestConfig']");
-			Type ctype;
-			if(conf.size == 1) {
-				var node = conf[0];
-				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
-				ctype = node_get_type();
-			} else {
+			Type ctype = find_type("//xmlns:class[@parent='ValadateTestConfig']");
+			if(ctype == Type.INVALID)
 				ctype = typeof(TestConfig);
-			}
 			config = Object.new(ctype, "options", options, null) as TestConfig;
 		}
 
 		private void visit_test_result() {
-			var res = xmlfile.eval("//xmlns:class[@parent='ValadateTestResult']");
-			Type ctype;
-			if(res.size == 1) {
-				var node = res[0];
-				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
-				ctype = node_get_type();
-			} else {
+			Type ctype = find_type("//xmlns:class[@parent='ValadateTestResult']");
+			if(ctype == Type.INVALID)
 				ctype = typeof(TapTestResult);
-			}
 			result = Object.new(ctype, "config", config) as TestResult;
 		}
 		
 		private void visit_test_runner() {
-			var res = xmlfile.eval("//xmlns:class[@implements='ValadateTestRunner']");
-			Type ctype;
+			Type ctype = find_type("//xmlns:class[@implements='ValadateTestRunner']");
+			if(ctype != Type.INVALID)
+				TestRunner.register_default(ctype);
+			runner = TestRunner.new(config);
+		}
+
+		private Type find_type(string xpath) {
+			var res = xmlfile.eval(xpath);
+			Type ctype = Type.INVALID;
 			if(res.size == 1) {
 				var node = res[0];
 				string node_type_str = node->get_prop("get-type");
 				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
-				TestRunner.register_default(ctype);
 			}
-			runner = TestRunner.new(config);
+			return ctype;
 		}
 
 		private void visit_root() {
@@ -173,84 +164,92 @@ namespace Valadate {
 			foreach (var method in res) {
 
 				string name = method->get_prop("name");
-
-				if(options.running_test != null)
-					if(name != options.running_test.split("/")[3])
-						continue;
-
-				var oldpath = currpath;
-				currpath += "/" + name; 
-
-				bool throwserr = (method->get_prop("throws") == null) ? false : true;
-				string label = name;
-				bool istest = false;
-				bool skip = false;
-
-				if(name.has_prefix("test_")) {
-					istest = true;
-					label = label.substring(5);
-				}
-
-				if(name.has_prefix("_test_")) {
-					skip = istest = true;
-					label = label.substring(6);
-				}
-
-				label = label.replace("_", " ");
-				
-				var child = method->children;
-				while(child != null) {
-					if(child->name == "annotation") {
-						var attname = child->get_prop("name") ?? child->get_prop("key");
-						if(attname.has_prefix("test."))
-							istest = true;
-						if(attname == "test.name")
-							label = child->get_prop("value");
-						if(attname == "test.skip")
-							skip = (child->get_prop("value") == "yes") ? true : false;
-					}
-					if(child->name == "return-value") {
-						var retchild = child->children;
-						while(retchild->name != "type") { retchild = retchild->next; };
-						if(retchild->get_prop("name") != "none")
-							istest = false;
-					}
-					//if(child->name == "parameters")
-					//	istest = false;
-					child = child->next;
-				}
-			
-				if(!istest) {
-					currpath = oldpath;
+				if(options.in_subprocess && name != options.running_test.split("/")[3])
 					continue;
+				if(!is_test(method))
+					continue;
+
+				var adapter = new TestAdapter(name, testcase);
+				annotate_label(adapter);
+				annotate(adapter, method->children);
+
+				if(options.in_subprocess && !adapter.skipped) {
+					var method_cname = method->get_prop("identifier");
+					TestCase.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
+					if(testmethod != null)
+						adapter.add_test_method(testmethod);
 				}
-			
-				var tcase = testcase;
-				TestPlan.TestMethod testmethod = null;
-				if(skip) {
-					testmethod = () => { stdout.printf("SKIP: Skipping Test"); };
-				} else {
-					if(options.running_test != null || !config.run_async) {
-						var method_cname = method->get_prop("identifier");
-						testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
-					} else {
-						testmethod = () => { assert_not_reached(); };
-					}
-				}
-				if(testmethod != null) {
-					tcase.add_test_method(name, () => {
-						try {
-							testmethod(tcase);
-						} catch (Error e) {
-							throw e;
-						}
-					}, oldpath + "/" + label);
-				}
-				currpath = oldpath;
+				adapter.label = "%s/%s".printf(currpath, adapter.label);
 			}
 			visit_class(classtype.parent());
 		}
 
+		private void annotate_label(Test test) {
+			if(test.name.has_prefix("test_")) {
+				test.label = test.name.substring(5);
+			} else if(test.name.has_prefix("_test_")) {
+				test.label = test.name.substring(6);
+				test.status = TestStatus.SKIPPED;
+			} else if(test.name.has_prefix("_todo_test_")) {
+				test.label = test.name.substring(11);
+				test.status = TestStatus.TODO;
+			} else {
+				test.label = test.name;
+			}
+			test.label = test.label.replace("_", " ");
+		}
+
+		/**
+		 * Annotates a TestAdapter based on the attributes in the Xml.Node*
+		 */
+		private void annotate(TestAdapter adapter, Xml.Node* node) {
+			while(node != null) {
+				if(node->name == "annotation" || node->name == "attribute") {
+					var attname = node->get_prop("name") ?? node->get_prop("key");
+					if(attname == "test.name")
+						adapter.label = node->get_prop("value");
+					if(attname == "test.skip") {
+						adapter.status = TestStatus.SKIPPED;
+						adapter.staus_message = child->get_prop("value");
+					}
+					if(attname == "test.todo") {
+						adapter.status = TestStatus.TODO;
+						adapter.status_message = child->get_prop("value");
+					}
+				}
+				child = child->next;
+			}
+		}
+		/**
+		 * Tests if the Xml.Node* points to a TestMethod
+		 */
+		private bool is_test(Xml.Node* node) {
+			bool istest = false;
+			string name = method->get_prop("name");
+			
+			if(name.has_prefix("test_") || name.has_prefix("_test_"))
+				istest = true;
+			
+			var child = node->children;
+			while(child != null) {
+				if(child->name == "annotation" || child->name == "attribute") {
+					var attname = child->get_prop("name") ?? child->get_prop("key");
+					if(attname.has_prefix("test."))
+						istest = true;
+				}
+				if(child->name == "return-value") {
+					var retchild = child->children;
+					while(retchild->name != "type") { retchild = retchild->next; };
+					if(retchild->get_prop("name") != "none")
+						istest = false;
+				}
+				//if(child->name == "parameters")
+				//	istest = false;
+				child = child->next;
+			}
+			return istest;
+		}
+		
 		public void run() {
 			runner.run_all(this);
 		}

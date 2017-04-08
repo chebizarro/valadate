@@ -26,31 +26,74 @@ namespace Valadate {
 		RUNNING,
 		PASSED,
 		SKIPPED,
+		TODO,
 		ERROR,
 		FAILED,
 		STATUS
 	}
 
+	public abstract class TestMessage {
+		public string level {get;set;}
+		public string message {get;set;}
+		public string? file {get;set;}
+		public string? line {get;set;}
+		public string? function {get;set;}
+		
+		public TestMessage(string level, string message, string? path = null) {
+			this.level = level;
+			this.message = message;
+			
+			if(path != null) {
+				var paths = path.split(":");
+				if(paths.length >= 2) {
+					this.file = paths[0];
+					this.line = paths[1];
+					if(paths.length >= 3)
+						this.function = paths[2];
+				}
+			}
+		}
+		
+		public virtual string to_string() {
+			if(file != null)
+				return "%s : %s:%s: %s".printf(
+					level, file, 
+					(function != null) ? "%s:%s".printf(line, function) :
+					line,
+					message);
+			else
+				return "%s : %s".printf(level, message);
+		}
+	}
 
 	public class TestReport {
 
-		public signal void report(TestStatus status);
+		//public signal void report(TestStatus status);
 		
 		public Test test {get;set;}
 		
-		public TestStatus status {get;set;}
-		
 		public int index {get;set;}
 		
-		public string message {get;set;}
+		public TestMessage? error {get;set;}
+
+		private List<TestMessage> _messages = new List<TestMessage>();
 		
-		public string buffer {get;set;}
-		
-		public TestReport(Test test, TestStatus status, int index, string? message = null) {
-			this.test = test;
-			this.status = status;
-			this.index = index;
-			this.message = message;
+		public List<TestMessage> messages {
+			get { return _messages;	}
 		}
+		
+		public string? buffer {get;set;}
+		
+		public TestReport(Test test, TestStatus status, int index) {
+			this.test = test;
+			//this.status = status;
+			this.index = index;
+		}
+		
+		public void report(OutputStream stream) throws Error {
+			//if(
+			
+		}
+		
 	}
 }

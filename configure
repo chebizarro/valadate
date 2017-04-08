@@ -2441,6 +2441,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
+
 am__api_version='1.15'
 
 # Find a good install program.  We prefer a C program (faster),
@@ -14116,14 +14117,15 @@ fi
 
 
 
-# Check whether --enable-coverage was given.
+
+	# Check whether --enable-coverage was given.
 if test "${enable_coverage+set}" = set; then :
   enableval=$enable_coverage; enable_coverage=$enableval
 else
   enable_coverage=no
 fi
 
- if test x$enable_coverage != xno; then
+	 if test x$enable_coverage != xno; then
   ENABLE_COVERAGE_TRUE=
   ENABLE_COVERAGE_FALSE='#'
 else
@@ -14131,14 +14133,14 @@ else
   ENABLE_COVERAGE_FALSE=
 fi
 
-if test "x$enable_coverage" != xno; then :
+	if test "x$enable_coverage" != xno; then :
   COVERAGE_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
-	 COVERAGE_VALAFLAGS="-g"
-	 COVERAGE_LIBS="-lgcov"
+		 COVERAGE_VALAFLAGS="-g"
+		 COVERAGE_LIBS="-lgcov"
 
 
 
-	 # Extract the first word of "lcov", so it can be a program name with args.
+		 # Extract the first word of "lcov", so it can be a program name with args.
 set dummy lcov; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
@@ -14180,10 +14182,11 @@ fi
 
 
 
-	 if test "$LCOV" = :; then :
+		 if test "$LCOV" = :; then :
   as_fn_error $? "lcov is necessary for testing code coverage (http://ltp.sourceforge.net/coverage/lcov.php)" "$LINENO" 5
 fi
 fi
+
 
 
 
@@ -17498,5 +17501,5 @@ echo " • Enable code coverage: ${enable_coverage}"
 echo ""
 echo " • Building on: ${host_os}"
 echo ""
-echo " • Documentation: ${enable_docs}"
+echo " • Building documentation: ${enable_docs}"
 echo ""

@@ -11,6 +11,7 @@ testexe_0_SOURCES =  \
 	
 testexe_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
+	--vapi-comments \	
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
 	--library testexe-0

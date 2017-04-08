@@ -7,7 +7,7 @@ TESTS_ENVIRONMENT= \
 	MALLOC_CHECK_=2 			\
 	MALLOC_PERTURB_=$$(($${RANDOM:-256} % 256)) \
 	maybe_errexit='-k --tap -l'
-LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build/autotools/tap-driver.sh
+LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build/tap-driver.sh
 #LOG_COMPILER = $(builddir)/$(test_programs)
 LOG_COMPILER = $(top_srcdir)/build/autotools/tap-test
 

@@ -56,8 +56,8 @@ namespace Valadate {
 			}
 		}
 
-		public bool skipped {get;set;default=false;}
-		public bool failed {get;set;default=false;}
+		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
+		public string status_message {get;set;}
 
 		/**
 		 * The public constructor takes an optional string parameter for the
@@ -79,12 +79,25 @@ namespace Valadate {
 		 * Runs all of the tests in the Suite
 		 */
 		public void run (TestResult result) {
+
+			if(status != TestStatus.NOT_RUN)
+				return;
+
+			status = TestStatus.RUNNING;
+
 			_tests.foreach((t) => {
-				if(failed && !result.config.keep_going)
+
+				if(status == TestStatus.FAILED && !result.config.keep_going)
 					return;
+
 				t.run(result);
-				failed = t.failed;
+
+				if(t.status == TestStatus.FAILED) status = TestStatus.FAILED;
 			});
+
+			if(status == TestStatus.RUNNING)
+				status = TestStatus.PASSED;
+
 		}
 
 		public new Test get(int index) {

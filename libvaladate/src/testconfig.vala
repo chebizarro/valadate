@@ -43,6 +43,12 @@ namespace Valadate {
 			}
 		}
 
+		public bool in_subprocess {
+			get {
+				return options.running_test != null;
+			}
+		}
+
 		public virtual bool run_async {
 			get {
 				return options.run_async;

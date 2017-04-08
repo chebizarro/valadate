@@ -21,6 +21,19 @@
  */
 namespace Valadate { 
 
+	public class TapTestMessage : TestMessage {
+
+		public TapTestMessage(string level, string message, string? path = null) {
+			base(level, message, path);
+		}
+
+		public override string to_string() {
+			
+			return "";
+		}
+
+	}
+
 	public class TapTestResult : Object, TestResult {
 
 		public int testcount {get;internal set;default=0;}
@@ -29,7 +42,17 @@ namespace Valadate {
 		private Queue<TestReport> reports = new Queue<TestReport>();
 		private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
 	
+		private Regex regex;
+		private const string error_regex = 
+			"""^[\*]{0,2}[\s]?[a-z:0-9\(\): ]*([A-Za-z-0-9]{0,8})[\s]?""" +
+			"""[\*]{0,2}:[\s]?([a-zA-Z.:0-9\/_]*)[\s]?(.+)""";
+
 		private int testno = 0;
+
+		construct {
+			if(config.in_subprocess)
+				regex = new Regex(error_regex);
+		}
 
 		public bool report() {
 			if (reports.is_empty())
@@ -37,18 +60,23 @@ namespace Valadate {
 			
 			var rpt = reports.peek_head();
 
-			if (rpt.status == TestStatus.PASSED ||
-				rpt.status == TestStatus.SKIPPED ||
-				rpt.status == TestStatus.STATUS ||
-				rpt.status == TestStatus.FAILED ||
-				rpt.status == TestStatus.ERROR) {
-				if (rpt.message != null)
-					stdout.puts(rpt.message);
-				stdout.flush();
-				rpt.report(rpt.status);
+			if (rpt.test.status == TestStatus.PASSED ||
+				rpt.test.status == TestStatus.SKIPPED ||
+				rpt.test.status == TestStatus.STATUS ||
+				rpt.test.status == TestStatus.FAILED ||
+				rpt.test.status == TestStatus.ERROR) {
+				
+				try {
+					//rpt.report(output);
+				} catch (Error e) {
+					stdout.printf("Bail out! %s", e.message);
+					stdout.flush();
+					error(e.message);
+				}
 				reports.pop_head();
 				return report();
 			}
+
 			return true;
 		}
 
@@ -62,93 +90,115 @@ namespace Valadate {
 		
 		public void start(Test test) {
 			count_tests(test);
-			if(config.running_test != null)
+			if(config.in_subprocess)
 				return;
-			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
-				"# random seed: %s\n1..%d\n".printf(config.seed, testcount)));
+			var rep = new TestReport(test, -1);
+			reports.push_tail(rep);
+			rep.buffer = "TAP version 13\n1..%d\n# random seed: %s\n".printf(
+				testcount, config.seed);
 		}
 
+		/*
 		public void add_error(Test test, string error) {
-			update_test(test, TestStatus.ERROR, error);
+			//update_test(test, TestStatus.ERROR, error);
 		}
 
 		public void add_failure(Test test, string failure) {
-			update_test(test, TestStatus.FAILED, failure);
+			//update_test(test, TestStatus.FAILED, failure);
 		}
 
 		public void add_success(Test test, string? message = null) {
-			update_test(test, TestStatus.PASSED, message);
+			//update_test(test, TestStatus.PASSED, message);
 		}
 		
 		public void add_skip(Test test, string message) {
-			update_test(test, TestStatus.SKIPPED, message));
-		}
+			//update_test(test, TestStatus.SKIPPED, message);
+		}*/
 
 		public void add_test(Test test) {
-			reports.push_tail(new TestReport(test, TestStatus.RUNNING, ++testno));
+			reports.push_tail(new TestReport(test, ++testno));
 			tests.insert(test, reports.peek_tail());
 		}
 
 		public void add_test_start(Test test) {
-			if(config.running_test != null)
+			if(config.in_subprocess)
 				return;
-			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
-				"# Start of %s tests\n".printf(test.label)));
+			var rep = new TestReport(test, -1);
+			reports.push_tail(rep);
+			rep.buffer = "# Start of %s tests\n".printf(test.label);
 		}
 
 		public void add_test_end(Test test) {
-			if(config.running_test != null)
+
+			if(config.in_subprocess)
 				return;
-			reports.push_tail(new TestReport(test, TestStatus.STATUS,-1,
-			"# End of %s tests\n".printf(test.label)));
+
+			var rep = new TestReport(test, -1);
+			reports.push_tail(rep);
+			rep.buffer = "# End of %s tests\n".printf(test.label);
+
 		}
 
+		/*
 		private void update_test(Test test, TestStatus status, string? message) {
 
 			var rept = tests.get(test);
 			if(rept == null)
 				return;
 			rept.status = status;
-			rept.message = message.printf(rept.index);
+			//rept.message = message.printf(rept.index);
 
-		}
+		}*/
 
-		public bool process_buffer(Test test, string buffer) {
+		public void process_buffer(Test test, string buffer) {
 			
-			string skip = null;
-			string err = null;
-			string pass = null;
-			string[] message = buffer.strip().split("\n");
-			
-			if(message[0] == "\n")
-				message = message[1:message.length];
+			var rept = tests.get(test);
+			if(rept == null)
+				return;
 
-			if(message[message.length-1] == "\n")
-				message = message[0:message.length-1];
+			string[] lines = buffer.split("\n");
+			string[] output = {};
 
-			foreach(string line in message) {
+			for(int i=0; i<lines.length; i++) {
 
-				if(line.has_prefix("ok "))
-					if("# SKIP:" in line)
-						skip = line.split("# ")[1];
-					else
-						pass = line;
-				else if (line.has_prefix("# FAIL:"))
-					err = line.substring(2);
-				else if (line.has_prefix("FAIL:"))
-					err = line;
-				
+				var line = lines[i];
+				MatchInfo info;
+
+				if(regex.match(line, 0, out info)) {
+					var message = new TapTestMessage(
+						info.fetch(1),info.fetch(2),info.fetch(3));
+
+					var level = info.fetch(1);
+					switch(level) {
+						case "WARNING":
+						case "CRITICAL":
+						case "ERROR":
+							rept.status = TestStatus.FAILED;
+							rept.error = message;
+							break;
+						case "Message":
+						case "DEBUG":
+						case "INFO":
+							rept.messages.append(message);
+							break;
+						default:
+							rept.buffer += "# %s\n".printf(line);
+							break;
+					}
+				} else if (line.has_prefix("Child process killed by signal")) {
+					rept.error = new TapTestMessage("ERROR", line);
+					rept.status = TestStatus.FAILED;
+				} else if (line == "Aborted (core dumped)") {
+					rept.error = new TapTestMessage("ERROR", line);
+					rept.status = TestStatus.FAILED;
+				} else if (line == "" && i == lines.length-1) {
+					// skip this line entirely
+				} else if (line.has_prefix("#")) {
+					rept.buffer += "%s\n".printf(line);
+				} else {
+					rept.buffer += "# %s\n".printf(line);
+				}
 			}
-			
-			if (skip != null)
-				add_skip(test, skip, "");
-			else if(err != null)
-				add_failure(test, string.joinv("\n",err.strip().split("\n")));
-			else if(pass != null)
-				add_success(test, string.joinv("\n",message));
-
-			return (err == null) ? true : false;
-
 		}
 		
 	}
