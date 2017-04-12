@@ -46,6 +46,8 @@ namespace Valadate {
 			}
 		}
 
+		public Test? parent {get;set;}
+
 		/**
 		 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 		 * run by this TestSuite
@@ -58,6 +60,7 @@ namespace Valadate {
 
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 		public string status_message {get;set;}
+		public double time {get;set;}
 
 		/**
 		 * The public constructor takes an optional string parameter for the
@@ -72,6 +75,7 @@ namespace Valadate {
 		 * Adds a test to the suite.
 		 */
 		public void add_test(Test test) {
+			test.parent = this;
 			_tests.append(test);
 		}
 
@@ -83,21 +87,12 @@ namespace Valadate {
 			if(status != TestStatus.NOT_RUN)
 				return;
 
-			status = TestStatus.RUNNING;
-
 			_tests.foreach((t) => {
-
-				if(status == TestStatus.FAILED && !result.config.keep_going)
-					return;
 
 				t.run(result);
 
-				if(t.status == TestStatus.FAILED) status = TestStatus.FAILED;
 			});
-
-			if(status == TestStatus.RUNNING)
-				status = TestStatus.PASSED;
-
+				
 		}
 
 		public new Test get(int index) {
@@ -105,6 +100,7 @@ namespace Valadate {
 		}
 
 		public new void set(int index, Test test) {
+			test.parent = this;
 			_tests.insert_before(_tests.nth(index), test);
 			var t = _tests.nth_data((uint)index++);
 			_tests.remove(t);

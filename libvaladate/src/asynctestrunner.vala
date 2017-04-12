@@ -32,42 +32,28 @@ namespace Valadate {
 		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
 
 		/* Change this to change the cap on the number of concurrent operations. */
-		private static uint _max_n_ongoing_tests = 1;
+		private static uint _max_n_ongoing_tests = 2;
 		private MainLoop loop;
-
-		private SubprocessLauncher launcher =
-			new SubprocessLauncher(GLib.SubprocessFlags.STDOUT_PIPE | GLib.SubprocessFlags.STDERR_MERGE);
 
 		private TestPlan plan;
 
 		construct {
 			_max_n_ongoing_tests = GLib.get_num_processors();
-			this.launcher.setenv("G_MESSAGES_DEBUG","all", true);
-			this.launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
-			this.launcher.setenv("G_SLICE","always-malloc debug-blocks", true);
 		}
 		
 		public void run(Test test, TestResult result) {
-			result.start(test);
+			result.add_test(test);
 			test.run(result);
 			result.report();
 		}
 
 		public void run_all(TestPlan plan) {
 
-			Environment.set_variable("G_MESSAGES_DEBUG", "all", true);
-
-			if(!plan.config.keep_going) {
-				Environment.set_variable("G_DEBUG","fatal-criticals fatal-warnings gc-friendly", true);
-				Environment.set_variable("G_SLICE","always-malloc debug-blocks", true);
-			}
-
 			this.plan = plan;
 
-			plan.result.start(plan.root);
 			run_test_internal(plan.root, plan.result, "");
 
-			if (plan.config.running_test == null) {
+			if (!plan.config.in_subprocess) {
 				loop = new MainLoop();
 				var time = new TimeoutSource (15);
 				time.set_callback (() => {
@@ -95,59 +81,29 @@ namespace Valadate {
 				string testpath = "%s/%s".printf(path, subtest.name);
 
 				if(subtest is TestCase) {
-
-					if(!plan.config.in_subprocess && !plan.config.list_only) {
-
-						result.add_test_start(subtest);
-
-						run_test_internal(subtest, result, testpath);
-
-						result.add_test_end(subtest);
-
-
-					} else {
-
-						run_test_internal(subtest, result, testpath);
-
-					}
-
-				} else if (subtest is TestSuite) {
-
+					if(!plan.config.in_subprocess && !plan.config.list_only)
+						result.add_test(subtest);
 					run_test_internal(subtest, result, testpath);
-
-					if(!plan.config.in_subprocess) {
-						/*
-						var rpt = new TestReport(subtest, TestStatus.PASSED,-1);
-						rpt.report.connect((s)=> ((TestSuite)subtest).tear_down());
-						reports.push_tail(rpt);
-						*/
-					}
-
+				} else if (subtest is TestSuite) {
+					result.add_test(subtest);
+					run_test_internal(subtest, result, testpath);
 				} else if (plan.config.list_only) {
-					
 					stdout.printf("%s\n", labelpath);
-
-				} else if (plan.config.in_subprocess) {
-
-					if(plan.config.running_test == testpath) {
-						test.run(result);
-						result.report();
-					}
+				} else if (plan.config.in_subprocess &&
+					plan.config.running_test == testpath) {
+					test.run(result);
 				} else {
-
 					subtest.name = testpath;
 					result.add_test(subtest);
-					run_async.begin(subtest, result);
+					run_async.begin(subtest, result,
+						(o,r) => { run_async.end(r); });
 				}
 			}
 		}
 
 		private async void run_async(Test test, TestResult result) {
-			
-			string command = "%s -r %s".printf(plan.assembly.binary.get_path(), test.name);
-			string[] args;
 			string buffer = null;
-
+			var testprog = plan.assembly.clone();
 			if (_n_ongoing_tests > _max_n_ongoing_tests) {
 				var wrapper = new DelegateWrapper();
 				wrapper.cb = run_async.callback;
@@ -157,27 +113,12 @@ namespace Valadate {
 		
 			try {
 				_n_ongoing_tests++;
-				
-				Shell.parse_argv(command, out args);
-				var process = launcher.spawnv(args);
-				yield process.communicate_utf8_async(null, null, out buffer, null);
-				
-				if(process.wait_check()) {
-					if(test.status == TestStatus.RUNNING)
-						test.status = TestStatus.PASSED;
-
-					//result.process_buffer(test, buffer);
-
-				}
-
+				testprog.run_async.begin("-r %s".printf(test.name));
+				result.add_success(test);
+				result.process_buffers(test, testprog);
 			} catch (Error e) {
-
-				test.status = TestStatus.FAILED;
-				test.status_message = e.message;
-
-				//result.add_error(test, e.message);
-
-
+				result.add_error(test, e.message);
+				result.process_buffers(test, testprog);
 			} finally {
 				_n_ongoing_tests--;
 				var wrapper = _pending_tests.pop_head ();

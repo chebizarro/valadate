@@ -167,9 +167,7 @@ namespace Valadate.Drivers {
 					testmethod = (TestPlan.TestMethod)plan.assembly.get_method(attr.name);
 
 					if (testmethod != null) {
-						testcase_test.add_test_method(method.name, ()=> {
-							testmethod(testcase_test);
-						});
+						//testcase_test.add_test_method(testmethod);
 					}
 				}
 			}

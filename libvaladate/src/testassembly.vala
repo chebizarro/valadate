@@ -22,28 +22,27 @@
  
 namespace Valadate {
 
-	public class TestAssembly : Object, Assembly {
+	public class TestAssembly : Assembly {
 	
-		public File binary {get;set;}
-
 		public TestOptions options {get;set;}
 
 		private GLib.Module module;
-
-		public TestAssembly(string[] args) throws AssemblyError {
-			binary = File.new_for_path(args[0]);
+		
+		public TestAssembly(string[] args) throws Error {
+			base(File.new_for_path(args[0]));
 			options = new TestOptions(args);
-			load_module();
+		}
+		
+		private TestAssembly.copy(TestAssembly other) throws Error {
+			base(other.binary);
+			options = other.options;
+		}
+		
+		public override Assembly clone() throws Error {
+			return new TestAssembly.copy(this);
 		}
 
-		public void run() { }
-
-		private void load_module() throws AssemblyError
-			requires(binary != null)
-		{
-			if (!binary.query_exists())
-				throw new AssemblyError.NOT_FOUND("Assembly: %s does not exist", binary.get_path());
-			
+		private void load_module() throws AssemblyError {
 			module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
 			if (module == null)
 				throw new AssemblyError.LOAD(GLib.Module.error());
@@ -51,6 +50,8 @@ namespace Valadate {
 		}
 		
 		public void* get_method(string method_name) throws AssemblyError {
+			if(module == null)
+				load_module();
 			void* function;
 			if(module.symbol (method_name, out function))
 				if (function != null)

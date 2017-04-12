@@ -129,7 +129,7 @@ Valadate-2.0.typelib: Valadate-2.0.gir
 		$<
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = Valadate-2.0.gir
+gir_DATA = $(srcdir)/Valadate-2.0.gir
 
 typelibdir = $(libdir)/girepository-1.0
 typelib_DATA = Valadate-2.0.typelib

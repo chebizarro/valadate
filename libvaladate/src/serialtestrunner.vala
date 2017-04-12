@@ -32,13 +32,11 @@ namespace Valadate {
 				Environment.set_variable("G_SLICE","always-malloc debug-blocks", true);
 			}
 
-			plan.result.start(plan.root);
 			plan.root.run(plan.result);
 			plan.result.report();
 		}
 
 		public void run(Test test, TestResult result) {
-			result.start(test);
 			test.run(result);
 			result.report();
 		}

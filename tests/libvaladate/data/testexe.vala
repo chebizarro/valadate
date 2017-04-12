@@ -30,7 +30,9 @@ namespace Valadate.Tests {
 		 * test_ prefix
 		 */
 		public void test_simple () {
+			stdout.puts("Test of stdout");
 			assert(true);
+			debug("This is a debug message, which will be trapped");
 		}
 
 		/**
@@ -50,6 +52,7 @@ namespace Valadate.Tests {
 		 */
 		[Test (name="Annotated Test With Name")]
 		public void annotated_test_with_name () {
+			message("This is a message, which will be trapped");
 			assert_true(true);
 		}
 
@@ -85,6 +88,7 @@ namespace Valadate.Tests {
 		 */
 		[Test (todo="always throws an error")]
 		public void test_throws_error() throws Error {
+			info("This test will fail but the TestSuite will still pass");
 			throw new FileError.NOSYS("This is a test error");
 		}
 		

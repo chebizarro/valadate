@@ -51,10 +51,11 @@ endif
 
 MAINTAINERCLEANFILES = \
 	configure \
-	$(srcdir)/build/aclocal.m4 \
+	$(srcdir)/aclocal.m4 \
 	$(srcdir)/build/compile \
+	$(srcdir)/build/tap-driver.sh \
 	$(srcdir)/build/config.guess \
-	$(srcdir)/build/config.h.in \
+	$(srcdir)/config.h.in \
 	$(srcdir)/build/config.rpath \
 	$(srcdir)/build/config.sub \
 	$(srcdir)/build/depcomp \

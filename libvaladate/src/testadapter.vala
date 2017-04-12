@@ -22,10 +22,12 @@
  
 namespace Valadate {
 
+
 	private class TestAdapter : Object, Test {
 
 		public string name {get;set;}
 		public string label {get;set;}
+		public double time {get;set;}
 
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 		public string status_message {get;set;}
@@ -37,51 +39,44 @@ namespace Valadate {
 		}
 
 		private TestCase.TestMethod test;
-		private TestCase parent;
+		public Test? parent {get;set;}
+
 
 		public new Test get(int index) {
 			return this;
 		}
 
-		public TestAdapter(string name, TestCase parent) {
+		public TestAdapter(string name) {
 			this.name = name;
-			this.parent = parent;
 		}
 
-		public void add_test_method(TestPlan.TestMethod testmethod) {
+		public void add_test(owned TestPlan.TestMethod testmethod) {
 			this.test = () => {
 				try {
-					testmethod(parent);
+					testmethod(parent as TestCase);
 				} catch (Error e) {
 					throw e;
 				}
 			};
 		}
 
+		public void add_test_method(owned TestCase.TestMethod testmethod) {
+			this.test = (owned)testmethod;
+		}
+
 		public void run(TestResult result) {
 			if(status == TestStatus.SKIPPED)
 				return;
-
-			parent.set_up();
-
+			var p = parent as TestCase;
+			result.add_test(this);
+			p.set_up();
 			try {
-
 				test();
-
 			} catch (Error e) {
-
-				if(status != TestStatus.TODO) {
-					status = TestStatus.FAILED;
-					status_message = e.message;
-				}
-				
-				//result.add_failure(this, e.message);
-				
+				result.add_failure(this, e.message);
 			}
-			parent.tear_down();
-			
-			if(status == TestStatus.RUNNING)
-				status = TestStatus.PASSED;
+			p.tear_down();
+			result.add_success(this);
 		}
 	}
 }

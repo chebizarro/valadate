@@ -24,7 +24,7 @@ namespace Valadate.Tests {
 		
 		[Test (name="tests fails")]
 		public void test_pie_fail () {
-			assert_true(true);
+			GLib.assert(false);
 		}
 
 		[Test (name="tests passes")]

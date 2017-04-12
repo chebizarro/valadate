@@ -1,10 +1,24 @@
 VALADATELIB = $(top_builddir)/libvaladate/libvaladate-2.0.la
 TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-cli-2.0.la
 
+if ENABLE_DEVMODE
+valadate_conf = \
+	-DVALADATE_DRIVER_DIR=\""$(top_srcdir)/libvaladate/drivers"\" \
+	-DVALADATE_LIB_DIR=\""$(top_srcdir)/libvaladate"\" \
+	-DVALADATE_TESTS_DIR=\""$(top_srcdir)/tests"\"
+else
+valadate_conf = \
+	-DVALADATE_DRIVER_DIR=\""$(libdir)/libvaladate/drivers"\" \
+	-DVALADATE_LIB_DIR=\""$(libdir)/libvaladate"\" \
+	-DVALADATE_TESTS_DIR=\""$(libdir)/libvaladate/tests"\"
+endif
+
 VALADATE_LIB_PATHS = \
 	$(top_srcdir) \
 	$(top_builddir)/vapi \
-	$(top_builddir)/libvaladate/include
+	$(top_srcdir)/vapi \
+	$(top_srcdir)/libvaladate/include \
+	$(top_srcdir)/libvaladate/include
 
 VALADATE_VALAFLAGS = \
 	--vapidir $(top_builddir)/vapi \
@@ -17,7 +31,7 @@ VALADATE_VALAFLAGS = \
 	--hide-internal
 
 VALADATE_CPPFLAGS = \
-	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
+	$(valadate_conf) \
 	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
 	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
 
@@ -30,7 +44,7 @@ TESTS_VALAFLAGS = \
 	-g
 
 TESTS_CPPFLAGS = \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
+	$(valadate_conf) \
 	$(addprefix -I ,$(VALADATE_LIB_PATHS)) \
 	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
 

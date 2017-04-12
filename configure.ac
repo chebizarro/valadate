@@ -39,15 +39,15 @@ AC_SUBST(VALADATE_INTERFACE_AGE)
 AC_SUBST(VALADATE_BINARY_AGE)
 
 AC_DEFINE(VALADATE_MAJOR_VERSION, [valadate_major_version],
-	  [Define to the GLIB major version])
+	  [Define to the Valadate major version])
 AC_DEFINE(VALADATE_MINOR_VERSION, [valadate_minor_version],
-	  [Define to the GLIB minor version])
+	  [Define to the Valadate minor version])
 AC_DEFINE(VALADATE_MICRO_VERSION, [valadate_micro_version],
-	  [Define to the GLIB micro version])
+	  [Define to the Valadate micro version])
 AC_DEFINE(VALADATE_INTERFACE_AGE, [valadate_interface_age],
-	  [Define to the GLIB interface age])
+	  [Define to the Valadate interface age])
 AC_DEFINE(VALADATE_BINARY_AGE, [valadate_binary_age],
-	  [Define to the GLIB binary age])
+	  [Define to the Valadate binary age])
 
 # libtool versioning
 LT_RELEASE=valadate_lt_release
@@ -122,39 +122,8 @@ AM_CONDITIONAL(PLATFORM_LINUX, test x"$platform_linux" = "xyes")
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static win32-dll])
 
-
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
-
-dnl === Valadate =======================================================
-
-VALADATE_LIB_DIR=[${PWD}/libvaladate]
-VALADATE_DRIVER_DIR=[${PWD}/libvaladate/drivers]
-AC_SUBST(VALADATE_LIB_DIR)
-AC_SUBST(VALADATE_DRIVER_DIR)
-
-
-pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 libxml-2.0"
-AC_SUBST(pkg_modules)
-PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
-
-AC_SUBST(VALADATE_CFLAGS)
-AC_SUBST(VALADATE_LIBS)
-
-PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_modules])
-
-AC_SUBST(VALADATE_CLI_CFLAGS)
-AC_SUBST(VALADATE_CLI_LIBS)
-
-dnl === Valadate Tests =================================================
-
-VALADATE_TESTS_DIR=[${PWD}/tests]
-AC_SUBST(VALADATE_TESTS_DIR)
-
-PKG_CHECK_MODULES([TESTS], [$pkg_modules])
-
-AC_SUBST(TESTS_CFLAGS)
-AC_SUBST(TESTS_LIBS)
 
 dnl === Test suite =====================================================
 
@@ -163,6 +132,36 @@ GLIB_TESTS
 dnl === Test coverage ==================================================
 
 VALADATE_COVERAGE
+
+dnl === Introspection ==================================================
+
+GOBJECT_INTROSPECTION_CHECK([1.38.0])
+
+dnl === Valadate =======================================================
+
+pkg_modules="glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 libxml-2.0"
+AC_SUBST(pkg_modules)
+
+PKG_CHECK_MODULES([VALADATE], [$pkg_modules])
+AC_SUBST(VALADATE_CFLAGS)
+AC_SUBST(VALADATE_LIBS)
+
+PKG_CHECK_MODULES([VALADATE_CLI], [$pkg_modules])
+AC_SUBST(VALADATE_CLI_CFLAGS)
+AC_SUBST(VALADATE_CLI_LIBS)
+
+dnl === Valadate Tests =================================================
+
+PKG_CHECK_MODULES([TESTS], [$pkg_modules])
+AC_SUBST(TESTS_CFLAGS)
+AC_SUBST(TESTS_LIBS)
+
+dnl === Check for Development Mode =====================================
+
+AC_ARG_ENABLE([devmode],
+	AS_HELP_STRING([--enable-devmode],[Enable development mode]),
+	[enable_devmode=$enableval], [enable_devmode=no])
+AM_CONDITIONAL([ENABLE_DEVMODE], [test x$enable_devmode = xyes])
 
 dnl === Vala Drivers ===================================================
 
@@ -192,33 +191,35 @@ AM_CONDITIONAL(HAVE_LIBVALA_0_24_X, test "$have_libvala_0_24_x" = "yes")
 PKG_CHECK_MODULES(LIBVALA_0_22_X, libvala-0.22 >= 0.21.0, have_libvala_0_22_x="yes", have_libvala_0_22_x="no")
 AM_CONDITIONAL(HAVE_LIBVALA_0_22_X, test "$have_libvala_0_22_x" = "yes")
 
-
 dnl === Docs ===========================================================
 
 # Documentation with Valadoc
 AC_ARG_ENABLE([docs],
-              AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
-        [enable_docs=$enableval], [enable_docs=no])
+	AS_HELP_STRING([--enable-docs],[Enable documentation generation]),
+	[enable_docs=$enableval], [enable_docs=no])
 AM_CONDITIONAL([ENABLE_DOCS], [test x$enable_docs = xyes])
 
 have_valadoc=no
 if test x$enable_docs = xyes; then
-  # make sure the library is new enough and the program exists
-  AC_PATH_PROG([VALADOC], [valadoc], [no])
-  if test "x$VALADOC" = "xno";
-  then
-      AC_MSG_RESULT([valadoc documentation not built because not found])
-  else
-      have_valadoc="yes"
-      AC_SUBST(VALADOC)
-      PKG_CHECK_MODULES([GTKDOC], gtk-doc)
-      have_gtkdoc=yes
-  fi
+	# make sure the library is new enough and the program exists
+	AC_PATH_PROG([VALADOC], [valadoc], [no])
+	if test "x$VALADOC" = "xno";
+	then
+		AC_MSG_RESULT([valadoc documentation not built because not found])
+	else
+		have_valadoc="yes"
+		AC_SUBST(VALADOC)
+		PKG_CHECK_MODULES([GTKDOC], gtk-doc)
+		have_gtkdoc=yes
+	fi
 fi
 AM_CONDITIONAL([HAVE_VALADOC], [test x$have_valadoc = xyes])
 
-# Introspection
-GOBJECT_INTROSPECTION_CHECK([1.38.0])
+dnl === Config variables set at build time =============================
+
+AC_SUBST(VALADATE_LIB_DIR)
+AC_SUBST(VALADATE_DRIVER_DIR)
+AC_SUBST(VALADATE_TESTS_DIR)
 
 dnl === Makefiles ======================================================
 

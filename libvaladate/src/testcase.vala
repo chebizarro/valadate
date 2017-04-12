@@ -55,8 +55,11 @@ namespace Valadate {
 			}
 		}
 
+		public Test? parent {get;set;}
+
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 		public string status_message {get;set;}
+		public double time {get;set;}
 
 		public string bug_base {get;set;}
 		
@@ -70,75 +73,51 @@ namespace Valadate {
 		}
 
 		public new void set(int index, Test test) {
+			test.parent = this;
 			_tests.insert_before(_tests.nth(index), test);
 			var t = _tests.nth_data((uint)index++);
 			_tests.remove(t);
 		}
 
 		public void add_test(Test test) {
+			test.parent = this;
 			_tests.append(test);
 		}
 
 		public void add_test_method(string testname, owned TestMethod test, string? label = null) {
-			var adapter = new TestAdapter (testname, (owned)test, this);
+			var adapter = new TestAdapter (testname);
+			adapter.add_test_method((owned)test);
 			adapter.label = label;
+			adapter.parent = this;
 			_tests.append(adapter);
 		}
 		
 		public virtual void run(TestResult result) {
 			if(status != TestStatus.NOT_RUN)
 				return;
-
 			current_result = result;
-			status = TestStatus.RUNNING;
-
-			result.add_test_start(this);
-
 			_tests.foreach((t) => {
-
 				current_test = t;
-
-				if(status == TestStatus.FAILED && !result.config.keep_going)
-					return;
-
-				result.add_test(t);
-
 				t.run(result);
-
-				if(t.status == TestStatus.FAILED) status = TestStatus.FAILED;
 			});
-
-			if(status == TestStatus.RUNNING)
-				status = TestStatus.PASSED;
-
-			result.add_test_end(this);
-
 		}
 
 		public void bug(string reference)
 			requires(bug_base != null)
 		{
-			stdout.printf("MSG: Bug Reference: %s%s",bug_base, reference);
-			stdout.flush();
+			info("MSG: Bug Reference: %s%s",bug_base, reference);
 		}
 
 		public void skip(string message) {
-			current_test.status = TestStatus.SKIPPED;
-			current_test.status_message = message;
-
 			current_result.add_skip(current_test, message);
 
 		}
 
 		public void fail(string? message = null) {
-			current_test.status = TestStatus.FAILED;
-			current_test.status_message = message;
-
 			current_result.add_failure(current_test, message);
-
 		}
 
-		public extern void assert(bool expr);
+		//public extern void assert(bool expr);
 
 		protected void assertion_message_expr(
 			string? domain, string file, int line, string func, string? expr) {

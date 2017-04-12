@@ -25,38 +25,36 @@ namespace Valadate {
 	 * It is the base interface for all runnable Tests.
 	 */
 	public interface Test : Object {
-			
 		/**
 		 * Runs the Tests and collects the results in a TestResult 
 		 *
 		 * @param result the TestResult object used to store the results of the Test
 		 */
 		public abstract void run (TestResult result);
-
 		/**
 		 * The name of the test
 		 */
 		public abstract string name { get; set; }
-
 		/**
 		 * The label of the test
 		 */
 		public abstract string label { get; set; }
-
 		/**
 		 * Returns the number of tests that will be run by this test
 		 */
 		public abstract int count {get;}
-
 		/**
 		 * The #TestStatus of the test
 		 */
 		public abstract TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-
 		/**
 		 * The status message of the test
 		 */
 		public abstract string status_message {get;set;}
+
+		public abstract double time {get;set;}
+
+		public abstract Test? parent {get;set;}
 
 		public abstract Test get(int index);
 

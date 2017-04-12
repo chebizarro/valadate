@@ -21,78 +21,84 @@
  */
 namespace Valadate { 
 
-	public enum TestStatus {
-		NOT_RUN,
-		RUNNING,
-		PASSED,
-		SKIPPED,
-		TODO,
-		ERROR,
-		FAILED,
-		STATUS
-	}
+	public class TestReport {
 
-	public abstract class TestMessage {
-		public string level {get;set;}
-		public string message {get;set;}
-		public string? file {get;set;}
-		public string? line {get;set;}
-		public string? function {get;set;}
+		private const string testsuitexml =
+		"""<testsuite disabled="" errors="" failures="" hostname="" id="" """ +
+		"""name="" package="" skipped="" tests="" time="" timestamp="">""" +
+		"""<properties><property name="" value=""/></properties>""" +
+		"""</testsuite>""";
+		private const string testcasexml =
+		"""<testcase assertions="" classname="" name="" status="" time=""/>""";
+		public Test test {get;set;}
 		
-		public TestMessage(string level, string message, string? path = null) {
-			this.level = level;
-			this.message = message;
-			
-			if(path != null) {
-				var paths = path.split(":");
-				if(paths.length >= 2) {
-					this.file = paths[0];
-					this.line = paths[1];
-					if(paths.length >= 3)
-						this.function = paths[2];
-				}
+		public XmlFile xml {get;set;}
+		
+		private Xml.Doc* doc;
+		
+		private Xml.Node* root;
+		
+		public TestReport(Test test) throws Error {
+			this.test = test;
+
+			if(test is TestSuite || test is TestCase)
+				new_testsuite();
+			else if (test is TestAdapter)
+				new_testcase();
+
+			root->set_prop("name",test.label);
+			xml = new XmlFile.from_doc(doc);
+			xml.register_ns("vdx", "https://www.valadate.org/vdx");
+		}
+		
+		private void new_testsuite() {
+			doc = Xml.Parser.read_memory(testsuitexml, testsuitexml.length);
+			root = doc->get_root_element();;
+			root->set_prop("tests", count_tests(test).to_string());
+		}
+
+		private void new_testcase() {
+			doc = Xml.Parser.read_memory(testcasexml, testcasexml.length);
+			root = doc->get_root_element();;
+			root->set_prop("classname",((TestAdapter)test).parent.name);
+			root->set_prop("status",test.status.to_string().substring(21));
+		}
+
+		private int count_tests(Test test) {
+			var testcount = 0;
+			if(test is TestSuite)
+				foreach(var subtest in test)
+					testcount += count_tests(subtest);
+			else
+				testcount += test.count;
+			return testcount;
+		}
+
+		~TestReport() {
+			delete doc;
+		}
+
+		public void add_text(string text) {
+			if(test is TestAdapter) {
+				Xml.Node* child = new Xml.Node.pi("system-out", text);
+				root->add_child(child);
 			}
 		}
 		
-		public virtual string to_string() {
-			if(file != null)
-				return "%s : %s:%s: %s".printf(
-					level, file, 
-					(function != null) ? "%s:%s".printf(line, function) :
-					line,
-					message);
-			else
-				return "%s : %s".printf(level, message);
-		}
-	}
-
-	public class TestReport {
-
-		//public signal void report(TestStatus status);
-		
-		public Test test {get;set;}
-		
-		public int index {get;set;}
-		
-		public TestMessage? error {get;set;}
-
-		private List<TestMessage> _messages = new List<TestMessage>();
-		
-		public List<TestMessage> messages {
-			get { return _messages;	}
+		public void add_xml(string xml) {
+			var newDoc = Xml.Parser.read_memory(xml, xml.length);
+			if(newDoc == null)
+				return;
+				
+			var node = newDoc->get_root_element();
+			root->add_child(node->copy_list());
 		}
 		
-		public string? buffer {get;set;}
-		
-		public TestReport(Test test, TestStatus status, int index) {
-			this.test = test;
-			//this.status = status;
-			this.index = index;
-		}
-		
-		public void report(OutputStream stream) throws Error {
-			//if(
-			
+		public void update_status() {
+			if(test is TestAdapter) {
+				root->set_prop("status",test.status.to_string().substring(21));
+				root->set_prop("time",test.time.to_string());
+			}
 		}
 		
 	}

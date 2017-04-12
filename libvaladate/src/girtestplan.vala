@@ -24,7 +24,7 @@ namespace Valadate {
 
 	public class GirTestPlan : Object, TestPlan {
 
-		public Assembly assembly {get;construct set;}
+		public TestAssembly assembly {get;construct set;}
 		public TestOptions options {get;set;}
 		public TestConfig config {get;set;}
 		public TestResult result {get;set;}
@@ -42,7 +42,7 @@ namespace Valadate {
 
 		construct {
 			try {
-				options = ((TestAssembly)assembly).options;
+				options = assembly.options;
 				testsuite = root = new TestSuite("/");
 				load();
 			} catch (Error e) {
@@ -77,10 +77,10 @@ namespace Valadate {
 		}
 
 		private void visit_test_result() {
-			Type ctype = find_type("//xmlns:class[@parent='ValadateTestResult']");
-			if(ctype == Type.INVALID)
-				ctype = typeof(TapTestResult);
-			result = Object.new(ctype, "config", config) as TestResult;
+			//Type ctype = find_type("//xmlns:class[@parent='ValadateTestResult']");
+			//if(ctype == Type.INVALID)
+				//ctype = typeof(TapTestResult);
+			result = new TestResult(config);
 		}
 		
 		private void visit_test_runner() {
@@ -94,9 +94,9 @@ namespace Valadate {
 			var res = xmlfile.eval(xpath);
 			Type ctype = Type.INVALID;
 			if(res.size == 1) {
-				var node = res[0];
+				Xml.Node* node = res[0];
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
+				unowned GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
 			}
 			return ctype;
@@ -105,7 +105,7 @@ namespace Valadate {
 		private void visit_root() {
 			var ns = xmlfile.eval("//xmlns:namespace");
 			
-			foreach (var node in ns) {
+			foreach (Xml.Node* node in ns) {
 				var tsname = node->get_prop("prefix");
 				if(options.running_test != null)
 					if(tsname != options.running_test.split("/")[1])
@@ -122,9 +122,9 @@ namespace Valadate {
 			var expression = "%s/xmlns:class".printf(suitenode->get_path());
 			var res = xmlfile.eval (expression);
 
-			foreach (var node in res) {
+			foreach (Xml.Node* node in res) {
 				string node_type_str = node->get_prop("get-type");
-				GetType node_get_type = (GetType)assembly.get_method(node_type_str);
+				unowned GetType node_get_type = (GetType)assembly.get_method(node_type_str);
 				var node_type = node_get_type();
 
 				if(!node_type.is_a(typeof(Valadate.Test)) || node_type.is_abstract())
@@ -161,25 +161,28 @@ namespace Valadate {
 			var expression = "//xmlns:class[@glib:type-name='%s']/xmlns:method".printf(classtype.name());
 			var res = xmlfile.eval(expression);
 			
-			foreach (var method in res) {
+			foreach (Xml.Node* method in res) {
 
 				string name = method->get_prop("name");
-				if(options.in_subprocess && name != options.running_test.split("/")[3])
+				if(config.in_subprocess && name != options.running_test.split("/")[3])
 					continue;
 				if(!is_test(method))
 					continue;
 
-				var adapter = new TestAdapter(name, testcase);
+				var adapter = new TestAdapter(name);
 				annotate_label(adapter);
 				annotate(adapter, method->children);
 
-				if(options.in_subprocess && !adapter.skipped) {
+				if(config.in_subprocess && adapter.status != TestStatus.SKIPPED) {
 					var method_cname = method->get_prop("identifier");
-					TestCase.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
+					TestPlan.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
 					if(testmethod != null)
-						adapter.add_test_method(testmethod);
+						adapter.add_test((owned)testmethod);
+				} else {
+					adapter.add_test_method(()=> {assert_not_reached();});
 				}
 				adapter.label = "%s/%s".printf(currpath, adapter.label);
+				testcase.add_test(adapter);
 			}
 			visit_class(classtype.parent());
 		}
@@ -210,14 +213,14 @@ namespace Valadate {
 						adapter.label = node->get_prop("value");
 					if(attname == "test.skip") {
 						adapter.status = TestStatus.SKIPPED;
-						adapter.staus_message = child->get_prop("value");
+						adapter.status_message = node->get_prop("value");
 					}
 					if(attname == "test.todo") {
 						adapter.status = TestStatus.TODO;
-						adapter.status_message = child->get_prop("value");
+						adapter.status_message = node->get_prop("value");
 					}
 				}
-				child = child->next;
+				node = node->next;
 			}
 		}
 		/**
@@ -225,7 +228,7 @@ namespace Valadate {
 		 */
 		private bool is_test(Xml.Node* node) {
 			bool istest = false;
-			string name = method->get_prop("name");
+			string name = node->get_prop("name");
 			
 			if(name.has_prefix("test_") || name.has_prefix("_test_"))
 				istest = true;
@@ -243,8 +246,8 @@ namespace Valadate {
 					if(retchild->get_prop("name") != "none")
 						istest = false;
 				}
-				//if(child->name == "parameters")
-				//	istest = false;
+				if(child->name == "parameters")
+					istest = false;
 				child = child->next;
 			}
 			return istest;

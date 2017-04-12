@@ -25,7 +25,7 @@ namespace Valadate {
 		ERROR
 	}
 
-	internal class XmlSearchResults {
+	public class XmlSearchResults {
 		
 		private Xml.XPath.Object* result;
 
@@ -37,7 +37,7 @@ namespace Valadate {
 			}
 		}
 
-		public Xml.Node* get(int i)
+		public void* get(int i)
 			requires(size > 0)
 			requires(i < size)
 			requires(i >= 0)
@@ -46,7 +46,7 @@ namespace Valadate {
 		}
 		
 		
-		public XmlSearchResults(Xml.XPath.Object* result) {
+		internal XmlSearchResults(Xml.XPath.Object* result) {
 			this.result = result;
 		}
 
@@ -56,19 +56,44 @@ namespace Valadate {
 
 	}
 
-	internal class XmlFile {
+	public class XmlFile {
 		
 		private Xml.Doc* document;
 		private Xml.XPath.Context context;
+		private bool owns_doc = false;
 		
 		public XmlFile(File path) throws Error {
-			document = Xml.Parser.parse_file(path.get_path());
+			this.from_doc(Xml.Parser.parse_file(path.get_path()));
+			owns_doc = true;
+		}
+
+		internal XmlFile.from_doc(Xml.Doc* xmldoc) throws Error {
+			document = xmldoc;
 
 			if (document == null)
 				throw new XmlFileError.ERROR(
-					"There was an error parsing the file at %s", path.get_path());
+					"There was an error parsing the Xml.Doc");
 
+			set_context();
+		}
+
+		public XmlFile.from_string(string xml) throws Error {
+			document = Xml.Parser.read_memory(xml, xml.length);
+			owns_doc = true;
+
+			if (document == null)
+				throw new XmlFileError.ERROR(
+					"There was an error parsing the string %s", xml);
+			set_context();
+		}
+
+		private void set_context() {
 			context = new Xml.XPath.Context (document);
+		}
+
+		~XmlFile() {
+			if (owns_doc)
+				delete document;
 		}
 
 		public void register_ns(string prefix, string ns) {
@@ -78,11 +103,6 @@ namespace Valadate {
 		public XmlSearchResults eval(string expression) {
 			return new XmlSearchResults(context.eval_expression (expression));
 		}
-		
-		~XmlFile() {
-			delete document;
-		}
-		
 		
 	}
 

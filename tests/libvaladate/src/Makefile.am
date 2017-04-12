@@ -16,7 +16,10 @@ test_programs = tests_libvaladate
 
 tests_libvaladate_SOURCES =  \
 	main.vala \
-	testplan.vala
+	assembly.vala \
+	asynctestrunner.vala \
+	testplan.vala \
+	testresult.vala
 	
 tests_libvaladate_VALAFLAGS = \
 	$(TESTS_VALAFLAGS)

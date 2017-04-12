@@ -39,7 +39,7 @@ namespace Valadate {
 
 		}
 
-		public static TestPlan @new(Assembly assembly) throws ConfigError {
+		public static TestPlan @new(TestAssembly assembly) throws ConfigError {
 
 			initialise();
 
@@ -78,7 +78,7 @@ namespace Valadate {
 		
 		public abstract File plan {get;construct set;}
 
-		public abstract Assembly assembly {get;construct set;}
+		public abstract TestAssembly assembly {get;construct set;}
 
 		public abstract TestOptions options {get;set;}
 

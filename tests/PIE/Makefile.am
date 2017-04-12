@@ -4,8 +4,9 @@ include $(top_srcdir)/build/autotools/glib-tap.mk
 # --- PIE tests ---
 
 # tests_PIE is a test binary compiled as a PIE
+bin_PROGRAMS = tests_PIE-0
 
-test_programs = tests_PIE-0 testload_PIE-0
+test_programs = testload_PIE-0
 
 tests_PIE_0_SOURCES =  \
 	testpie.vala

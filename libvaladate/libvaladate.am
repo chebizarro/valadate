@@ -6,7 +6,8 @@ libvaladate_sources = \
 	src/girtestplan.vala \
 	src/pluginmodule.vala \
 	src/serialtestrunner.vala \
-	src/taptestresult.vala \
+	src/testreportprinter.vala \
+	src/taptestreportprinter.vala \
 	src/test.vala \
 	src/testadapter.vala \
 	src/testassembly.vala \

@@ -8,6 +8,7 @@ AM_CFLAGS = \
 
 AM_VALAFLAGS = \
 	$(VALAFLAGS) \
+	--pkg libxml-2.0 \
 	--pkg libvala-0.32 \
 	--pkg libvaladate-2.0 \
 	--vapidir $(VERSIONED_VAPI_DIR) \

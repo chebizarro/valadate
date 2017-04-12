@@ -24,7 +24,7 @@ namespace Valadate {
 
 	public class VapiTestPlan : Object, TestPlan {
 
-		public Assembly assembly {get;construct set;}
+		public TestAssembly assembly {get;construct set;}
 		public TestOptions options {get;protected set;}
 		public TestConfig config {get;protected set;}
 		public TestResult result {get;protected set;}

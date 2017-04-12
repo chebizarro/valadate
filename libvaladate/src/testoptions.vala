@@ -35,7 +35,6 @@ namespace Valadate {
 		private static bool _timed = true;
 		private static bool _verbose;
 		private static bool _version;
-		private static bool _vala_version;
 		[CCode (array_length = false, array_null_terminated = true)]
 		private static string[] _paths;
 		[CCode (array_length = false, array_null_terminated = true)]

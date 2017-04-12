@@ -1,9 +1,9 @@
 include $(top_srcdir)/base.am
-include $(top_srcdir)/build/autotools/glib-tap.mk
+#include $(top_srcdir)/build/autotools/glib-tap.mk
 
 # --- Test exe ---
-test_programs = testexe-0
-bin_PROGRAMS = testexe-0
+#test_programs = testexe-0
+bin_PROGRAMS = testexe-0 helloworld
 
 testexe_0_SOURCES =  \
 	testexe.vala \
@@ -11,7 +11,6 @@ testexe_0_SOURCES =  \
 	
 testexe_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
-	--vapi-comments \	
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
 	--library testexe-0
@@ -28,6 +27,9 @@ testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
 	-I$(top_srcdir)/libvaladate/include \
 	-pie
+
+helloworld_SOURCES =  \
+	helloworld.vala
 	
 CLEANFILES += \
 	*.vapi \

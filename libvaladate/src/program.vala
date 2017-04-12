@@ -22,42 +22,8 @@
  
 namespace Valadate {
 
-	public abstract class Program : Object, Assembly {
+	public abstract class Program : Assembly {
 	
-		public File binary {get;set;}
-
-		protected static SubprocessLauncher launcher;
-
-		class construct {
-			launcher = new SubprocessLauncher(
-				GLib.SubprocessFlags.STDOUT_PIPE |
-				GLib.SubprocessFlags.STDERR_MERGE);
-		}
-		
-		public Program(File binary) {
-			this.binary = binary;
-		}
-
-		public virtual void run(string? command = null) throws Error {
-			string[] args;
-			Shell.parse_argv("%s %s".printf(program.get_path(), command ?? ""), out args);
-			string buffer = null;
-			var process = launcher.spawnv(args);
-			process.communicate_utf8(null, null, out buffer, null);
-
-			try {
-				if(process.wait_check()) {
-					//callback(false, buffer);
-				}
-			} catch (Error e) {
-				//callback(true, buffer);
-			}
-		}
-
-		//public abstract void run();
-		public void* get_method(string method_name) throws AssemblyError {
-			return null;
-		}
 
 	}
 }
