@@ -27,6 +27,10 @@ namespace Valadate {
 		[CCode (has_target = false)]
 		public delegate void TestMethod(TestCase self) throws Error;
 
+		public delegate void AsyncTestMethod(TestCase self, AsyncReadyCallback cb);
+		public delegate void AsyncTestMethodResult(TestCase self, AsyncResult res);
+
+
 		private static HashTable<string, Type> plan_types;
 		
 		private static void initialise() {
@@ -43,37 +47,35 @@ namespace Valadate {
 
 			initialise();
 
-			string currdir = Environment.get_current_dir();
 			string plan_name = Path.get_basename(assembly.binary.get_path());
-			string builddir = Path.get_dirname(assembly.binary.get_path());
-			string srcdir = Environment.get_variable("G_TEST_SRCDIR") ??
-				Environment.get_variable("srcdir") ??
-				currdir;
-			
 			if(plan_name.has_prefix("lt-"))
 				plan_name = plan_name.substring(3);
-
-			if(Path.get_basename(builddir) == ".libs")
-				builddir = builddir[0 : builddir.length-6];
-
-			if(!Path.is_absolute(builddir))
-				builddir = currdir + builddir;
-
-			if(!Path.is_absolute(srcdir))
-				srcdir = currdir + srcdir;
+				
+				
+			File plan_file = assembly.srcdir;
 
 			foreach(var key in plan_types.get_keys()) {
-				var plan_file = File.new_for_path(Path.build_filename(srcdir, plan_name + "." + key));
+				
+				
+				plan_file = assembly.srcdir.get_child(plan_name + "." + key);
+	 			
 	 			if(plan_file.query_exists()) {
+
 					return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
+
 				} else {
-					plan_file = File.new_for_path(Path.build_filename(builddir, plan_name + "." + key));
+
+					plan_file = assembly.builddir.get_child(plan_name + "." + key);
+
 					if(plan_file.query_exists()) {
+
 						return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
+
 					}
 				}
 			}
-			throw new ConfigError.TESTPLAN("Test Plan %s Not Found!", plan_name);
+			
+			throw new ConfigError.TESTPLAN("Test Plan %s Not Found in %s or %s", plan_name, assembly.srcdir.get_path(), assembly.builddir.get_path());
 		}
 		
 		public abstract File plan {get;construct set;}

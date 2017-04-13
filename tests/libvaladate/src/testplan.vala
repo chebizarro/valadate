@@ -34,7 +34,7 @@ namespace Valadate.Tests {
 
 		var conf = tplan.config;
 		
-		assert(tplan.root[0].count == 4);
+		assert(tplan.root[0].size == 4);
 	}
 
 	public static void gir_test_plan_no_of_tests() {

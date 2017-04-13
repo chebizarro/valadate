@@ -28,27 +28,24 @@ namespace Valadate {
 		
 		private List<TestCase> testcases = new List<TestCase>();
 		
-		public TapTestReportPrinter(TestConfig config) {
+		public TapTestReportPrinter(TestConfig config) throws Error {
 			base(config);
 			stdout.printf("TAP version %s\n", TAP_VERSION);
 			stdout.printf("# random seed: %s\n", config.seed);
-		}
-		
-		private int count_tests(Test test) {
-			var testcount = 0;
-			if(test is TestSuite)
-				foreach(var subtest in test)
-					testcount += count_tests(subtest);
-			else
-				testcount += test.count;
-			return testcount;
 		}
 		
 		public override void print(TestReport report) {
 
 			if(report.test is TestSuite) {
 				testcases = new List<TestCase>();
-				stdout.printf("1..%d\n", count_tests(report.test));
+				stdout.printf("1..%d\n", report.test.count);
+				
+				var props = report.xml.eval("//properties/property");
+				stdout.puts("# Environment\n");
+				foreach(Xml.Node* prop in props) {
+					stdout.printf("# %s : %s\n",
+						prop->get_prop("name"), prop->get_prop("value"));
+				}
 
 			} else if(report.test is TestCase) {
 				testcases.append(report.test as TestCase);
@@ -107,6 +104,7 @@ namespace Valadate {
 				if(lasttest)
 					stdout.printf("# End of %s tests\n", test.parent.label);
 			}
+			base.print(report);
 		}
 	}
 }

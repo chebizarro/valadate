@@ -106,44 +106,44 @@ namespace Valadate.Drivers {
 			ns.accept_children(this);
 		}
 		
-		public override void visit_class(Vala.Class @class) {
+		public override void visit_class(Vala.Class cls) {
 			
 			try {
-				if (is_subtype_of(@class, "Valadate.TestCase"))
-					testsuite.add_test(visit_testcase(@class));
+				if (is_subtype_of(cls, "Valadate.TestCase"))
+					testsuite.add_test(visit_testcase(cls));
 				
-				else if (is_subtype_of(@class, "Valadate.TestSuite"))			
-					testsuite.add_test(visit_testsuite(@class));
+				else if (is_subtype_of(cls, "Valadate.TestSuite"))			
+					testsuite.add_test(visit_testsuite(cls));
 
-				else if (is_subtype_of(@class, "Valadate.TestRunner"))			
-					_runner += get_class_type(@class);
+				else if (is_subtype_of(cls, "Valadate.TestRunner"))			
+					_runner += get_class_type(cls);
 
-				else if (is_subtype_of(@class, "Valadate.TestConfig"))			
-					_config += get_class_type(@class);
+				else if (is_subtype_of(cls, "Valadate.TestConfig"))			
+					_config += get_class_type(cls);
 
-				else if (is_subtype_of(@class, "Valadate.TestResult"))			
-					_result += get_class_type(@class);
+				else if (is_subtype_of(cls, "Valadate.TestResult"))			
+					_result += get_class_type(cls);
 
 			} catch (Error e) {
 				error(e.message);
 			}
-			class.accept_children(this);
+			cls.accept_children(this);
 		}
 
-		private bool is_subtype_of(Vala.Class @class, string typename) {
-			foreach(var basetype in @class.get_base_types())
+		private bool is_subtype_of(Vala.Class cls, string typename) {
+			foreach(var basetype in cls.get_base_types())
 				if(((Vala.UnresolvedType)basetype).to_qualified_string() == typename)
 					return true;
 			return false;
 		}
 
-		private Type get_class_type(Vala.Class @class) {
-			var attr = new Vala.CCodeAttribute (@class);
+		private Type get_class_type(Vala.Class cls) {
+			var attr = new Vala.CCodeAttribute (cls);
 			return Type.from_name(attr.name);
 		}
 
-		private unowned Constructor get_constructor(Vala.Class @class) {
-			var attr = new Vala.CCodeAttribute (@class.default_construction_method);
+		private unowned Constructor get_constructor(Vala.Class cls) {
+			var attr = new Vala.CCodeAttribute (cls.default_construction_method);
 			return (Constructor)plan.assembly.get_method(attr.name);
 		}
 

@@ -20,6 +20,8 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
+using Valadate.XmlTags;
+
 namespace Valadate { 
 
 	public enum TestStatus {
@@ -32,6 +34,7 @@ namespace Valadate {
 		FAILED
 	}
 
+
 	public class TestResult {
 
 		public TestConfig config {get;set;}
@@ -40,14 +43,6 @@ namespace Valadate {
 
 		private Queue<TestReport> reports = new Queue<TestReport>();
 		private HashTable<Test, TestReport> tests = new HashTable<Test, TestReport>(direct_hash, direct_equal);
-
-		private const string ERROR_TAG = "error";
-		private const string FAILURE_TAG = "failure";
-		private const string VDX_TAG = "vdx:info";
-		private const string VDX_TIMER = "vdx:timer";
-		private const string VDX_NS = "xmlns:vdx=\"https://www.valadate.org/vdx\"";
-		private const string SYSTEM_OUT_TAG = "system-out";
-		private const string SYSTEM_ERR_TAG = "system-err";
 
 		private Regex regex;
 		private const string regex_string =
@@ -59,7 +54,8 @@ namespace Valadate {
 		private const string regex_err_string =
 			"""(\*{2}\n([A-Z]*):([\S]*) ([\S ]*)\n)""";
 
-		private static Timer timer;
+		private static int64 start_time;
+		private static int64 end_time;
 
 		public TestResult(TestConfig config) throws Error {
 			this.config = config;
@@ -127,18 +123,16 @@ namespace Valadate {
 			var escaped = Markup.escape_text(message);
 			var message_parts = escaped.split(":");
 			var tag = ERROR_TAG;
-			var ns = "";
 			
 			if (((log_levels & LogLevelFlags.LEVEL_INFO) != 0) ||
 				((log_levels & LogLevelFlags.LEVEL_MESSAGE) != 0) ||
 				((log_levels & LogLevelFlags.LEVEL_DEBUG) != 0)) {
 				tag = VDX_TAG;
-				ns = VDX_NS;
 			} else {
 				emit_timer();
 			}
 			
-			stderr.printf("<%s message=\"%s\" type=\"%s\" %s>\n", tag, escaped, level, ns);
+			stderr.printf("<%s message=\"%s\" type=\"%s\">\n", tag, escaped, level);
 			stderr.printf("%s: %s\n", level, message_parts[message_parts.length-1]);
 			stderr.printf("File: %s\n", message_parts[0]);
 			stderr.printf("Line: %s\n", message_parts[1]);
@@ -167,7 +161,7 @@ namespace Valadate {
 
 		public void add_test(Test test) {
 			if(config.in_subprocess) {
-				timer = new Timer ();
+				start_time = get_monotonic_time();
 				return;
 			}
 			if(test.status == TestStatus.NOT_RUN)
@@ -213,21 +207,21 @@ namespace Valadate {
 				test.status = TestStatus.SKIPPED;
 				test.status_message = message;
 			} else {
-				stderr.puts("<skipped/>\n");
+				stderr.printf("%s\n", SKIPPED_XML);
 			}
 		}
 
 		private static void emit_timer() {
-			timer.stop();
-			var ms = (timer.elapsed(null)*1000).to_string();
-			stderr.printf("<%s message=\"%s\" type=\"TIMER\" %s></%s>\n",
-				VDX_TIMER, ms, VDX_NS, VDX_TIMER);
+			end_time = get_monotonic_time();
+			var ms = "%I64d".printf((end_time-start_time)/1000);
+			stderr.printf(MESSAGE_XML,
+				VDX_TIMER, ms, "TIMER", VDX_TIMER);
 			
 		}
 		
 		private void emit_message(string tag, string message, string? ns = null) {
 			//var domain = e.domain.to_string().up().replace("-","_");
-			stderr.printf("<%s message=\"%s\" type=\"%s\">%s</%s>\n",
+			stderr.printf(MESSAGE_XML,
 					tag, message, tag.up(), message, tag);
 		}
 

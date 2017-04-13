@@ -19,7 +19,9 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
- 
+
+using Valadate.XmlTags;
+
 namespace Valadate {
 
 	public class GirTestPlan : Object, TestPlan {
@@ -53,7 +55,7 @@ namespace Valadate {
 		private void load() throws ConfigError {
 			setup_context();
 			visit_config();
-			visit_test_result();
+			result = new TestResult(config);
 			visit_test_runner();
 			visit_root();
 		}
@@ -76,13 +78,6 @@ namespace Valadate {
 			config = Object.new(ctype, "options", options, null) as TestConfig;
 		}
 
-		private void visit_test_result() {
-			//Type ctype = find_type("//xmlns:class[@parent='ValadateTestResult']");
-			//if(ctype == Type.INVALID)
-				//ctype = typeof(TapTestResult);
-			result = new TestResult(config);
-		}
-		
 		private void visit_test_runner() {
 			Type ctype = find_type("//xmlns:class[@implements='ValadateTestRunner']");
 			if(ctype != Type.INVALID)
@@ -143,7 +138,6 @@ namespace Valadate {
 
 				if(node_type.is_a(typeof(TestSuite))) {
 					testsuite = test as TestSuite;
-					//visit_testsuite(node);
 				} else if (node_type.is_a(typeof(TestCase))) {
 					testcase = test as TestCase;
 					visit_class(node_type);
@@ -152,19 +146,19 @@ namespace Valadate {
 			}
 		}
 		
-		private void visit_class(Type classtype)
-			requires(classtype.is_a(typeof(Test)))
-		{
+		private void visit_class(Type classtype) {
+
 			if(classtype == typeof(TestCase))
 				return;
 
-			var expression = "//xmlns:class[@glib:type-name='%s']/xmlns:method".printf(classtype.name());
-			var res = xmlfile.eval(expression);
+			var expression = "//xmlns:class[@glib:type-name='%s']/xmlns:method";
+			var res = xmlfile.eval(expression.printf(classtype.name()));
 			
 			foreach (Xml.Node* method in res) {
 
 				string name = method->get_prop("name");
-				if(config.in_subprocess && name != options.running_test.split("/")[3])
+				if( config.in_subprocess &&
+					name != options.running_test.split("/")[3])
 					continue;
 				if(!is_test(method))
 					continue;

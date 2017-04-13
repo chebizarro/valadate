@@ -26,7 +26,7 @@ namespace Valadate.Tests {
 
 	public class TestLoadPIE : TestCase {
 		
-		[Test (name="test loading pie binary")]
+		[Test (todo="this is a builddir!=srcdir problem", name="test loading pie binary")]
 		public void load_pie () {
 			var modname = Config.VALADATE_TESTS_DIR + "/PIE/.libs/" + TESTEXE;
 			var mod = GLib.Module.open (modname, ModuleFlags.BIND_LOCAL);

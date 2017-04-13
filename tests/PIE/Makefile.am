@@ -52,7 +52,6 @@ testload_PIE_0_LDADD = \
 	
 testload_PIE_0_CPPFLAGS = \
 	-fPIE \
-	-DVALADATE_TESTS_DIR=\""$(VALADATE_TESTS_DIR)"\" \
 	$(TESTS_CPPFLAGS)
 	
 testload_PIE_0_CFLAGS = \

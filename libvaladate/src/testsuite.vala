@@ -37,12 +37,25 @@ namespace Valadate {
 		public string label { get; set; }
 
 		/**
+		 * Iterator (not the actual number of Tests that will be run)
+		 */
+		public int size {
+			get {
+				return (int)_tests.length();
+			}
+		}
+
+		/**
 		 * Returns the number of {@link Valadate.Test}s that will be run by 
 		 * this TestSuite
 		 */
 		public int count {
 			get {
-				return (int)_tests.length();
+				int testcount = 0;
+				_tests.foreach((t) => {
+					testcount += t.count;
+				});
+				return testcount;
 			}
 		}
 

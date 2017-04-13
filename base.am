@@ -3,9 +3,9 @@ TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-cli-2.0.la
 
 if ENABLE_DEVMODE
 valadate_conf = \
-	-DVALADATE_DRIVER_DIR=\""$(top_srcdir)/libvaladate/drivers"\" \
-	-DVALADATE_LIB_DIR=\""$(top_srcdir)/libvaladate"\" \
-	-DVALADATE_TESTS_DIR=\""$(top_srcdir)/tests"\"
+	-DVALADATE_DRIVER_DIR=\""$(top_builddir)/libvaladate/drivers"\" \
+	-DVALADATE_LIB_DIR=\""$(top_builddir)/libvaladate"\" \
+	-DVALADATE_TESTS_DIR=\""$(top_builddir)/tests"\"
 else
 valadate_conf = \
 	-DVALADATE_DRIVER_DIR=\""$(libdir)/libvaladate/drivers"\" \
@@ -18,7 +18,7 @@ VALADATE_LIB_PATHS = \
 	$(top_builddir)/vapi \
 	$(top_srcdir)/vapi \
 	$(top_srcdir)/libvaladate/include \
-	$(top_srcdir)/libvaladate/include
+	$(top_builddir)/libvaladate/include
 
 VALADATE_VALAFLAGS = \
 	--vapidir $(top_builddir)/vapi \
@@ -36,6 +36,8 @@ VALADATE_CPPFLAGS = \
 	`pkg-config --cflags --libs $(pkg_modules) gio-2.0`
 
 TESTS_VALAFLAGS = \
+	--vapidir $(top_srcdir)/libvaladate/vapi \
+	--vapidir $(top_srcdir)/vapi \
 	--vapidir $(top_builddir)/libvaladate/vapi \
 	--vapidir $(top_builddir)/vapi \
 	--pkg valadate-2.0 \

@@ -19,17 +19,13 @@
  * Authors:
  * 	Chris Daley <chebizarro@gmail.com>
  */
+ 
+using Valadate.XmlTags;
+ 
 namespace Valadate { 
 
 	public class TestReport {
 
-		private const string testsuitexml =
-		"""<testsuite disabled="" errors="" failures="" hostname="" id="" """ +
-		"""name="" package="" skipped="" tests="" time="" timestamp="">""" +
-		"""<properties><property name="" value=""/></properties>""" +
-		"""</testsuite>""";
-		private const string testcasexml =
-		"""<testcase assertions="" classname="" name="" status="" time=""/>""";
 		public Test test {get;set;}
 		
 		public XmlFile xml {get;set;}
@@ -48,30 +44,35 @@ namespace Valadate {
 
 			root->set_prop("name",test.label);
 			xml = new XmlFile.from_doc(doc);
-			xml.register_ns("vdx", "https://www.valadate.org/vdx");
+			xml.register_ns("vdx", VDX_NS);
 		}
 		
 		private void new_testsuite() {
-			doc = Xml.Parser.read_memory(testsuitexml, testsuitexml.length);
-			root = doc->get_root_element();;
-			root->set_prop("tests", count_tests(test).to_string());
+			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, TESTSUITE_XML);
+			doc = Xml.Parser.read_memory(decl, decl.length);
+			root = doc->get_root_element()->children;
+			root->set_prop("tests", test.count.to_string());
+			
+			if(test.parent != null && test.parent.name != "/")
+				return;
+			
+			var props = root->children;
+			
+			foreach(var key in Environment.list_variables()) {
+				Xml.Node* node = new Xml.Node(null, "property");
+				node->set_prop("name", key);
+				node->set_prop("value", Markup.escape_text(Environment.get_variable(key)));
+				props->add_child(node);
+			}
+			
 		}
 
 		private void new_testcase() {
-			doc = Xml.Parser.read_memory(testcasexml, testcasexml.length);
-			root = doc->get_root_element();;
+			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, TESTCASE_XML);
+			doc = Xml.Parser.read_memory(decl, decl.length);
+			root = doc->get_root_element()->children;
 			root->set_prop("classname",((TestAdapter)test).parent.name);
 			root->set_prop("status",test.status.to_string().substring(21));
-		}
-
-		private int count_tests(Test test) {
-			var testcount = 0;
-			if(test is TestSuite)
-				foreach(var subtest in test)
-					testcount += count_tests(subtest);
-			else
-				testcount += test.count;
-			return testcount;
 		}
 
 		~TestReport() {

@@ -20,22 +20,48 @@
  * 
  */
 
+using Valadate.XmlTags;
+
 namespace Valadate {
 	
 	public abstract class TestReportPrinter {
 		
-		public XmlFile report {get;set;}
+		public XmlFile xml {get;set;}
 
 		public TestConfig config {get;set;}
 		
-		public TestReportPrinter(TestConfig config) {
+		public TestReportPrinter(TestConfig config) throws Error {
 			this.config = config;
-
-			report = new XmlFile.from_string(
-				"""<testsuites disabled="" errors="" failures="" name="" tests="" time=""/>""");
+			xml = new XmlFile.from_string(XML_DECL + TESTSUITES_XML);
 		}
+		
+		private Xml.Node* testsuite;
+		private int testcount = -1;
+		
+		public virtual void print(TestReport report) {
+			Xml.Node* root = xml.eval("//testsuites")[0];
+			Xml.Node* newnode = report.xml.eval("//testsuite | //testcase")[0];
+			Xml.Node* node = newnode;
 
-		public abstract void print(TestReport report);
+			if(report.test is TestCase || report.test is TestSuite) {
+				if(testsuite == null) {
+					testcount = report.test.count;
+					testsuite = root->add_child(node);
+				} else {
+					testsuite = testsuite->add_child(node);
+					testcount--;
+				}
+			} else if(report.test is TestAdapter) {
+				testsuite->add_child(node);
+				testcount--;
+			}
+			
+			var logname = Environment.get_variable("TEST_LOGS");
+			if(logname == null)
+				logname = "test";
+			if(logname != null && testcount == 0)
+				root->doc->save_format_file(logname.strip() + ".xml", 1);
+		}
 		
 	}
 }

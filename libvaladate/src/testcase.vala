@@ -55,6 +55,16 @@ namespace Valadate {
 			}
 		}
 
+		public int size {
+			get {
+				int testcount = 0;
+				_tests.foreach((t) => {
+					testcount += t.count;
+				});
+				return testcount;
+			}
+		}
+
 		public Test? parent {get;set;}
 
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
@@ -105,7 +115,7 @@ namespace Valadate {
 		public void bug(string reference)
 			requires(bug_base != null)
 		{
-			info("MSG: Bug Reference: %s%s",bug_base, reference);
+			info("Bug Reference: %s%s",bug_base, reference);
 		}
 
 		public void skip(string message) {

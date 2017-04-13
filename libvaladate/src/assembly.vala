@@ -32,7 +32,7 @@ namespace Valadate {
 	
 		private static SubprocessLauncher launcher;
 		
-		private static void init() {
+		private static void init_launcher() {
 			if (launcher == null) {
 				launcher = new SubprocessLauncher(
 					GLib.SubprocessFlags.STDIN_PIPE |
@@ -52,23 +52,20 @@ namespace Valadate {
 		private HashTable<string, string> env = new HashTable<string, string>(str_hash, str_equal);
 
 		public Assembly(File binary) throws Error {
+			init_launcher();
 			if(!binary.query_exists())
 				throw new FileError.NOENT("The file %s does not exist", binary.get_path());
-			if(!FileUtils.test(binary.get_path(), FileTest.IS_EXECUTABLE))
+			if(!GLib.FileUtils.test(binary.get_path(), FileTest.IS_EXECUTABLE))
 				throw new FileError.PERM("The file %s is not executable", binary.get_path());
-
 			this.binary = binary;
 		}
 
 		public abstract Assembly clone() throws Error;
 
 		public virtual Assembly run(string? command = null) throws Error {
-			init();
 			string[] args;
 			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
-
 			var process = launcher.spawnv(args);
-
 			stdout = new DataInputStream (process.get_stdout_pipe());
 			stderr = new DataInputStream (process.get_stderr_pipe());
 			stdin = new DataOutputStream (process.get_stdin_pipe());
@@ -81,6 +78,5 @@ namespace Valadate {
 			yield;
 			return this;
 		}
-
 	}
 }

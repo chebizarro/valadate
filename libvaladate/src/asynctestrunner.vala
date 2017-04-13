@@ -30,16 +30,9 @@ namespace Valadate {
 
 		private uint _n_ongoing_tests = 0;
 		private Queue<DelegateWrapper> _pending_tests = new Queue<DelegateWrapper> ();
-
-		/* Change this to change the cap on the number of concurrent operations. */
-		private static uint _max_n_ongoing_tests = 2;
+		private static uint _max_n_ongoing_tests = GLib.get_num_processors();
 		private MainLoop loop;
-
 		private TestPlan plan;
-
-		construct {
-			_max_n_ongoing_tests = GLib.get_num_processors();
-		}
 		
 		public void run(Test test, TestResult result) {
 			result.add_test(test);
@@ -50,7 +43,6 @@ namespace Valadate {
 		public void run_all(TestPlan plan) {
 
 			this.plan = plan;
-
 			run_test_internal(plan.root, plan.result, "");
 
 			if (!plan.config.in_subprocess) {

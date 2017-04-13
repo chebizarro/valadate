@@ -53,6 +53,11 @@ namespace Valadate.Tests {
 		[Test (name="Annotated Test With Name")]
 		public void annotated_test_with_name () {
 			message("This is a message, which will be trapped");
+			
+			for(int i=0;i<10000000;i++) {
+				int i2 = i%int.MAX;
+			}
+			
 			assert_true(true);
 		}
 

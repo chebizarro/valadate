@@ -38,6 +38,12 @@ namespace Valadate {
 			}
 		}
 
+		public int size {
+			get {
+				return 1;
+			}
+		}
+
 		private TestCase.TestMethod test;
 		public Test? parent {get;set;}
 
