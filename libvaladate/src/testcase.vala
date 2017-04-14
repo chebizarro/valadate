@@ -27,7 +27,7 @@
 
 namespace Valadate {
 
-	[CCode (cheader_filename="testcase.h")]
+	//[CCode (cheader_filename="testcase.h")]
 	public abstract class TestCase : Object, Test, TestFixture {
 		/**
 		 * The TestMethod delegate represents a {@link Valadate.Test} method

@@ -78,9 +78,9 @@ namespace Valadate {
 					case TestStatus.TODO:
 						var errs = report.xml.eval("//failure | //error");
 						if(errs.size > 0)
-							stdout.printf("not ok %d - %s # TODO %s \n", index, test.label, test.status_message);
+							stdout.printf("not ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "");
 						else
-							stdout.printf("ok %d - %s # TODO %s \n", index, test.label, test.status_message);
+							stdout.printf("ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "");
 						break;
 					case TestStatus.FAILED:
 					case TestStatus.ERROR:
@@ -91,7 +91,7 @@ namespace Valadate {
 						break;
 				}
 				stdout.puts("  ---\n");
-				stdout.printf("  duration_ms: %f\n", test.time);
+				stdout.printf("  duration_ms: %.4f\n", test.time);
 				var messages = report.xml.eval("//failure | //error | //info");
 				foreach(Xml.Node* mess in messages) {
 					stdout.printf("  message: >\n    %s\n", mess->get_prop("message"));

@@ -19,9 +19,6 @@
 
 namespace Valadate.Utils.Tests {
 	
-	using Valadate;
-	using Valadate.Utils;
-
 	public class TestEmitter : Object {
 		public void emit0()	{}
 
@@ -38,13 +35,7 @@ namespace Valadate.Utils.Tests {
 		public signal void s1();
 	}
 
-	public class TestSignalWaiter : Framework.TestCase {
-
-		public TestSignalWaiter() {
-			add_test("NoSignal", test_multi_signal_waiter_no_signal);
-			add_test("TwoSignals", test_multi_signal_waiter_one_signal);
-			add_test("ManySignals", test_multi_signal_waiter_many_signals);
-		}
+	public class TestSignalWaiter : TestCase {
 
 		public void test_multi_signal_waiter_no_signal() {
 			var emitter = new TestEmitter();

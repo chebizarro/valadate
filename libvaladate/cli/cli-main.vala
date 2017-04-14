@@ -1,6 +1,6 @@
 namespace Valadate {
 
-	public static void main (string[] args) {
+	public static int main (string[] args) {
 		try {
 			var assembly = new TestAssembly(args);
 			var testplan = TestPlan.new(assembly);
@@ -8,5 +8,7 @@ namespace Valadate {
 		} catch (Error e) {
 			error(e.message);
 		}
+		
+		return 0;
 	}
 }

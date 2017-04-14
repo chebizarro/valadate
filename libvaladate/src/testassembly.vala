@@ -83,6 +83,11 @@ namespace Valadate {
 			else
 				srcdir = File.new_for_path(srcstr);
 
+			var mesondir = srcdir.get_child(Path.get_basename(binary.get_path()) + "@exe");
+
+			if(mesondir.query_exists())
+				srcdir = mesondir;
+
 		}
 	
 		public override Assembly clone() throws Error {

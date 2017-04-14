@@ -75,6 +75,10 @@ namespace Valadate {
 		public string status_message {get;set;}
 		public double time {get;set;}
 
+		public int skipped {get;set;}
+		public int errors {get;set;}
+		public int failures {get;set;}
+
 		/**
 		 * The public constructor takes an optional string parameter for the
 		 * TestSuite's name

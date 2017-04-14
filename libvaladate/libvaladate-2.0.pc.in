@@ -9,5 +9,5 @@ Name: Valadate
 Description: Base Library for the Valadate Unit testing framework
 Version: @VERSION@
 Requires: @pkg_modules@
-Libs: -L${libdir} -lvaladate-1.0
+Libs: -L${libdir} -lvaladate-2.0
 Cflags: -I${includedir}/valadate

@@ -1,36 +1,29 @@
 include $(top_srcdir)/base.am
 include $(top_srcdir)/build/autotools/glib-tap.mk
 
-test_programs = tests_libvaladate_utils
+test_programs = testutils-0
 
-tests_libvaladate_utils_SOURCES =  \
+testutils_0_SOURCES =  \
 	testsignalwaiter.vala \
-	testtempdir.vala \
-	testasync.vala \
-	wait.vala \
-	main.vala
+	wait.vala
 	
-tests_libvaladate_utils_VALAFLAGS = \
+testutils_0_VALAFLAGS = \
+	--gir testutils-0.gir \
+	--library testutils-0 \
 	$(TESTS_VALAFLAGS)
 
-tests_libvaladate_utils_LDADD = \
+testutils_0_LDADD = \
 	$(TESTS_LIBS) \
-	$(VALADATELIB)
+	$(VALADATELIB) \
+	$(TEST_RUNNER)
 
-tests_libvaladate_utils_CPPFLAGS = \
+testutils_0_CPPFLAGS = \
+	-fPIE \
 	$(TESTS_CPPFLAGS)
 	
-tests_libvaladate_utils_CFLAGS = \
+testutils_0_CFLAGS = \
+	-pie \
 	$(TESTS_CFLAGS)
 
-CLEANFILES += \
-	$(tests_libvaladate_utils_SOURCES:.vala=.c) \
-	*.stamp \
-	*.html \
-	*.xml \
-	*.gcda \
-	*.gcno
-
-DISTCLEANFILES += $(CLEANFILES)
 
 -include $(top_srcdir)/git.mk

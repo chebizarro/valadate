@@ -22,6 +22,7 @@ libvaladate_sources = \
 	src/testrunner.vala \
 	src/testsuite.vala \
 	src/vapitestplan.vala \
-	src/xmltestreportprinter.vala \
 	utils/xml.vala \
-	utils/xmlfile.vala
+	utils/xmlfile.vala \
+	utils/wait.vala \
+	utils/signalwaiter.vala

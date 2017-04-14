@@ -129,7 +129,11 @@ namespace Valadate {
 				((log_levels & LogLevelFlags.LEVEL_DEBUG) != 0)) {
 				tag = VDX_TAG;
 			} else {
+				//add_failure
 				emit_timer();
+				stderr.printf(MESSAGE_XML, tag, escaped, tag.up(), escaped, tag);
+				stderr.printf("%s%s",TESTCASE_END, ROOT_END);
+				return;
 			}
 			
 			stderr.printf("<%s message=\"%s\" type=\"%s\">\n", tag, escaped, level);
@@ -137,6 +141,7 @@ namespace Valadate {
 			stderr.printf("File: %s\n", message_parts[0]);
 			stderr.printf("Line: %s\n", message_parts[1]);
 			stderr.printf("</%s>\n", tag);
+			
 		}
 
 		private static void printerr_func (string? text) {
@@ -216,7 +221,7 @@ namespace Valadate {
 		private static void emit_timer() {
 			end_time = get_monotonic_time();
 			//var ms = "%I64d".printf((end_time-start_time)/1000);
-			var ms = "%f".printf((double)(end_time-start_time));
+			var ms = "%f".printf(((double)(end_time-start_time))/1000);
 			stderr.printf(MESSAGE_XML, VDX_TIMER, ms, "TIMER", ms, VDX_TIMER);
 			
 		}
@@ -234,6 +239,8 @@ namespace Valadate {
 
 			uint8 buffer[4096] = {};
 			assembly.stderr.read_all(buffer, null);
+			
+			//stdout.printf("%s\n", (string)buffer);
 			
 			var xml = ((string)buffer).strip();
 			if(xml.length < 8)
@@ -253,6 +260,14 @@ namespace Valadate {
 			Xml.Node* timer = bits[0];
 			test.time = double.parse(timer->get_content());
 
+			var errs = rept.xml.eval("//testcase/error");
+			foreach(Xml.Node* err in errs)
+				add_failure(test, err->get_prop("message"));
+
+			errs = rept.xml.eval("//testcase/failure");
+			foreach(Xml.Node* err in errs)
+				add_failure(test, err->get_prop("message"));
+
 			update_status(test);
 
 			uint8 outbuffer[4096] = {};
@@ -262,61 +277,6 @@ namespace Valadate {
 				return;
 
 			rept.add_text(xml, SYSTEM_OUT_TAG);
-		
-			/*
-			InputStream[] inputs = { assembly.stderr, assembly.stdout };
-		
-			foreach(var input in inputs) {
-				if(input == null)
-					continue;
-
-				uint8 buffer[4096] = {};
-				input.read_all(buffer, null);
-				//stdout.printf("%s\n",(string)buffer);
-				MatchInfo info;
-				bool nextinfo = regex.match((string)buffer, 0, out info);
-				
-				int[] matches = {0};
-				
-				while(nextinfo) {
-					var res = info.fetch(2);
-					var mess = info.fetch(0);
-					switch(res) {
-						case FAILURE_TAG:
-							add_failure(test,info.fetch(3));
-							break;
-						case ERROR_TAG:
-							add_error(test,info.fetch(3));
-							break;
-						case VDX_TIMER:
-							test.time = double.parse(info.fetch(3));
-							update_status(test);
-							break;
-						default:
-							break;
-					}
-					rept.add_xml(mess);
-					int start, end;
-					if(info.fetch_pos(0, out start, out end)) {
-						matches += start;
-						matches += end;
-					}
-					nextinfo = info.next();
-				}
-
-				matches += buffer.length-1;
-				var std_xml = "<%s>%s</%s>";
-				var tag = (input == assembly.stderr) ? SYSTEM_ERR_TAG : SYSTEM_OUT_TAG;
-				for(int i=0;i<matches.length;i++) {
-					var start = matches[i];
-					var end = matches[i+1];
-					var str = buffer[start:end-start];
-					if(str != "\n".data && str.length > 0)
-						stdout.printf("@@%s@@\n",(string)str);
-					i++;
-					//rept.add_xml(std_xml.printf(tag, xml, tag));
-				}
-			}*/
 		}
 	}
 }

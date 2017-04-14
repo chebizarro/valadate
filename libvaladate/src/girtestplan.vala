@@ -187,8 +187,8 @@ namespace Valadate {
 			} else if(test.name.has_prefix("_test_")) {
 				test.label = test.name.substring(6);
 				test.status = TestStatus.SKIPPED;
-			} else if(test.name.has_prefix("_todo_test_")) {
-				test.label = test.name.substring(11);
+			} else if(test.name.has_prefix("todo_test_")) {
+				test.label = test.name.substring(10);
 				test.status = TestStatus.TODO;
 			} else {
 				test.label = test.name;
@@ -224,7 +224,9 @@ namespace Valadate {
 			bool istest = false;
 			string name = node->get_prop("name");
 			
-			if(name.has_prefix("test_") || name.has_prefix("_test_"))
+			if(	name.has_prefix("test_") ||
+				name.has_prefix("_test_") ||
+				name.has_prefix("todo_test_"))
 				istest = true;
 			
 			var child = node->children;

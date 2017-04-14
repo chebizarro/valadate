@@ -19,6 +19,7 @@
 using Valadate;
 
 namespace Valadate.Utils.Tests {
+
     internal class Changer : Object {
         private uint timer = 0;
 
@@ -71,18 +72,9 @@ namespace Valadate.Utils.Tests {
     }
 
     /* Here we test the wait_* functions. */
-    public class TestWait : Framework.TestCase {
+    public class TestWait : TestCase {
 		
         Changer changer = new Changer();
-
-		public TestWait() {
-			add_test("wait_signal_normal", test_wait_signal_normal);
-			//add_test("wait_signal_immediate", test_wait_signal_immediate);
-			//add_test("wait_signal_fail", test_wait_signal_fail);
-			//add_test("wait_condition_normal", test_wait_condition_normal);
-			//add_test("wait_condition_immediate", test_wait_condition_immediate);
-			//add_test("wait_condition_fail", test_wait_condition_fail);
-		}
 
         public override void tear_down() {
             // The timeout is added owned, so the object won't be
@@ -103,7 +95,7 @@ namespace Valadate.Utils.Tests {
             assert(changer.count == 5);
         }
 
-        public void test_wait_signal_fail() {
+        public void todo_test_wait_signal_fail() {
             assert(!wait_for_signal(200, changer, "notify::count",
                         () => {}));
             assert(changer.count == 0);
@@ -123,7 +115,7 @@ namespace Valadate.Utils.Tests {
             assert(changer.count == 0);
         }
 
-        public void test_wait_condition_fail() {
+        public void todo_test_wait_condition_fail() {
             assert(!wait_for_condition(250, changer, "notify::count",
                         () => changer.count == 4,
                         () => changer.start()));
@@ -136,7 +128,7 @@ namespace Valadate.Utils.Tests {
             assert(changer.count == 1);
         }
 
-        public void test_wait_async_fail() {
+        public void todo_test_wait_async_fail() {
             assert(!wait_for_async(20, (cb) => changer.inc_async.begin(cb),
                         res => changer.inc_async.end(res)));
             assert(changer.count == 0);
@@ -149,7 +141,7 @@ namespace Valadate.Utils.Tests {
             assert(changer.count == 1);
         }
 
-        public void test_wait_cancellable_async_fail() {
+        public void todo_test_wait_cancellable_async_fail() {
             assert(!wait_for_cancellable_async(20,
                         (c, cb) => changer.cancellable_inc_async.begin(c, cb),
                         res => changer.cancellable_inc_async.end(res)));

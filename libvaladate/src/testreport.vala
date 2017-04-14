@@ -30,10 +30,6 @@ namespace Valadate {
 		
 		public XmlFile xml {get;set;}
 		
-		//private Xml.Doc* doc;
-		
-		//private Xml.Node* root;
-		
 		public TestReport(Test test) throws Error {
 			this.test = test;
 
@@ -41,9 +37,7 @@ namespace Valadate {
 				new_testsuite();
 			else if (test is TestAdapter)
 				new_testcase();
-
 		}
-
 		
 		private void new_testsuite() {
 			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, TESTSUITE_XML);
