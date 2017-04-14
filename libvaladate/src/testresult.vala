@@ -156,11 +156,14 @@ namespace Valadate {
 				*/
 				stderr.printf("</%s>\n", FAILURE_TAG);
 				emit_timer();
+				stderr.printf("%s%s",TESTCASE_END, ROOT_END);
 			}
 		}
 
 		public void add_test(Test test) {
-			if(config.in_subprocess) {
+			if(config.in_subprocess && test is TestAdapter) {
+				stderr.printf("%s%s",XML_DECL,ROOT_START);
+				stderr.printf(TESTCASE_START,test.parent.get_type().name(), test.label);
 				start_time = get_monotonic_time();
 				return;
 			}
@@ -196,6 +199,7 @@ namespace Valadate {
 		public void add_success(Test test) {
 			if(config.in_subprocess) {
 				emit_timer();
+				stderr.printf("%s%s",TESTCASE_END, ROOT_END);
 			} else if (test.status == TestStatus.RUNNING) {
 				test.status = TestStatus.PASSED;
 				update_status(test);
@@ -203,26 +207,23 @@ namespace Valadate {
 		}
 
 		public void add_skip(Test test, string message) {
-			if(config.in_subprocess) {
-				test.status = TestStatus.SKIPPED;
-				test.status_message = message;
-			} else {
+			test.status = TestStatus.SKIPPED;
+			test.status_message = message;
+			if(config.in_subprocess)
 				stderr.printf("%s\n", SKIPPED_XML);
-			}
 		}
 
 		private static void emit_timer() {
 			end_time = get_monotonic_time();
-			var ms = "%I64d".printf((end_time-start_time)/1000);
-			stderr.printf(MESSAGE_XML,
-				VDX_TIMER, ms, "TIMER", VDX_TIMER);
+			//var ms = "%I64d".printf((end_time-start_time)/1000);
+			var ms = "%f".printf((double)(end_time-start_time));
+			stderr.printf(MESSAGE_XML, VDX_TIMER, ms, "TIMER", ms, VDX_TIMER);
 			
 		}
 		
 		private void emit_message(string tag, string message, string? ns = null) {
 			//var domain = e.domain.to_string().up().replace("-","_");
-			stderr.printf(MESSAGE_XML,
-					tag, message, tag.up(), message, tag);
+			stderr.printf(MESSAGE_XML, tag, message, tag.up(), message, tag);
 		}
 
 		public void process_buffers(Test test, Assembly assembly) throws Error {
@@ -231,6 +232,38 @@ namespace Valadate {
 			if(rept == null)
 				return;
 
+			uint8 buffer[4096] = {};
+			assembly.stderr.read_all(buffer, null);
+			
+			var xml = ((string)buffer).strip();
+			if(xml.length < 8)
+				return;
+			
+			rept.xml = new XmlFile.from_string(((string)buffer).strip());
+
+			var bits = rept.xml.eval("//testcase/text()");
+
+			if(bits.size != 0) {
+				Xml.Node* textnode = bits[0];
+				rept.add_text(textnode->get_content(), SYSTEM_ERR_TAG);
+				textnode->unlink();
+			}
+
+			bits = rept.xml.eval("//timer");
+			Xml.Node* timer = bits[0];
+			test.time = double.parse(timer->get_content());
+
+			update_status(test);
+
+			uint8 outbuffer[4096] = {};
+			assembly.stdout.read_all(outbuffer, null);
+			xml = ((string)outbuffer).strip();
+			if(xml.length < 1 || xml == "\n")
+				return;
+
+			rept.add_text(xml, SYSTEM_OUT_TAG);
+		
+			/*
 			InputStream[] inputs = { assembly.stderr, assembly.stdout };
 		
 			foreach(var input in inputs) {
@@ -270,7 +303,7 @@ namespace Valadate {
 					}
 					nextinfo = info.next();
 				}
-				/*
+
 				matches += buffer.length-1;
 				var std_xml = "<%s>%s</%s>";
 				var tag = (input == assembly.stderr) ? SYSTEM_ERR_TAG : SYSTEM_OUT_TAG;
@@ -282,8 +315,8 @@ namespace Valadate {
 						stdout.printf("@@%s@@\n",(string)str);
 					i++;
 					//rept.add_xml(std_xml.printf(tag, xml, tag));
-				}*/
-			}
+				}
+			}*/
 		}
 	}
 }

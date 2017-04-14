@@ -69,6 +69,7 @@ namespace Valadate {
 
 		internal XmlFile.from_doc(Xml.Doc* xmldoc) throws Error {
 			document = xmldoc;
+			owns_doc = true;
 
 			if (document == null)
 				throw new XmlFileError.ERROR(

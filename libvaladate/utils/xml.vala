@@ -26,9 +26,9 @@ namespace Valadate.XmlTags {
 
 	public const string ERROR_TAG = "error";
 	public const string FAILURE_TAG = "failure";
-	public const string VDX_TAG = "vdx:info";
-	public const string VDX_TIMER = "vdx:timer";
-	public const string VDX_NS = "xmlns:vdx=\"https://www.valadate.org/vdx\"";
+	public const string VDX_TAG = "info";//"vdx:info";
+	public const string VDX_TIMER = "timer";//"vdx:timer";
+	public const string VDX_NS = ""; //"xmlns:vdx=\"https://www.valadate.org/vdx\"";
 	public const string SYSTEM_OUT_TAG = "system-out";
 	public const string SYSTEM_ERR_TAG = "system-err";
 
@@ -42,7 +42,7 @@ namespace Valadate.XmlTags {
 
 	public const string TESTSUITES_XML =
 		"""<testsuites disabled="" errors="" failures="" name="" """ +
-		"""tests="" time="" xmlns:vdx="https://www.valadate.org/vdx"></testsuites>""";
+		"""tests="" time=""></testsuites>""";
 
 	public const string TESTSUITE_XML =
 		"""<testsuite disabled="" errors="" failures="" hostname="" id="" """ +
@@ -57,5 +57,16 @@ namespace Valadate.XmlTags {
 	public const string MESSAGE_XML = "<%s message=\"%s\" type=\"%s\">%s</%s>\n";
 
 	public const string ROOT_XML = "<root %s>%s</root>";
+
+
+
+	public const string ROOT_START = "<root " + VDX_NS + ">";
+	public const string ROOT_END = "</root>";
+
+	public const string TESTCASE_START =
+		"<testcase assertions=\"\" classname=\"%s\" name=\"%s\" status=\"\" time=\"\">";
+	public const string TESTCASE_END = "</testcase>";
+
+
 
 }

@@ -30,9 +30,10 @@ namespace Valadate.Tests {
 		 * test_ prefix
 		 */
 		public void test_simple () {
-			stdout.puts("Test of stdout");
-			assert(true);
 			debug("This is a debug message, which will be trapped");
+			stdout.puts("Test of stdout");
+			stderr.puts("Test of stderr");
+			assert(true);
 		}
 
 		/**

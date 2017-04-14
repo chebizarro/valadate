@@ -30,9 +30,9 @@ namespace Valadate {
 		
 		public XmlFile xml {get;set;}
 		
-		private Xml.Doc* doc;
+		//private Xml.Doc* doc;
 		
-		private Xml.Node* root;
+		//private Xml.Node* root;
 		
 		public TestReport(Test test) throws Error {
 			this.test = test;
@@ -42,16 +42,16 @@ namespace Valadate {
 			else if (test is TestAdapter)
 				new_testcase();
 
-			root->set_prop("name",test.label);
-			xml = new XmlFile.from_doc(doc);
-			xml.register_ns("vdx", VDX_NS);
 		}
+
 		
 		private void new_testsuite() {
 			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, TESTSUITE_XML);
-			doc = Xml.Parser.read_memory(decl, decl.length);
-			root = doc->get_root_element()->children;
+			var doc = Xml.Parser.read_memory(decl, decl.length);
+			var root = doc->get_root_element()->children;
 			root->set_prop("tests", test.count.to_string());
+			root->set_prop("name",test.label);
+			xml = new XmlFile.from_doc(doc);
 			
 			if(test.parent != null && test.parent.name != "/")
 				return;
@@ -64,39 +64,45 @@ namespace Valadate {
 				node->set_prop("value", Markup.escape_text(Environment.get_variable(key)));
 				props->add_child(node);
 			}
-			
 		}
 
 		private void new_testcase() {
 			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, TESTCASE_XML);
-			doc = Xml.Parser.read_memory(decl, decl.length);
-			root = doc->get_root_element()->children;
+			var doc = Xml.Parser.read_memory(decl, decl.length);
+			var root = doc->get_root_element()->children;
 			root->set_prop("classname",((TestAdapter)test).parent.name);
 			root->set_prop("status",test.status.to_string().substring(21));
+			root->set_prop("name",test.label);
+			xml = new XmlFile.from_doc(doc);
+			
 		}
 
-		~TestReport() {
-			delete doc;
-		}
-
-		public void add_text(string text) {
+		public void add_text(string text, string tag) {
 			if(test is TestAdapter) {
-				Xml.Node* child = new Xml.Node.pi("system-out", text);
+				Xml.Node* child = new Xml.Node(null, tag);
+				child->set_content(Markup.escape_text(text));
+				Xml.Node* root = xml.eval("//testcase")[0];
 				root->add_child(child);
 			}
 		}
 		
+		/*
 		public void add_xml(string xml) {
-			var newDoc = Xml.Parser.read_memory(xml, xml.length);
+			var decl = XML_DECL + ROOT_XML.printf(VDX_NS, xml);
+			var newDoc = Xml.Parser.read_memory(decl, decl.length);
 			if(newDoc == null)
 				return;
 				
-			var node = newDoc->get_root_element();
-			root->add_child(node->copy_list());
-		}
+			Xml.Node* node = newDoc->get_root_element()->children;
+			//node->unset_ns_prop(node->ns, "xmlns:vdx");
+			//node->ns_def = null; //root->parent->ns_def;
+			//node->set_ns(root->ns);
+			root->add_child(node);
+		}*/
 		
 		public void update_status() {
 			if(test is TestAdapter) {
+				Xml.Node* root = xml.eval("//testcase")[0];
 				root->set_prop("status",test.status.to_string().substring(21));
 				root->set_prop("time",test.time.to_string());
 			}

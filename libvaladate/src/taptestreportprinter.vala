@@ -92,15 +92,15 @@ namespace Valadate {
 				}
 				stdout.puts("  ---\n");
 				stdout.printf("  duration_ms: %f\n", test.time);
-				var messages = report.xml.eval("//failure | //error | //vdx:info");
+				var messages = report.xml.eval("//failure | //error | //info");
 				foreach(Xml.Node* mess in messages) {
 					stdout.printf("  message: >\n    %s\n", mess->get_prop("message"));
 					stdout.printf("  severity: %s\n", mess->name);
 				}
 				stdout.puts("  ...\n");
-				messages = report.xml.eval("//system-out");
+				messages = report.xml.eval("//system-out | //system-err");
 				foreach(Xml.Node* mess in messages)
-					stdout.printf("# %s\n", mess->get_content());
+					stdout.printf("# %s\n", string.joinv("\n# ", mess->get_content().split("\n")));
 				if(lasttest)
 					stdout.printf("# End of %s tests\n", test.parent.label);
 			}
