@@ -1,30 +1,15 @@
 namespace Valadate.Tests {
 
-	public class MockTestCase : TestCase {
-		
-		construct {
-			add_test_method("mocktest", test_test, "mock test");
-		}
-		
-		public void test_test() {
-			assert(true);
-		}
-	}
-
-
 	public static void new_test_result() {
-		string binary = Path.build_filename(Config.VALADATE_TESTS_DIR, "..", "data", ".libs", "testexe-0");
-		var options = new TestOptions({ binary });
+		var options = new TestOptions({ testbinary.get_path() });
 		var conf = new TestConfig(options);
 		var res = new TestResult(conf);
 		
 		assert(res is TestResult);
-	
 	}
 
 	public static void test_result_add_test() {
-		string binary = Path.build_filename(Config.VALADATE_TESTS_DIR, "..", "data", ".libs", "testexe-0");
-		var options = new TestOptions({ binary });
+		var options = new TestOptions({ testbinary.get_path() });
 		var conf = new TestConfig(options);
 		var res = new TestResult(conf);
 		
@@ -32,19 +17,23 @@ namespace Valadate.Tests {
 		res.add_test(test);
 	
 		assert(test.count == 1);
-	
 	}
+	
+	// report
+	// add_error
+	// add_failure
+	// add_success
+	// add_skip
+	// 
 
-	private const string buffer1 = """<failure message="test.vala:43: This is just info" type="G_LOG_LEVEL_INFO">
+	private const string buffer1 = 
+"""<failure message="test.vala:43: This is just info" type="G_LOG_LEVEL_INFO">
 G_LOG_LEVEL_INFO: test.vala:43: This is just info
 </failure>
 This is a stderr message""";
 
-
-
-	public static void test_result_process_buffer() {
-		string binary = Path.build_filename(Config.VALADATE_TESTS_DIR, "..", "data", ".libs", "testexe-0");
-		var options = new TestOptions({ binary });
+	public static void test_result_process_buffers() {
+		var options = new TestOptions({ testbinary.get_path() });
 		var conf = new TestConfig(options);
 		var res = new TestResult(conf);
 		

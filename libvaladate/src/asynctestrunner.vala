@@ -40,13 +40,23 @@ namespace Valadate {
 			result.report();
 		}
 
-		public void run_all(TestPlan plan) {
+		public int run_all(TestPlan plan) throws Error {
 
 			this.plan = plan;
+			
+			if (plan.config.list_only) {
+				list_tests(plan.root, "");
+				return 0;
+			} else if (plan.root.count == 0) {
+				return 0;
+			} else if (!plan.config.in_subprocess) {
+				loop = new MainLoop();
+			}
+
 			run_test_internal(plan.root, plan.result, "");
 
 			if (!plan.config.in_subprocess) {
-				loop = new MainLoop();
+				
 				var time = new TimeoutSource (15);
 				time.set_callback (() => {
 					var res = plan.result.report();
@@ -58,18 +68,27 @@ namespace Valadate {
 				time.attach (loop.get_context ());
 				loop.run();
 			}
-
+			return 0;
+		}
+		
+		private void list_tests(Test test, string path) {
+			foreach(var subtest in test) {
+				string testpath = "%s/%s".printf(path, subtest.name);
+				if(subtest is TestAdapter)
+					stdout.printf("%s\n", testpath);
+				else
+					list_tests(subtest, testpath);
+			}
 		}
 
 		public void run_test(Test test, TestResult result) {
 			test.run(result);
 		}
 
-		private void run_test_internal(Test test, TestResult result, string path) {
+		private void run_test_internal(Test test, TestResult result, string path) throws Error {
 
 			foreach(var subtest in test) {
 
-				string labelpath = "%s/%s".printf(path, subtest.label);
 				string testpath = "%s/%s".printf(path, subtest.name);
 
 				if(subtest is TestCase) {
@@ -79,22 +98,19 @@ namespace Valadate {
 				} else if (subtest is TestSuite) {
 					result.add_test(subtest);
 					run_test_internal(subtest, result, testpath);
-				} else if (plan.config.list_only) {
-					stdout.printf("%s\n", labelpath);
 				} else if (plan.config.in_subprocess &&
 					plan.config.running_test == testpath) {
 					test.run(result);
 				} else {
 					subtest.name = testpath;
 					result.add_test(subtest);
-					run_async.begin(subtest, result,
-						(o,r) => { run_async.end(r); });
+					run_async.begin(subtest, result);
 				}
 			}
 		}
 
-		private async void run_async(Test test, TestResult result) {
-			string buffer = null;
+		private async void run_async(Test test, TestResult result) throws Error {
+			var timeout = plan.config.timeout;
 			var testprog = plan.assembly.clone();
 			if (_n_ongoing_tests > _max_n_ongoing_tests) {
 				var wrapper = new DelegateWrapper();
@@ -105,8 +121,33 @@ namespace Valadate {
 		
 			try {
 				_n_ongoing_tests++;
-				testprog.run_async.begin("-r %s".printf(test.name));
+				
+				var cancellable = new Cancellable ();
+				var tcase = test as TestAdapter;
+				timeout = plan.config.timeout;
+				if(timeout != tcase.timeout)
+					timeout = tcase.timeout;
+					
+				var time = new TimeoutSource (timeout);
+				
+				cancellable.cancelled.connect (() => {
+					testprog.quit();
+				});
+
+				time.set_callback (() => {
+					if (tcase.status == TestStatus.RUNNING ||
+						tcase.status == TestStatus.NOT_RUN) {
+						cancellable.cancel();
+					}
+					return false;
+				});
+				time.attach (loop.get_context());
+
+				yield testprog.run_async("-r %s".printf(test.name), cancellable);
 				result.add_success(test);
+				result.process_buffers(test, testprog);
+			} catch (IOError e) {
+				result.add_error(test, "The test timed out after %d milliseconds".printf(timeout));
 				result.process_buffers(test, testprog);
 			} catch (Error e) {
 				result.add_error(test, e.message);

@@ -52,7 +52,7 @@ TESTS_CPPFLAGS = \
 
 TESTS_CFLAGS = \
 	-Wall \
-	-I$(top_srcdir)/libvaladate/inlcude
+	-I$(top_srcdir)/libvaladate/include
 
 # ---- AM FLAGS ----
 

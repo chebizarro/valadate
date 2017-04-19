@@ -42,8 +42,7 @@ namespace Valadate {
 			options = other.options;
 		}
 		
-		private void setup_dirs() {
-
+		private void setup_dirs() throws Error {
 			var buildstr = Environment.get_variable("G_TEST_BUILDDIR");
 
 			if(buildstr == null) {
@@ -65,14 +64,13 @@ namespace Valadate {
 					var makefile = builddir.get_child("Makefile");
 					if(makefile.query_exists()) {
 						var reader = new DataInputStream(makefile.read());
-						while(true) {
-							var line = reader.read_line();
-							if(line == null) {
-								break;
-							} else if(line.has_prefix("VPATH = ")) {
-								srcstr = line.split(" = ")[1];
+						var line = reader.read_line();
+						while(line!= null) {
+							if(line.has_prefix("VPATH = ")) {
+								srcstr = Path.build_path(Path.DIR_SEPARATOR_S, builddir.get_path(), line.split(" = ")[1]);
 								break;
 							}
+							line = reader.read_line();
 						}
 					}
 				}
@@ -87,6 +85,9 @@ namespace Valadate {
 
 			if(mesondir.query_exists())
 				srcdir = mesondir;
+				
+			Environment.set_variable("G_TEST_BUILDDIR", builddir.get_path(), true);
+			Environment.set_variable("G_TEST_SRCDIR", srcdir.get_path(), true);
 
 		}
 	

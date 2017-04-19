@@ -141,7 +141,7 @@ namespace Valadate.Utils.Tests {
             assert(changer.count == 1);
         }
 
-        public void todo_test_wait_cancellable_async_fail() {
+        public void _test_wait_cancellable_async_fail() {
             assert(!wait_for_cancellable_async(20,
                         (c, cb) => changer.cancellable_inc_async.begin(c, cb),
                         res => changer.cancellable_inc_async.end(res)));

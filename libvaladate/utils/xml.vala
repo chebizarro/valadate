@@ -24,9 +24,10 @@ namespace Valadate.XmlTags {
 	
 	public const string XML_DECL ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
+	public const string SKIP_TAG = "skipped";
 	public const string ERROR_TAG = "error";
 	public const string FAILURE_TAG = "failure";
-	public const string VDX_TAG = "info";//"vdx:info";
+	public const string INFO_TAG = "info";//"vdx:info";
 	public const string VDX_TIMER = "timer";//"vdx:timer";
 	public const string VDX_NS = ""; //"xmlns:vdx=\"https://www.valadate.org/vdx\"";
 	public const string SYSTEM_OUT_TAG = "system-out";

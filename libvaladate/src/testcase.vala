@@ -94,8 +94,8 @@ namespace Valadate {
 			_tests.append(test);
 		}
 
-		public void add_test_method(string testname, owned TestMethod test, string? label = null) {
-			var adapter = new TestAdapter (testname);
+		public void add_test_method(string testname, owned TestMethod test, int timeout, string? label = null) {
+			var adapter = new TestAdapter (testname, timeout);
 			adapter.add_test_method((owned)test);
 			adapter.label = label;
 			adapter.parent = this;
@@ -125,25 +125,6 @@ namespace Valadate {
 
 		public void fail(string? message = null) {
 			current_result.add_failure(current_test, message);
-		}
-
-		//public extern void assert(bool expr);
-
-		protected void assertion_message_expr(
-			string? domain, string file, int line, string func, string? expr) {
-			string s;
-			if(expr == null)
-				s = "code should not be reached";
-			else
-				s = "assertion failed: (%s)".printf(expr);
-			assertion_message(domain, file, line, func, s);
-		}
-
-		protected void assertion_message(
-			string? domain, string file, int line, string func, string message) {
-			var mess = "FAIL: %s:%d: %s".printf(Path.get_basename(file),line,message);
-
-			current_result.add_failure(current_test, mess);
 		}
 
 		public virtual void set_up() {}

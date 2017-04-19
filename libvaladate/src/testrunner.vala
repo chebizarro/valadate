@@ -45,9 +45,9 @@ namespace Valadate {
 			return Object.new(runner_type) as TestRunner;
 		}
 
-		public abstract void run_all(TestPlan plan);
+		public abstract int run_all(TestPlan plan) throws Error;
 
-		public abstract void run(Test test, TestResult result);
+		public abstract void run(Test test, TestResult result) throws Error;
 
 	}
 }

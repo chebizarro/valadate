@@ -30,8 +30,10 @@ namespace Valadate {
 		
 		public TapTestReportPrinter(TestConfig config) throws Error {
 			base(config);
-			stdout.printf("TAP version %s\n", TAP_VERSION);
-			stdout.printf("# random seed: %s\n", config.seed);
+			if(!config.list_only) {
+				stdout.printf("TAP version %s\n", TAP_VERSION);
+				stdout.printf("# random seed: %s\n", config.seed);
+			}
 		}
 		
 		public override void print(TestReport report) {
@@ -73,14 +75,14 @@ namespace Valadate {
 						stdout.printf("ok %d - %s\n", index, test.label);
 						break;
 					case TestStatus.SKIPPED:
-						stdout.printf("ok %d - %s # SKIP %s \n", index, test.label, test.status_message ?? "");
+						stdout.printf("ok %d - %s # SKIP %s \n", index, test.label, test.status_message ?? "Skipping");
 						break;
 					case TestStatus.TODO:
 						var errs = report.xml.eval("//failure | //error");
 						if(errs.size > 0)
-							stdout.printf("not ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "");
+							stdout.printf("not ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "Todo");
 						else
-							stdout.printf("ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "");
+							stdout.printf("ok %d - %s # TODO %s \n", index, test.label, test.status_message ?? "Todo");
 						break;
 					case TestStatus.FAILED:
 					case TestStatus.ERROR:
@@ -104,7 +106,6 @@ namespace Valadate {
 				if(lasttest)
 					stdout.printf("# End of %s tests\n", test.parent.label);
 			}
-			base.print(report);
 		}
 	}
 }

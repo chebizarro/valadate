@@ -24,7 +24,7 @@ namespace Valadate {
 
 	public class SerialTestRunner : Object, TestRunner {
 
-		public void run_all(TestPlan plan) {
+		public int run_all(TestPlan plan) {
 			Environment.set_variable("G_MESSAGES_DEBUG", "all", true);
 
 			if(!plan.config.keep_going) {
@@ -34,6 +34,7 @@ namespace Valadate {
 
 			plan.root.run(plan.result);
 			plan.result.report();
+			return 0;
 		}
 
 		public void run(Test test, TestResult result) {

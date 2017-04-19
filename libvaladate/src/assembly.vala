@@ -49,7 +49,7 @@ namespace Valadate {
 		public OutputStream stdin {get;set;}
 		public InputStream stdout {get;set;}
 
-		private HashTable<string, string> env = new HashTable<string, string>(str_hash, str_equal);
+		private Subprocess process;
 
 		public Assembly(File binary) throws Error {
 			init_launcher();
@@ -62,21 +62,35 @@ namespace Valadate {
 
 		public abstract Assembly clone() throws Error;
 
-		public virtual Assembly run(string? command = null) throws Error {
+		public virtual Assembly run(string? command = null, Cancellable? cancellable = null) throws Error {
 			string[] args;
 			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
-			var process = launcher.spawnv(args);
+			process = launcher.spawnv(args);
 			stdout = new DataInputStream (process.get_stdout_pipe());
 			stderr = new DataInputStream (process.get_stderr_pipe());
 			stdin = new DataOutputStream (process.get_stdin_pipe());
-			process.wait_check();
+			process.wait_check(cancellable);
+				//cancellable.set_error_if_cancelled();
+				//throw new IOError.FAILED("The process exited abnormally");
+
 			return this;
 		}
 
-		public virtual async Assembly run_async(string? command = null) throws Error {
-			run(command);
-			yield;
+		public virtual async Assembly run_async(string? command = null, Cancellable? cancellable = null) throws Error {
+			string[] args;
+			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
+			process = launcher.spawnv(args);
+			stdout = new DataInputStream (process.get_stdout_pipe());
+			stderr = new DataInputStream (process.get_stderr_pipe());
+			stdin = new DataOutputStream (process.get_stdin_pipe());
+			yield process.wait_check_async(cancellable);
+			cancellable.set_error_if_cancelled();
 			return this;
 		}
+		
+		public virtual void quit() {
+			if(process != null)
+				process.force_exit();
+		} 
 	}
 }

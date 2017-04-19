@@ -22,12 +22,15 @@
  
 namespace Valadate {
 
+	using Valadate.Utils;
 
-	private class TestAdapter : Object, Test {
+	public class TestAdapter : Object, Test {
 
 		public string name {get;set;}
 		public string label {get;set;}
 		public double time {get;set;}
+		
+		public int timeout {get;set;}
 
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 		public string status_message {get;set;}
@@ -40,26 +43,43 @@ namespace Valadate {
 
 		public int size {
 			get {
-				return 1;
+				return count;
 			}
 		}
 
 		private TestCase.TestMethod test;
 		public Test? parent {get;set;}
 
-
 		public new Test get(int index) {
 			return this;
 		}
 
-		public TestAdapter(string name) {
+		public TestAdapter(string name, int timeout) {
 			this.name = name;
+			this.timeout = timeout;
 		}
 
 		public void add_test(owned TestPlan.TestMethod testmethod) {
 			this.test = () => {
 				try {
 					testmethod(parent as TestCase);
+				} catch (Error e) {
+					throw e;
+				}
+			};
+		}
+
+		public void add_async_test (
+			TestPlan.AsyncTestMethod async_begin,
+			TestPlan.AsyncTestMethodResult async_finish)
+		{
+			var p = parent as TestCase;
+			this.test = () => {
+				try {
+					wait_for_async(
+						timeout,
+						(cb) => { async_begin(p, cb);},
+						(res) => { async_finish(p, res);});
 				} catch (Error e) {
 					throw e;
 				}

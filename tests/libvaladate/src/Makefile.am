@@ -16,10 +16,21 @@ test_programs = tests_libvaladate
 
 tests_libvaladate_SOURCES =  \
 	main.vala \
+	mocks.vala \
 	assembly.vala \
 	asynctestrunner.vala \
+	girtestplan.vala \
+	gnutestreportprinter.vala \
+	taptestresultprinter.vala \
+	testadapter.vala \
+	testassembly.vala \
+	testcase.vala \
 	testplan.vala \
-	testresult.vala
+	testreport.vala \
+	testresult.vala \
+	testsuite.vala \
+	vapitestplan.vala \
+	xmltestreportprinter.vala
 	
 tests_libvaladate_VALAFLAGS = \
 	$(TESTS_VALAFLAGS)

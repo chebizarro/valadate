@@ -4,11 +4,10 @@ namespace Valadate {
 		try {
 			var assembly = new TestAssembly(args);
 			var testplan = TestPlan.new(assembly);
-			testplan.run();
+			
+			return testplan.run();
 		} catch (Error e) {
 			error(e.message);
 		}
-		
-		return 0;
 	}
 }

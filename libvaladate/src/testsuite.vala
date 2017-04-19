@@ -72,7 +72,6 @@ namespace Valadate {
 		}
 
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-		public string status_message {get;set;}
 		public double time {get;set;}
 
 		public int skipped {get;set;}

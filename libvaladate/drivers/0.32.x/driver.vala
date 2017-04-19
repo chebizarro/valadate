@@ -28,18 +28,19 @@ namespace Valadate.Drivers {
 		private VapiTestPlan plan;
 		private File file;
 		
-		public void load_test_plan(File file, VapiTestPlan plan) {
-			this.file = file;
+		public void load_test_plan(VapiTestPlan plan) {
 			setup_context();
-			
-			context.add_source_file (new Vala.SourceFile (context, Vala.SourceFileType.PACKAGE, file.get_path()));
+			context.add_source_file (new Vala.SourceFile (
+				context, Vala.SourceFileType.PACKAGE, plan.plan.get_path()));
 			var parser = new Vala.Parser ();
 			parser.parse (context);
 			var visitor = new TestVisitor(plan);
 			context.accept(visitor);
+			/*
 			plan.config = visitor.get_config();
 			plan.result = visitor.get_result();
 			plan.runner = visitor.get_runner();
+			*/
 		}
 
 		private void setup_context() {
@@ -115,6 +116,7 @@ namespace Valadate.Drivers {
 				else if (is_subtype_of(cls, "Valadate.TestSuite"))			
 					testsuite.add_test(visit_testsuite(cls));
 
+				/*
 				else if (is_subtype_of(cls, "Valadate.TestRunner"))			
 					_runner += get_class_type(cls);
 
@@ -123,6 +125,7 @@ namespace Valadate.Drivers {
 
 				else if (is_subtype_of(cls, "Valadate.TestResult"))			
 					_result += get_class_type(cls);
+				*/
 
 			} catch (Error e) {
 				error(e.message);
@@ -154,13 +157,20 @@ namespace Valadate.Drivers {
 			testcase_test.name = testclass.name;
 			
 			foreach(var method in testclass.get_methods()) {
-				if( method.name.has_prefix("test_") &&
-					method.has_result != true &&
-					method.get_parameters().size == 0) {
 
-					if (plan.options.running_test != null &&
-						plan.options.running_test != "/" + method.get_full_name().replace(".","/"))
-						continue;
+				if (plan.options.running_test != null &&
+					plan.options.running_test != "/" + method.get_full_name().replace(".","/"))
+					continue;
+
+				if(!is_test(method))
+					continue;
+
+				var adapter = new TestAdapter(method.name, plan.config.timeout);
+
+				annotate_label(adapter);
+				annotate(adapter, method);
+
+				
 
 					unowned TestPlan.TestMethod testmethod = null;
 					var attr = new Vala.CCodeAttribute(method);
@@ -170,8 +180,62 @@ namespace Valadate.Drivers {
 						//testcase_test.add_test_method(testmethod);
 					}
 				}
-			}
 			return testcase_test;
+		}
+
+		private void annotate_label(Test test) {
+			if(test.name.has_prefix("test_")) {
+				test.label = test.name.substring(5);
+			} else if(test.name.has_prefix("_test_")) {
+				test.label = test.name.substring(6);
+				test.status = TestStatus.SKIPPED;
+			} else if(test.name.has_prefix("todo_test_")) {
+				test.label = test.name.substring(10);
+				test.status = TestStatus.TODO;
+			} else {
+				test.label = test.name;
+			}
+			test.label = test.label.replace("_", " ");
+		}
+
+		private void annotate(TestAdapter adapter, Vala.Method method) {
+
+			foreach(var attr in method.attributes) {
+				if(attr.name == "Test") {
+					if(attr.has_argument("name"))
+						adapter.label = attr.get_string("name");
+					if(attr.has_argument("skip")) {
+						adapter.status = TestStatus.SKIPPED;
+						adapter.status_message = attr.get_string("skip");
+					} else	if(attr.has_argument("todo")) {
+						adapter.status = TestStatus.SKIPPED;
+						adapter.status_message = attr.get_string("todo");
+					}
+				}
+			}
+
+		}
+
+		private bool is_test(Vala.Method method) {
+			bool istest = false;
+			string name = method.name;
+			
+			if(	name.has_prefix("test_") ||
+				name.has_prefix("_test_") ||
+				name.has_prefix("todo_test_"))
+				istest = true;
+
+			foreach(var attr in method.attributes)
+				if(attr.name == "Test")
+					istest = true;
+
+			if(method.has_result)
+				istest = false;
+			
+			if(method.get_parameters().size > 0)
+				istest = false;
+				
+			return istest;
 		}
 
 		public TestSuite visit_testsuite(Vala.Class testclass)  {

@@ -92,7 +92,7 @@ namespace Valadate {
 
 		public abstract TestSuite root {get;protected set;}
 
-		public abstract void run();
+		public abstract int run() throws Error;
 		
 	}
 

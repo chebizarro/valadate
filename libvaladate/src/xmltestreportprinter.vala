@@ -1,56 +1,74 @@
 /*
- * Valadate - Unit testing library for GObject-based libraries.
- * Copyright (C) 2016  Chris Daley <chebizarro@gmail.com>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
-
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ * Valadate -- 
+ * Copyright 2017 Chris Daley <bizarro@localhost.localdomain>
  * 
- * Authors:
- * 	Chris Daley <chebizarro@gmail.com>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * 
  */
- 
-namespace Valadate {
 
+namespace Valadate {
+	
 	public class XmlTestReportPrinter : TestReportPrinter {
 		
-		private List<TestCase> testcases = new List<TestCase>();
+		private const string XML_DECL ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		private const string TESTSUITES_XML =
+			"""<testsuites disabled="" errors="" failures="" name="" """ +
+			"""tests="" time=""></testsuites>""";
 		
-		public XmlTestReportPrinter(TestConfig config) {
+		public XmlFile xml {get;set;}
+
+		public XmlTestReportPrinter(TestConfig config) throws Error {
 			base(config);
+			this.config = config;
+			xml = new XmlFile.from_string(XML_DECL + TESTSUITES_XML);
 		}
 		
 		private Xml.Node* testsuite;
+		private Xml.Node* oldtestsuite;
+		private int testcount = -1;
+		private int casecount = -1;
 		
 		public override void print(TestReport report) {
-			Xml.Node* root = xml.eval("/");
-			Xml.Node* newnode = report.xml.eval("/");
-			var node = newnode->copy_list();
+			Xml.Node* root = xml.eval("//testsuites")[0];
+			Xml.Node* node = report.xml.eval("//testsuite | //testcase")[0];
 
-			if(report.test is TestCase || report.test is TestSuite) {
+			if(report.test is TestSuite) {
 				if(testsuite == null) {
-					root->add_child(node);
-					testsuite = node;
+					testcount = report.test.count;
+					testsuite = root->add_child(node->copy_list());
 				} else {
-					testsuite->add_child(node);
+					oldtestsuite = testsuite;
+					testsuite = testsuite->add_child(node->copy_list());
 				}
+			} else if (report.test is TestCase) {
+				oldtestsuite = testsuite;
+				testsuite = testsuite->add_child(node->copy_list());
+				casecount = report.test.count;
 			} else if(report.test is TestAdapter) {
-				
-				testsuite->add_child(node);
+				testsuite->add_child(node->copy_list());
+				testcount--;
+				casecount--;
+				if(casecount == 0)
+					testsuite = oldtestsuite;
 			}
 			
-			root->doc->save_file("testoutput.xml");
-			
+			if(testcount == 0)
+				root->doc->dump_format(stdout);
 		}
+		
 	}
 }

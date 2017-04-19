@@ -54,10 +54,6 @@ namespace Valadate {
 		 * The #TestStatus of the test
 		 */
 		public abstract TestStatus status {get;set;default=TestStatus.NOT_RUN;}
-		/**
-		 * The status message of the test
-		 */
-		public abstract string status_message {get;set;}
 
 		public abstract double time {get;set;}
 

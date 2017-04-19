@@ -31,7 +31,7 @@ namespace Valadate.Tests {
 		}
 
 		[Test (name="Test Async with Timeout", timeout="200")]
-		public async void _test_async_with_timeout()
+		public async void test_async_with_timeout()
 			throws GLib.Error {
 
 			var dir = File.new_for_path (GLib.Environment.get_current_dir());

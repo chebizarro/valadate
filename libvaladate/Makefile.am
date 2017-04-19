@@ -26,7 +26,7 @@ libvaladate_2_0_la_VALAFLAGS = \
 	--library libvaladate \
 	--vapi vapi/libvaladate-2.0.vapi \
 	-H include/libvaladate.h \
-	--gir=Valadate-2.0.gir \
+	--gir Valadate-2.0.gir \
 	-g
 
 libvaladate_2_0_la_LDFLAGS = \
@@ -129,7 +129,7 @@ Valadate-2.0.typelib: Valadate-2.0.gir
 		$<
 
 girdir = $(datadir)/gir-1.0
-gir_DATA = $(srcdir)/Valadate-2.0.gir
+gir_DATA = Valadate-2.0.gir
 
 typelibdir = $(libdir)/girepository-1.0
 typelib_DATA = Valadate-2.0.typelib
@@ -138,8 +138,8 @@ CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 # install gdb scripts
-gdbdir = $(datadir)/valadate/gdb
-dist_gdb_SCRIPTS = src/valadate_gdb.py
+#gdbdir = $(datadir)/valadate/gdb
+#dist_gdb_SCRIPTS = src/valadate_gdb.py
 
 src/libvaladate-gdb.py: src/libvaladate-gdb.py.in
 	$(AM_V_GEN) $(SED) -e "s|\@datadir\@|$(datadir)|" $(srcdir)/src/libvaladate-gdb.py.in > $(builddir)/src/libvaladate-gdb.py
@@ -164,6 +164,6 @@ MAINTAINERCLEANFILES = \
 	include/valadate.h
 
 
-.NOTPARALLEL: noinst_LTLIBRARIES
+.NOTPARALLEL: lib_LTLIBRARIES typelib_DATA
 
 -include $(top_srcdir)/git.mk

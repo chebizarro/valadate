@@ -20,54 +20,30 @@
  * 
  */
 
-using Valadate.XmlTags;
-
 namespace Valadate {
 	
 	public abstract class TestReportPrinter {
-		
-		public XmlFile xml {get;set;}
 
-		public TestConfig config {get;set;}
+		public static TestReportPrinter @new(TestConfig config) throws Error {
+			switch(config.format) {
+				case "tap" :
+					return new TapTestReportPrinter(config);
+				case "xml" :
+					return new XmlTestReportPrinter(config);
+				case "gnu" :
+					return new GnuTestReportPrinter(config);
+				default:
+					throw new ConfigError.TEST_PRINTER("TestReportPrinter %s does not exist", config.format);
+			}
+		}
+		
+		public TestConfig config {get; set;}
 		
 		public TestReportPrinter(TestConfig config) throws Error {
 			this.config = config;
-			xml = new XmlFile.from_string(XML_DECL + TESTSUITES_XML);
 		}
-		
-		private Xml.Node* testsuite;
-		private Xml.Node* oldtestsuite;
-		private int testcount = -1;
-		private int casecount = -1;
-		
-		public virtual void print(TestReport report) {
-			Xml.Node* root = xml.eval("//testsuites")[0];
-			Xml.Node* node = report.xml.eval("//testsuite | //testcase")[0];
-
-			if(report.test is TestSuite) {
-				if(testsuite == null) {
-					testcount = report.test.count;
-					testsuite = root->add_child(node->copy_list());
-				} else {
-					oldtestsuite = testsuite;
-					testsuite = testsuite->add_child(node->copy_list());
-				}
-			} else if (report.test is TestCase) {
-				oldtestsuite = testsuite;
-				testsuite = testsuite->add_child(node->copy_list());
-				casecount = report.test.count;
-			} else if(report.test is TestAdapter) {
-				testsuite->add_child(node->copy_list());
-				testcount--;
-				casecount--;
-				if(casecount == 0)
-					testsuite = oldtestsuite;
-			}
-			
-			var logname = Environment.get_variable("TEST_LOGS");
-			if(logname != null && testcount == 0)
-				root->doc->save_format_file(logname.strip() + ".xml", 1);
-		}
+	
+		public abstract void print(TestReport report);
 		
 	}
 }

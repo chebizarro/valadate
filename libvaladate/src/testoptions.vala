@@ -23,35 +23,37 @@ namespace Valadate {
 
 	public class TestOptions {
 
-		private static string _seed;
-		private static string _testplan;
-		private static string _runtest;
-		private static string _format = "tap";
 		private static bool _async = true;
 		private static bool _tap;
-		private static bool _list;
+		private static string _format = "tap";
 		private static bool _keepgoing = false;
+		private static bool _list;
 		private static bool _quiet;
+		private static string _runtest;
+		[CCode (array_length = false, array_null_terminated = true)]
+		private static string[] _skip;
+		private static int _timeout = 100000;
+		private static string _seed;
 		private static bool _timed = true;
+		private static string _testplan;
 		private static bool _verbose;
 		private static bool _version;
 		[CCode (array_length = false, array_null_terminated = true)]
 		private static string[] _paths;
-		[CCode (array_length = false, array_null_terminated = true)]
-		private static string[] _skip;
 
 		public const OptionEntry[] options = {
-			{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
-			{ "format", 'f', 0, OptionArg.STRING, ref _format, "Output test results using format", "FORMAT" },
-			{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
-			{ "list", 'l', 0, OptionArg.NONE, ref _list, "List test cases available in a test executable", null },
 			{ "async", 'a', 0, OptionArg.NONE, ref _async, "Run tests asynchronously in a separate subprocess [Experimental]", null },
+			{ "format", 'f', 0, OptionArg.STRING, ref _format, "Output test results using format", "FORMAT" },
 			{ "", 'k', 0, OptionArg.NONE, ref _keepgoing, "Skip failed tests and continue running", null },
-			{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref _skip, "Skip all tests matching", "TESTPATH..." },
+			{ "list", 'l', 0, OptionArg.NONE, ref _list, "List test cases available in a test executable", null },
 			{ "quiet", 'q', 0, OptionArg.NONE, ref _quiet, "Run tests quietly", null },
-			{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },
-			{ "testplan", 0, 0, OptionArg.STRING, ref _testplan, "Run the specified TestPlan", "FILE" },
 			{ "", 'r', 0, OptionArg.STRING, ref _runtest, null, null },
+			{ "skip", 's', 0, OptionArg.STRING_ARRAY, ref _skip, "Skip all tests matching", "TESTPATH..." },
+			{ "timeout", 't', 0, OptionArg.INT, ref _timeout, "Default timeout for tests", "MILLISECONDS" },
+			{ "seed", 0, 0, OptionArg.STRING, ref _seed, "Start tests with random seed", "SEEDSTRING" },
+			{ "timed", 0, 0, OptionArg.NONE, ref _timed, "Run timed tests", null },			{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
+			{ "tap", 0, 0, OptionArg.NONE, ref _tap, "Output test results using TAP format" },
+			{ "testplan", 0, 0, OptionArg.STRING, ref _testplan, "Run the specified TestPlan", "FILE" },
 			{ "verbose", 0, 0, OptionArg.NONE, ref _verbose, "Run tests verbosely", null },
 			{ "version", 0, 0, OptionArg.NONE, ref _version, "Display version number", null },
 			{ "", 0, 0, OptionArg.STRING_ARRAY, ref _paths, "Only start test cases matching", "TESTPATH..." },
@@ -62,6 +64,12 @@ namespace Valadate {
 
 		public static string? get_current_test_path() {
 			return _runtest;
+		}
+
+		public string format {
+			get {
+				return _format;
+			}
 		}
 
 		public string seed {
@@ -91,6 +99,12 @@ namespace Valadate {
 		public bool keepgoing {
 			get {
 				return _keepgoing;
+			}
+		}
+
+		public int timeout {
+			get {
+				return _timeout;
 			}
 		}
 

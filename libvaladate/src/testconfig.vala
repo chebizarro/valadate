@@ -24,12 +24,19 @@ namespace Valadate {
 	public errordomain ConfigError {
 		MODULE,
 		TESTPLAN,
-		METHOD
+		METHOD,
+		TEST_PRINTER
 	}
 
 	public class TestConfig : Object {
 
 		public TestOptions options {get;construct set;}
+
+		public virtual string format {
+			get {
+				return options.format;
+			}
+		}
 
 		public virtual string seed {
 			get {
@@ -64,6 +71,12 @@ namespace Valadate {
 		public virtual bool keep_going {
 			get {
 				return options.keepgoing;
+			}
+		}
+
+		public virtual int timeout {
+			get {
+				return options.timeout;
 			}
 		}
 

@@ -238,6 +238,7 @@ AC_CONFIG_FILES([
 	tests/libvaladate/data/Makefile
 	tests/libvaladate/src/Makefile
 	tests/libvaladate/utils/Makefile
+	tests/libvaladate/gdb/Makefile
 	tests/PIE/Makefile
 	tests/abstract-tests/Makefile
 	vapi/Makefile

@@ -47,7 +47,7 @@ namespace Valadate {
 		}
 		
 		
-		public abstract void load_test_plan(File file, VapiTestPlan plan);
+		public abstract void load_test_plan(VapiTestPlan plan);
 		
 	}
 

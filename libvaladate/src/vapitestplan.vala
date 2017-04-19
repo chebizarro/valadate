@@ -40,7 +40,7 @@ namespace Valadate {
 
 		construct {
 			try {
-				options = ((TestAssembly)assembly).options;
+				options = assembly.options;
 				testsuite = root = new TestSuite("/");
 				load();
 			} catch (Error e) {
@@ -48,13 +48,13 @@ namespace Valadate {
 			}
 		}
 
-		private void load() throws ConfigError {
+		private void load() throws Error {
 			var version = get_version();
 			driver = VapiDriver.new(version);
-			driver.load_test_plan(plan, this);
+			driver.load_test_plan(this);
 		}
 
-		private string get_version() {
+		private string get_version() throws Error {
 			var dis = new DataInputStream(plan.read());
 			var line = dis.read_line().split(" ");
 			if(line[4] == "valac") {
@@ -66,8 +66,8 @@ namespace Valadate {
 			return "";
 		}
 
-		public void run() {
-			runner.run_all(this);
+		public int run() throws Error {
+			return runner.run_all(this);
 		}
 		
 	}

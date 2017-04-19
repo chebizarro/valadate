@@ -20,8 +20,6 @@
  * 	Chris Daley <chebizarro@gmail.com>
  */
 
-using Valadate.XmlTags;
-
 namespace Valadate {
 
 	public class GirTestPlan : Object, TestPlan {
@@ -52,7 +50,7 @@ namespace Valadate {
 			}
 		}
 
-		private void load() throws ConfigError {
+		private void load() throws Error {
 			setup_context();
 			visit_config();
 			result = new TestResult(config);
@@ -60,7 +58,7 @@ namespace Valadate {
 			visit_root();
 		}
 
-		private void setup_context() throws ConfigError {
+		private void setup_context() throws Error {
 			try {
 				xmlfile = new XmlFile(plan);
 				xmlfile.register_ns("xmlns", "http://www.gtk.org/introspection/core/1.0");
@@ -71,21 +69,21 @@ namespace Valadate {
 			}
 		}
 
-		private void visit_config() {
+		private void visit_config() throws Error {
 			Type ctype = find_type("//xmlns:class[@parent='ValadateTestConfig']");
 			if(ctype == Type.INVALID)
 				ctype = typeof(TestConfig);
 			config = Object.new(ctype, "options", options, null) as TestConfig;
 		}
 
-		private void visit_test_runner() {
+		private void visit_test_runner() throws Error {
 			Type ctype = find_type("//xmlns:class[@implements='ValadateTestRunner']");
 			if(ctype != Type.INVALID)
 				TestRunner.register_default(ctype);
 			runner = TestRunner.new(config);
 		}
 
-		private Type find_type(string xpath) {
+		private Type find_type(string xpath) throws Error {
 			var res = xmlfile.eval(xpath);
 			Type ctype = Type.INVALID;
 			if(res.size == 1) {
@@ -97,7 +95,7 @@ namespace Valadate {
 			return ctype;
 		}
 
-		private void visit_root() {
+		private void visit_root() throws Error {
 			var ns = xmlfile.eval("//xmlns:namespace");
 			
 			foreach (Xml.Node* node in ns) {
@@ -113,7 +111,7 @@ namespace Valadate {
 			}
 		}
 		
-		private void visit_testsuite(Xml.Node* suitenode) {
+		private void visit_testsuite(Xml.Node* suitenode) throws Error {
 			var expression = "%s/xmlns:class".printf(suitenode->get_path());
 			var res = xmlfile.eval (expression);
 
@@ -146,32 +144,65 @@ namespace Valadate {
 			}
 		}
 		
-		private void visit_class(Type classtype) {
+		private void visit_class(Type classtype) throws Error {
 
 			if(classtype == typeof(TestCase))
 				return;
 
-			var expression = "//xmlns:class[@glib:type-name='%s']/xmlns:method";
-			var res = xmlfile.eval(expression.printf(classtype.name()));
+			var expression = "//xmlns:class[@glib:type-name='%s']".printf(classtype.name()) +
+			"""/xmlns:method[xmlns:return-value/xmlns:type/@name='none' and """+
+			"""(starts-with(@name, 'test_') or starts-with(@name, '_test_') or """+
+			"""starts-with(@name, 'todo_test_') or starts-with(xmlns:attribute/@name, 'test.') """+
+			"""or starts-with(xmlns:annotation/@key, 'test.')) and (count(xmlns:parameters/xmlns:parameter)=0)""" +
+			"""or (xmlns:parameters/xmlns:parameter/xmlns:type/@name='Gio.AsyncReadyCallback')]""";
+
+			var res = xmlfile.eval(expression);
 			
 			foreach (Xml.Node* method in res) {
-
 				string name = method->get_prop("name");
-				if( config.in_subprocess &&
-					name != options.running_test.split("/")[3])
-					continue;
-				if(!is_test(method))
-					continue;
 
-				var adapter = new TestAdapter(name);
+				if(config.in_subprocess) {
+					var opts = options.running_test.split("/");
+					if (name != opts[opts.length-1])
+						continue;
+				}
+
+				var adapter = new TestAdapter(name, config.timeout);
 				annotate_label(adapter);
 				annotate(adapter, method->children);
 
 				if(config.in_subprocess && adapter.status != TestStatus.SKIPPED) {
-					var method_cname = method->get_prop("identifier");
-					TestPlan.TestMethod testmethod = (TestPlan.TestMethod)assembly.get_method(method_cname);
-					if(testmethod != null)
-						adapter.add_test((owned)testmethod);
+
+					if(is_async(adapter, method->children)) {
+						var testname = adapter.name;
+						if(testname.has_suffix("_async"))
+							testname = testname.substring(0,testname.length-6);
+						
+						var end = xmlfile.eval(
+							"//xmlns:method[@name='%s_finish']".printf(testname));
+							
+						if(end.size != 1)
+							continue;
+						
+						Xml.Node* endnode = end[0];
+						var begin_cname = method->get_prop("identifier");
+						var end_cname = endnode->get_prop("identifier");
+						
+						unowned TestPlan.AsyncTestMethod beginmethod = 
+							(TestPlan.AsyncTestMethod)assembly.get_method(begin_cname);
+						unowned TestPlan.AsyncTestMethodResult testmethod = 
+							(TestPlan.AsyncTestMethodResult)assembly.get_method(end_cname);
+						adapter.add_async_test(beginmethod, testmethod);
+
+					} else {
+					
+						var method_cname = method->get_prop("identifier");
+						TestPlan.TestMethod testmethod =
+							(TestPlan.TestMethod)assembly.get_method(method_cname);
+						if(testmethod != null)
+							adapter.add_test((owned)testmethod);
+					}
+
 				} else {
 					adapter.add_test_method(()=> {assert_not_reached();});
 				}
@@ -208,8 +239,9 @@ namespace Valadate {
 					if(attname == "test.skip") {
 						adapter.status = TestStatus.SKIPPED;
 						adapter.status_message = node->get_prop("value");
-					}
-					if(attname == "test.todo") {
+					} else if(attname == "test.timeout") {
+						adapter.timeout = int.parse(node->get_prop("value"));
+					} else if(attname == "test.todo") {
 						adapter.status = TestStatus.TODO;
 						adapter.status_message = node->get_prop("value");
 					}
@@ -217,40 +249,24 @@ namespace Valadate {
 				node = node->next;
 			}
 		}
-		/**
-		 * Tests if the Xml.Node* points to a TestMethod
-		 */
-		private bool is_test(Xml.Node* node) {
-			bool istest = false;
-			string name = node->get_prop("name");
-			
-			if(	name.has_prefix("test_") ||
-				name.has_prefix("_test_") ||
-				name.has_prefix("todo_test_"))
-				istest = true;
-			
-			var child = node->children;
-			while(child != null) {
-				if(child->name == "annotation" || child->name == "attribute") {
-					var attname = child->get_prop("name") ?? child->get_prop("key");
-					if(attname.has_prefix("test."))
-						istest = true;
-				}
-				if(child->name == "return-value") {
-					var retchild = child->children;
-					while(retchild->name != "type") { retchild = retchild->next; };
-					if(retchild->get_prop("name") != "none")
-						istest = false;
-				}
-				if(child->name == "parameters")
-					istest = false;
-				child = child->next;
-			}
-			return istest;
-		}
 		
-		public void run() {
-			runner.run_all(this);
+		private bool is_async(TestAdapter adapter, Xml.Node* node) {
+			while(node != null) {
+				if(node->name == "parameters" || node->name == "parameter")
+					node = node->children;
+				else if(node->name == "type")
+					if(node->get_prop("name") == "Gio.AsyncReadyCallback")
+						return true;
+					else
+						node = node->next;
+				else
+					node = node->next;
+			}
+			return false;
+		} 
+
+		public int run() throws Error {
+			return runner.run_all(this);
 		}
 		
 	}
