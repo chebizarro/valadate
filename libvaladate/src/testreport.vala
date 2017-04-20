@@ -274,6 +274,12 @@ namespace Valadate {
 				textnode->unlink();
 			}
 
+			var errs = xml.eval("//failure | //error");
+			if (errs.size > 0 &&
+				test.status != TestStatus.SKIPPED &&
+				test.status != TestStatus.TODO)
+				test.status = TestStatus.FAILED;
+
 			bits = xml.eval("//timer");
 			Xml.Node* timer = bits[0];
 			test.time = double.parse(timer->get_content());

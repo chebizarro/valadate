@@ -76,10 +76,24 @@ namespace Valadate {
 			var p = parent as TestCase;
 			this.test = () => {
 				try {
-					wait_for_async(
-						timeout,
-						(cb) => { async_begin(p, cb);},
-						(res) => { async_finish(p, res);});
+					AsyncResult? result = null;
+					var loop = new MainLoop();
+					var thread = new Thread<void*>.try(name, () => {
+						async_begin(p, (o, r) => { result = r; loop.quit();});
+						return null;
+					});
+					Timeout.add(timeout, () => {
+						loop.quit();
+						return false;
+					},
+					Priority.HIGH);
+					loop.run();
+					
+					if(result == null)
+						throw new IOError.TIMED_OUT(
+							"The test timed out after %d milliseconds",timeout);
+					
+					async_finish(p, result);
 				} catch (Error e) {
 					throw e;
 				}

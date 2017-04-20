@@ -50,11 +50,11 @@ namespace Valadate {
 				
 				printer.print(rpt);
 				reports.pop_head();
-				return report();
+				report();
 			}
 			return true;
 		}
-		
+
 		private void update_status(Test test) {
 			var rept = tests.get(test);
 			if(rept == null)

@@ -31,15 +31,51 @@ namespace Valadate {
 
 		private GLib.Module module;
 		
+		private string[] dependencies = {};
+		
+		private delegate void GtkInit([CCode (array_length_pos = 0.9)] ref unowned string[]? argv);
+		
 		public TestAssembly(string[] args) throws Error {
 			base(File.new_for_path(args[0]));
 			options = new TestOptions(args);
 			setup_dirs();
+			//list_deps();
 		}
 		
 		private TestAssembly.copy(TestAssembly other) throws Error {
 			base(other.binary);
 			options = other.options;
+		}
+		
+		private void list_deps() throws Error {
+			var objdump = new SystemProgram("objdump");
+			var grep = new SystemProgram("grep");
+			var awk = new SystemProgram("awk");
+			objdump.run("-p %s".printf(binary.get_path()));
+			grep.pipe("NEEDED ", objdump.stdout);
+			awk.pipe("-F'               ' '{print $2}' ", grep.stdout);
+			var awkout = awk.stdout as DataInputStream;
+			while(true) {
+				var dep = awkout.read_line();
+				if(dep != null) {
+					dependencies += dep;
+					if(dep.has_prefix("libgtk-3.")) {
+						//string[]? args = { binary.get_path() };
+						//unowned string[]? vargs = args;
+						//gtk_init(ref vargs);
+						GLib.stdout.printf("%s\n", GLib.Module.build_path(null, "gtk-3"));
+					}
+				} else {
+					break;
+				}
+			}
+			GLib.stdout.printf("%s\n", GLib.Module.build_path(null, "gtk-3"));
+			Module module = Module.open ("libgtk-3.so.0", ModuleFlags.BIND_LAZY);
+			void* init;
+			assert(module != null);
+			assert(module.symbol("gtk_init", out init));
+			assert(init != null);
+			//GLib.stdout.printf("# %s\n", string.joinv(":", dependencies));
 		}
 		
 		private void setup_dirs() throws Error {

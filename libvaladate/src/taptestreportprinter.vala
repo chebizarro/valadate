@@ -105,6 +105,7 @@ namespace Valadate {
 					stdout.printf("# %s\n", string.joinv("\n# ", mess->get_content().split("\n")));
 				if(lasttest)
 					stdout.printf("# End of %s tests\n", test.parent.label);
+				stdout.flush();
 			}
 		}
 	}

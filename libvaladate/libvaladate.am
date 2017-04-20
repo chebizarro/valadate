@@ -8,6 +8,7 @@ libvaladate_sources = \
 	src/gnutestreportprinter.vala \
 	src/pluginmodule.vala \
 	src/serialtestrunner.vala \
+	src/systemprogram.vala \
 	src/testreportprinter.vala \
 	src/taptestreportprinter.vala \
 	src/xmltestreportprinter.vala \

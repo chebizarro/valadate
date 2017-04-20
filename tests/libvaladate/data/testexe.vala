@@ -60,10 +60,6 @@ namespace Valadate.Tests {
 		public void annotated_test_with_name () {
 			message("This is a message, which will be trapped");
 			
-			for(int i=0; i<100000000; i++) {
-				int c = (int)(Math.PI%i);
-			}
-			
 			assert_true(true);
 		}
 
@@ -71,9 +67,14 @@ namespace Valadate.Tests {
 		 * The [Test (timeout=xxx)] annotation allows you to set the
 		 * timeout for a test.
 		 */
-		[Test (name="Asynchronous Test", timeout=100)]
+		[Test (name="Asynchronous Test", timeout="1000")]
 		public async void test_async () throws ThreadError {
 			debug("Async Test called");
+
+			for(int i=0; i<1000000000; i++) {
+				int c = (int)(Math.PI%i);
+			}
+			
 			assert_true(true);
 		}
 

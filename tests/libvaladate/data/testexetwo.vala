@@ -30,11 +30,11 @@ namespace Valadate.Tests {
 			assert_true(true);
 		}
 
-		[Test (name="Test Async with Timeout", timeout="200")]
+		[Test (name="Test Async with Timeout", timeout="100")]
 		public async void test_async_with_timeout()
 			throws GLib.Error {
 
-			var dir = File.new_for_path (GLib.Environment.get_current_dir());
+			var dir = File.new_for_path (GLib.Environment.get_variable("G_TEST_SRCDIR"));
 			var e = yield dir.enumerate_children_async(
 				FileAttribute.STANDARD_NAME, 0, Priority.DEFAULT, null);
 			bool found = false; 

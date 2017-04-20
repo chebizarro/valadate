@@ -30,7 +30,7 @@ namespace Valadate {
 
 	public abstract class Assembly {
 	
-		private static SubprocessLauncher launcher;
+		protected static SubprocessLauncher launcher;
 		
 		private static void init_launcher() {
 			if (launcher == null) {
@@ -49,7 +49,7 @@ namespace Valadate {
 		public OutputStream stdin {get;set;}
 		public InputStream stdout {get;set;}
 
-		private Subprocess process;
+		protected Subprocess process;
 
 		public Assembly(File binary) throws Error {
 			init_launcher();
@@ -70,9 +70,7 @@ namespace Valadate {
 			stderr = new DataInputStream (process.get_stderr_pipe());
 			stdin = new DataOutputStream (process.get_stdin_pipe());
 			process.wait_check(cancellable);
-				//cancellable.set_error_if_cancelled();
-				//throw new IOError.FAILED("The process exited abnormally");
-
+			cancellable.set_error_if_cancelled();
 			return this;
 		}
 
@@ -91,6 +89,8 @@ namespace Valadate {
 		public virtual void quit() {
 			if(process != null)
 				process.force_exit();
-		} 
+		}
+		
+		public Type type;
 	}
 }

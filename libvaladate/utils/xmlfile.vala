@@ -79,7 +79,9 @@ namespace Valadate {
 		}
 
 		public XmlFile.from_string(string xml) throws Error {
-			document = Xml.Parser.read_memory(xml, xml.length);
+			document = Xml.Parser.read_memory(xml, xml.length, null, null,
+				Xml.ParserOption.RECOVER | Xml.ParserOption.NOERROR |
+				Xml.ParserOption.NOWARNING | Xml.ParserOption.NOBLANKS);
 			owns_doc = true;
 
 			if (document == null)

@@ -41,9 +41,8 @@ namespace Valadate {
 		}
 
 		public int run_all(TestPlan plan) throws Error {
-
 			this.plan = plan;
-			
+		
 			if (plan.config.list_only) {
 				list_tests(plan.root, "");
 				return 0;
@@ -51,22 +50,20 @@ namespace Valadate {
 				return 0;
 			} else if (!plan.config.in_subprocess) {
 				loop = new MainLoop();
-			}
-
-			run_test_internal(plan.root, plan.result, "");
-
-			if (!plan.config.in_subprocess) {
-				
-				var time = new TimeoutSource (15);
-				time.set_callback (() => {
-					var res = plan.result.report();
-					if(!res)
-						loop.quit();
-					return res;
-					
-				});
-				time.attach (loop.get_context ());
+				Timeout.add(
+					5,
+					() => {
+						bool res = plan.result.report();
+						if(!res)
+							loop.quit();
+						return res;
+						
+					},
+					Priority.HIGH_IDLE);
+				run_test_internal(plan.root, plan.result, "");
 				loop.run();
+			} else {
+				run_test_internal(plan.root, plan.result, "");
 			}
 			return 0;
 		}
@@ -92,7 +89,7 @@ namespace Valadate {
 				string testpath = "%s/%s".printf(path, subtest.name);
 
 				if(subtest is TestCase) {
-					if(!plan.config.in_subprocess && !plan.config.list_only)
+					if(!plan.config.in_subprocess)
 						result.add_test(subtest);
 					run_test_internal(subtest, result, testpath);
 				} else if (subtest is TestSuite) {
@@ -121,7 +118,6 @@ namespace Valadate {
 		
 			try {
 				_n_ongoing_tests++;
-				
 				var cancellable = new Cancellable ();
 				var tcase = test as TestAdapter;
 				timeout = plan.config.timeout;
@@ -135,15 +131,13 @@ namespace Valadate {
 				});
 
 				time.set_callback (() => {
-					if (tcase.status == TestStatus.RUNNING ||
-						tcase.status == TestStatus.NOT_RUN) {
+					if (tcase.status == TestStatus.RUNNING)
 						cancellable.cancel();
-					}
 					return false;
 				});
 				time.attach (loop.get_context());
 
-				yield testprog.run_async("-r %s".printf(test.name), cancellable);
+				testprog.run("-r %s".printf(test.name), cancellable);
 				result.add_success(test);
 				result.process_buffers(test, testprog);
 			} catch (IOError e) {
@@ -153,12 +147,12 @@ namespace Valadate {
 				result.add_error(test, e.message);
 				result.process_buffers(test, testprog);
 			} finally {
+				result.report();
 				_n_ongoing_tests--;
 				var wrapper = _pending_tests.pop_head ();
 				if(wrapper != null)
 					wrapper.cb();
 			}
 		}
-
 	}
 }

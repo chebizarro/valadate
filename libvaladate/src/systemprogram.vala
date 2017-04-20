@@ -22,8 +22,33 @@
  
 namespace Valadate {
 
-	public abstract class Program : Assembly {
+	public class SystemProgram : Assembly {
+
+		private string name;
 	
+		public SystemProgram(string name) throws Error {
+			base(File.new_for_path(Environment.find_program_in_path(name)));
+			this.name = name;
+		}
+
+		public override Assembly clone() {
+			return new SystemProgram(name);
+		}
+
+		public virtual Assembly pipe(string? command = null, InputStream input, Cancellable? cancellable = null) throws Error {
+			string[] args;
+			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
+			process = launcher.spawnv(args);
+			stdout = new DataInputStream (process.get_stdout_pipe());
+			stderr = new DataInputStream (process.get_stderr_pipe());
+			stdin = new DataOutputStream (process.get_stdin_pipe());
+			stdin.splice(input, OutputStreamSpliceFlags.CLOSE_TARGET);
+			process.wait_check(cancellable);
+			cancellable.set_error_if_cancelled();
+			return this;
+		}
+
+
 
 	}
 }

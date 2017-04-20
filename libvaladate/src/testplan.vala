@@ -28,7 +28,7 @@ namespace Valadate {
 		public delegate void TestMethod(TestCase self) throws Error;
 
 		public delegate void AsyncTestMethod(TestCase self, AsyncReadyCallback cb);
-		public delegate void AsyncTestMethodResult(TestCase self, AsyncResult res);
+		public delegate void AsyncTestMethodResult(TestCase self, AsyncResult res) throws Error;
 
 
 		private static HashTable<string, Type> plan_types;

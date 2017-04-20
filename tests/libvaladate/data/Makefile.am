@@ -11,10 +11,12 @@ testexe_0_SOURCES =  \
 	
 testexe_0_VALAFLAGS = \
 	$(TESTS_VALAFLAGS) \
+	--vapi-comments \
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
 	--library testexe-0 \
-	--symbols testexe-0.test
+	--symbols testexe-0.test \
+	--dump-tree testexe-0.tree
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
