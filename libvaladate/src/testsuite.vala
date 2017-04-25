@@ -25,17 +25,14 @@ namespace Valadate {
 	public class TestSuite : Object, Test {
 
 		private List<Test> _tests = new List<Test>();
-		
 		/**
 		 * the name of the TestSuite
 		 */
 		public string name { get; set; }
-
 		/**
 		 * the label of the TestSuite
 		 */
 		public string label { get; set; }
-
 		/**
 		 * Iterator (not the actual number of Tests that will be run)
 		 */
@@ -44,7 +41,6 @@ namespace Valadate {
 				return (int)_tests.length();
 			}
 		}
-
 		/**
 		 * Returns the number of {@link Valadate.Test}s that will be run by 
 		 * this TestSuite
@@ -58,9 +54,7 @@ namespace Valadate {
 				return testcount;
 			}
 		}
-
 		public Test? parent {get;set;}
-
 		/**
 		 * Returns a {@link GLib.List} of {@link Valadate.Test}s that will be
 		 * run by this TestSuite
@@ -70,14 +64,11 @@ namespace Valadate {
 				return _tests;
 			}
 		}
-
 		public TestStatus status {get;set;default=TestStatus.NOT_RUN;}
 		public double time {get;set;}
-
 		public int skipped {get;set;}
 		public int errors {get;set;}
 		public int failures {get;set;}
-
 		/**
 		 * The public constructor takes an optional string parameter for the
 		 * TestSuite's name
@@ -86,7 +77,6 @@ namespace Valadate {
 			this.name = name ?? this.get_type().name();
 			this.label = name;
 		}
-
 		/**
 		 * Adds a test to the suite.
 		 */
@@ -94,7 +84,6 @@ namespace Valadate {
 			test.parent = this;
 			_tests.append(test);
 		}
-
 		/**
 		 * Runs all of the tests in the Suite
 		 */
@@ -104,11 +93,8 @@ namespace Valadate {
 				return;
 
 			_tests.foreach((t) => {
-
 				t.run(result);
-
 			});
-				
 		}
 
 		public new Test get(int index) {
@@ -124,6 +110,5 @@ namespace Valadate {
 
 		public virtual void set_up() {}
 		public virtual void tear_down() {}
-		
 	}
 }

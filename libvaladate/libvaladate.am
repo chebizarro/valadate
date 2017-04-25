@@ -6,12 +6,11 @@ libvaladate_sources = \
 	src/girtestplan.vala \
 	src/gtestadapter.vala \
 	src/gnutestreportprinter.vala \
-	src/pluginmodule.vala \
+	src/module.vala \
 	src/serialtestrunner.vala \
 	src/systemprogram.vala \
 	src/testreportprinter.vala \
 	src/taptestreportprinter.vala \
-	src/xmltestreportprinter.vala \
 	src/test.vala \
 	src/testadapter.vala \
 	src/testassembly.vala \
@@ -28,6 +27,7 @@ libvaladate_sources = \
 	src/testsuite.vala \
 	src/texttestplan.vala \
 	src/vapitestplan.vala \
+	src/xmltestreportprinter.vala \
 	utils/xmlfile.vala \
 	utils/wait.vala \
 	utils/signalwaiter.vala

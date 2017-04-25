@@ -14,7 +14,7 @@ testgenie_0_VALAFLAGS = \
 	--vapidir $(top_srcdir)/libvaladate \
 	--vapidir $(top_srcdir)/vapi \
 	--gir testgenie-0.gir \
-	--library testgenie
+	--library testgenie-0
 
 testgenie_0_LDADD = \
 	$(TESTS_LIBS) \

@@ -30,6 +30,7 @@ namespace Valadate {
 		public delegate void AsyncTestMethod(TestCase self, AsyncReadyCallback cb);
 		public delegate void AsyncTestMethodResult(TestCase self, AsyncResult res) throws Error;
 
+		public delegate Type GetType(); 
 
 		private static HashTable<string, Type> plan_types;
 		
@@ -39,42 +40,29 @@ namespace Valadate {
 
 			plan_types = new HashTable<string, Type>(str_hash, str_equal);
 			plan_types.insert("gir", typeof(GirTestPlan));
-			//plan_types.insert("vapi", typeof(VapiTestPlan));
+			plan_types.insert("vapi", typeof(VapiTestPlan));
 
 		}
 
 		public static TestPlan @new(TestAssembly assembly) throws ConfigError {
-
 			initialise();
 
-			string plan_name = Path.get_basename(assembly.binary.get_path());
+			var plan_name = Path.get_basename(assembly.binary.get_path());
 			if(plan_name.has_prefix("lt-"))
 				plan_name = plan_name.substring(3);
-				
-				
-			File plan_file = assembly.srcdir;
 
+			var plan_file = assembly.srcdir;
 			foreach(var key in plan_types.get_keys()) {
-				
-				
 				plan_file = assembly.srcdir.get_child(plan_name + "." + key);
-	 			
 	 			if(plan_file.query_exists()) {
-
 					return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
-
 				} else {
-
 					plan_file = assembly.builddir.get_child(plan_name + "." + key);
-
 					if(plan_file.query_exists()) {
-
 						return Object.new(plan_types[key], "assembly", assembly, "plan", plan_file) as TestPlan;
-
 					}
 				}
 			}
-			
 			throw new ConfigError.TESTPLAN("Test Plan %s Not Found in %s or %s", plan_name, assembly.srcdir.get_path(), assembly.builddir.get_path());
 		}
 		
@@ -93,7 +81,5 @@ namespace Valadate {
 		public abstract TestSuite root {get;protected set;}
 
 		public abstract int run() throws Error;
-		
 	}
-
 }

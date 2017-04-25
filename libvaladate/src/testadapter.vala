@@ -61,11 +61,7 @@ namespace Valadate {
 
 		public void add_test(owned TestPlan.TestMethod testmethod) {
 			this.test = () => {
-				try {
-					testmethod(parent as TestCase);
-				} catch (Error e) {
-					throw e;
-				}
+				testmethod(parent as TestCase);
 			};
 		}
 
@@ -75,28 +71,22 @@ namespace Valadate {
 		{
 			var p = parent as TestCase;
 			this.test = () => {
-				try {
-					AsyncResult? result = null;
-					var loop = new MainLoop();
-					var thread = new Thread<void*>.try(name, () => {
-						async_begin(p, (o, r) => { result = r; loop.quit();});
-						return null;
-					});
-					Timeout.add(timeout, () => {
-						loop.quit();
-						return false;
-					},
-					Priority.HIGH);
-					loop.run();
-					
-					if(result == null)
-						throw new IOError.TIMED_OUT(
-							"The test timed out after %d milliseconds",timeout);
-					
-					async_finish(p, result);
-				} catch (Error e) {
-					throw e;
-				}
+				AsyncResult? result = null;
+				var loop = new MainLoop();
+				var thread = new Thread<void*>.try(name, () => {
+					async_begin(p, (o, r) => { result = r; loop.quit();});
+					return null;
+				});
+				Timeout.add(timeout, () => {
+					loop.quit();
+					return false;
+				},
+				Priority.HIGH);
+				loop.run();
+				if(result == null)
+					throw new IOError.TIMED_OUT(
+						"The test timed out after %d milliseconds",timeout);
+				async_finish(p, result);
 			};
 		}
 

@@ -75,8 +75,7 @@ namespace Valadate {
 			}
 			parent.status = status;
 			update_status(parent);
-		}
-		
+		}	
 
 		public void add_test(Test test) {
 			try {
@@ -106,7 +105,6 @@ namespace Valadate {
 			tests.get(test).add_skip(message);
 			update_status(test);
 		}
-
 
 		public void process_buffers(Test test, Assembly assembly) throws Error {
 			

@@ -3,8 +3,11 @@ namespace Valadate.Tests {
 	public static void new_gir_test_plan() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
-		
-		var tplan = TestPlan.new(assembly); 
+
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 		
 		assert(tplan is TestPlan);
 		assert(tplan is GirTestPlan);
@@ -14,7 +17,10 @@ namespace Valadate.Tests {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root[0].size == 4);
 	}
@@ -23,7 +29,10 @@ namespace Valadate.Tests {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root[0][0].name == "TestsTestExe");
 		assert(tplan.root[0][0].count == 6);
@@ -33,7 +42,10 @@ namespace Valadate.Tests {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root[0][3].name == "TestsTestExeAbstractImpl");
 		assert(tplan.root[0][3].count == 4);
@@ -43,7 +55,10 @@ namespace Valadate.Tests {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root[0][1].name == "TestsTestExeSubClass");
 		assert(tplan.root[0][1].count == 7);
@@ -53,7 +68,10 @@ namespace Valadate.Tests {
 
 		var assembly = new TestAssembly({ testbinary.get_path() });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
+
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root[0][2].name == "TestsTestExeTwo");
 		assert(tplan.root[0][2].size == 3);
@@ -67,9 +85,10 @@ namespace Valadate.Tests {
 		
 		var assembly = new TestAssembly({ testbinary.get_path(), "-r", testpath });
 		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.gir");
 
-		debug("%d",tplan.root.count);
+		var tplan = Object.new(typeof(GirTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
 		assert(tplan.root.count == 1);
 		assert(tplan.root[0][0].size == 1);

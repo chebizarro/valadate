@@ -29,10 +29,10 @@ namespace Valadate {
 		private static bool _keepgoing = false;
 		private static bool _list;
 		private static bool _quiet;
-		private static string _runtest;
+		private static string _runtest = null;
 		[CCode (array_length = false, array_null_terminated = true)]
 		private static string[] _skip;
-		private static int _timeout = 100000;
+		private static int _timeout = 60000;
 		private static string _seed;
 		private static bool _timed = true;
 		private static string _testplan;
@@ -115,6 +115,8 @@ namespace Valadate {
 		}
 
 		public TestOptions(string[] args) throws OptionError {
+			_runtest = null;
+
 			opt_context = new OptionContext ("- Valadate Testing Framework");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);

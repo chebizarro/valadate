@@ -51,7 +51,7 @@ namespace Valadate {
 			} else if (!plan.config.in_subprocess) {
 				loop = new MainLoop();
 				Timeout.add(
-					5,
+					10,
 					() => {
 						bool res = plan.result.report();
 						if(!res)
@@ -86,7 +86,7 @@ namespace Valadate {
 
 			foreach(var subtest in test) {
 
-				string testpath = "%s/%s".printf(path, subtest.name);
+				var testpath = "%s/%s".printf(path, subtest.name);
 
 				if(subtest is TestCase) {
 					if(!plan.config.in_subprocess)
@@ -95,10 +95,10 @@ namespace Valadate {
 				} else if (subtest is TestSuite) {
 					result.add_test(subtest);
 					run_test_internal(subtest, result, testpath);
-				} else if (plan.config.in_subprocess &&
-					plan.config.running_test == testpath) {
-					test.run(result);
-				} else {
+				} else if (plan.config.in_subprocess) {
+					if(plan.config.running_test == testpath)
+						test.run(result);
+				} else if (subtest is TestAdapter) {
 					subtest.name = testpath;
 					result.add_test(subtest);
 					run_async.begin(subtest, result);
@@ -106,7 +106,8 @@ namespace Valadate {
 			}
 		}
 
-		private async void run_async(Test test, TestResult result) throws Error {
+		private async void run_async(Test test, TestResult result) throws Error
+			requires(plan.config.in_subprocess != true) {
 			var timeout = plan.config.timeout;
 			var testprog = plan.assembly.clone();
 			if (_n_ongoing_tests > _max_n_ongoing_tests) {
@@ -120,7 +121,6 @@ namespace Valadate {
 				_n_ongoing_tests++;
 				var cancellable = new Cancellable ();
 				var tcase = test as TestAdapter;
-				timeout = plan.config.timeout;
 				if(timeout != tcase.timeout)
 					timeout = tcase.timeout;
 					

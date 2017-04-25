@@ -3,7 +3,7 @@ TEST_RUNNER = $(top_builddir)/libvaladate/libvaladate-cli-2.0.la
 
 if ENABLE_DEVMODE
 valadate_conf = \
-	-DVALADATE_DRIVER_DIR=\""$(top_builddir)/libvaladate/drivers"\" \
+	-DVALADATE_DRIVER_DIR=\""$(abs_top_builddir)/libvaladate/drivers"\" \
 	-DVALADATE_LIB_DIR=\""$(top_builddir)/libvaladate"\" \
 	-DVALADATE_TESTS_DIR=\""$(top_builddir)/tests"\"
 else

@@ -32,13 +32,18 @@ namespace Valadate {
 		public TestSuite root {get;protected set;}
 		public File plan {get;construct set;}
 
-		internal delegate Type GetType(); 
-
 		private TestSuite testsuite;
 		private TestCase testcase;
 		private string currpath;
 		
 		private XmlFile xmlfile; 
+
+		private const string expression_body =
+		"""/xmlns:method[xmlns:return-value/xmlns:type/@name='none' and """+
+		"""(starts-with(@name, 'test_') or starts-with(@name, '_test_') or """+
+		"""starts-with(@name, 'todo_test_') or starts-with(xmlns:attribute/@name, 'test.') """+
+		"""or starts-with(xmlns:annotation/@key, 'test.')) and (count(xmlns:parameters/xmlns:parameter)=0)""" +
+		"""or (xmlns:parameters/xmlns:parameter/xmlns:type/@name='Gio.AsyncReadyCallback')]""";
 
 		construct {
 			try {
@@ -89,7 +94,7 @@ namespace Valadate {
 			if(res.size == 1) {
 				Xml.Node* node = res[0];
 				string node_type_str = node->get_prop("get-type");
-				unowned GetType node_get_type = (GetType)assembly.get_method(node_type_str);
+				unowned TestPlan.GetType node_get_type = (TestPlan.GetType)assembly.get_method(node_type_str);
 				ctype = node_get_type();
 			}
 			return ctype;
@@ -100,7 +105,7 @@ namespace Valadate {
 			
 			foreach (Xml.Node* node in ns) {
 				var tsname = node->get_prop("prefix");
-				if(options.running_test != null)
+				if(config.in_subprocess)
 					if(tsname != options.running_test.split("/")[1])
 						continue;
 				currpath = "/" + tsname;
@@ -117,7 +122,7 @@ namespace Valadate {
 
 			foreach (Xml.Node* node in res) {
 				string node_type_str = node->get_prop("get-type");
-				unowned GetType node_get_type = (GetType)assembly.get_method(node_type_str);
+				unowned TestPlan.GetType node_get_type = (TestPlan.GetType)assembly.get_method(node_type_str);
 				var node_type = node_get_type();
 
 				if(!node_type.is_a(typeof(Valadate.Test)) || node_type.is_abstract())
@@ -138,24 +143,20 @@ namespace Valadate {
 					testsuite = test as TestSuite;
 				} else if (node_type.is_a(typeof(TestCase))) {
 					testcase = test as TestCase;
-					visit_class(node_type);
+					visit_testcase(node_type);
 				}
 				currpath = oldpath;
 			}
 		}
 		
-		private void visit_class(Type classtype) throws Error {
+		private void visit_testcase(Type classtype) throws Error {
 
 			if(classtype == typeof(TestCase))
 				return;
 
 			var expression = "//xmlns:class[@glib:type-name='%s']".printf(classtype.name()) +
-			"""/xmlns:method[xmlns:return-value/xmlns:type/@name='none' and """+
-			"""(starts-with(@name, 'test_') or starts-with(@name, '_test_') or """+
-			"""starts-with(@name, 'todo_test_') or starts-with(xmlns:attribute/@name, 'test.') """+
-			"""or starts-with(xmlns:annotation/@key, 'test.')) and (count(xmlns:parameters/xmlns:parameter)=0)""" +
-			"""or (xmlns:parameters/xmlns:parameter/xmlns:type/@name='Gio.AsyncReadyCallback')]""";
-
+				expression_body;
+				
 			var res = xmlfile.eval(expression);
 			
 			foreach (Xml.Node* method in res) {
@@ -209,7 +210,7 @@ namespace Valadate {
 				adapter.label = "%s/%s".printf(currpath, adapter.label);
 				testcase.add_test(adapter);
 			}
-			visit_class(classtype.parent());
+			visit_testcase(classtype.parent());
 		}
 
 		private void annotate_label(Test test) {

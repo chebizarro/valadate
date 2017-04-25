@@ -3,8 +3,10 @@ namespace Valadate.Tests {
 	public static void new_vapi_test_plan() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 		
-		var tplan = TestPlan.new(assembly); 
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 		
 		assert(tplan is TestPlan);
 		assert(tplan is VapiTestPlan);
@@ -13,76 +15,76 @@ namespace Valadate.Tests {
 	public static void vapi_test_plan_no_of_testsuites() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 		
-		var tplan = TestPlan.new(assembly); 
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
-		var conf = tplan.config;
-		
-		assert(tplan.root[0].size == 4);
+		assert(tplan.root is TestSuite);
+		assert(tplan.root[0][0].size == 4);
 	}
 
 	public static void vapi_test_plan_no_of_tests() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 		
-		var tplan = TestPlan.new(assembly); 
-
-		var conf = tplan.config;
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 		
-		assert(tplan.root[0][0].name == "TestsTestExe");
-		//debug("%d", tplan.root[0][0].count);
-		//assert(tplan.root[0][0].count == 6);
+		assert(tplan.root[0][0][0].name == "TestExe");
+		assert(tplan.root[0][0][0].count == 6);
 	}
 
 	public static void vapi_test_plan_tests_abstract() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
-		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 
-		var conf = tplan.config;
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 		
-		assert(tplan.root[0][3].name == "TestsTestExeAbstractImpl");
-		assert(tplan.root[0][3].count == 4);
+		assert(tplan.root[0][0][1].name == "TestExeAbstractImpl");
+		assert(tplan.root[0][0][1].count == 4);
 	}
 
 	public static void vapi_test_plan_no_of_inherited_tests() {
 		
 		var assembly = new TestAssembly({ testbinary.get_path() });
-		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 
-		var conf = tplan.config;
-		
-		assert(tplan.root[0][1].name == "TestsTestExeSubClass");
-		//assert(tplan.root[0][1].count == 6);
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
+
+		assert(tplan.root[0][0][2].name == "TestExeSubClass");
+		assert(tplan.root[0][0][2].count == 7);
 	}
 
 	public static void vapi_test_plan_tests_with_label() {
 
 		var assembly = new TestAssembly({ testbinary.get_path() });
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 		
-		var tplan = TestPlan.new(assembly); 
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
 
-		var conf = tplan.config;
-		
-		assert(tplan.root[0][2].name == "TestsTestExeTwo");
-		//assert(tplan.root[0][2].count == 2);
-		assert(tplan.root[0][2][0].label == "/Valadate/TestsTestExeTwo/Test One");
-		assert(tplan.root[0][2][1].label == "/Valadate/TestsTestExeTwo/Test Two");
+		assert(tplan.root[0][0][3].name == "TestExeTwo");
+		assert(tplan.root[0][0][3].count == 3);
+		assert(tplan.root[0][0][3][1].label == "/Valadate/Tests/TestExeTwo/Test One");
+		assert(tplan.root[0][0][3][2].label == "/Valadate/Tests/TestExeTwo/Test Two");
 	}
 
 	public static void vapi_test_plan_run_single_test() {
 		
-		var testpath = "/Valadate/TestsTestExe/test_simple";
-		
+		var testpath = "/Valadate/Tests/TestExe/test_simple";
 		var assembly = new TestAssembly({ testbinary.get_path(), "-r", testpath });
-		
-		var tplan = TestPlan.new(assembly); 
+		var plan_file = 
+			File.new_for_path(Environment.get_variable("G_TEST_SRCDIR")).get_child("testexe-0.vapi");
 
-		var conf = tplan.config;
+		var tplan = Object.new(typeof(VapiTestPlan), "assembly", assembly, "plan", plan_file) as TestPlan;
+
+		assert(tplan.root.count == 1);
 		
-		//assert(tplan.root[0][0].count == 1);
-		//assert(tplan.root[0][1].count == 0);
+		//tplan.run();
 	}
 }

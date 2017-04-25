@@ -36,6 +36,13 @@ namespace Valadate {
 		private TestCase testcase;
 		private string currpath;
 		
+		private string[] content;
+		private Type runner_type = typeof(AsyncTestRunner);
+		private Type config_type = typeof(TestConfig);
+		
+		private HashTable<string, Type> typemap =
+			new HashTable<string, Type>(str_hash, str_equal);
+		
 		construct {
 			try {
 				options = assembly.options;
@@ -46,8 +53,31 @@ namespace Valadate {
 			}
 		}
 
-		private void load() throws ConfigError {
+		private void load() throws Error {
+			uint8[] cont;
+			plan.load_contents(null, out cont, null);
+			content = ((string)cont).split("\n");
+			visit_classes();
+		}
+		
+		private void visit_classes() throws Error {
+			foreach(var line in content) {
+				if(line.has_suffix("_get_type")) {
+					unowned TestPlan.GetType node_get_type =
+						(TestPlan.GetType)assembly.get_method(line);
+					var node_type = node_get_type();
+					if(node_type.is_a(typeof(TestCase)))
+						visit_testcase(node_type, line.substring(0, line.length-9));
+					else if(node_type.is_a(typeof(TestRunner)))
+						runner_type = node_type;
+					else if(node_type.is_a(typeof(TestConfig)))
+						config_type = node_type;
+				}
+			}
+		}
 
+		private void visit_testcase(Type type, string name) {
+			
 		}
 
 		public int run() throws Error {

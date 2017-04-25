@@ -13,7 +13,7 @@ libvaladate_2_0_la_SOURCES = \
 libvaladate_2_0_la_CFLAGS = \
 	$(COVERAGE_CFLAGS) \
 	$(VALADATE_CFLAGS) \
-	-DVALADATE_DRIVER_DIR=\""$(VALADATE_DRIVER_DIR)"\" \
+	$(valadate_conf) \
 	-g \
 	-Og
 	
@@ -39,10 +39,10 @@ libvaladate_2_0_la_LIBADD = \
 	$(VALADATE_LIBS)
 
 # includes
-libvaladate_1_0includedir = \
+libvaladate_2_0includedir = \
 	$(includedir)/valadate
 
-libvaladate_1_0include_HEADERS = \
+libvaladate_2_0include_HEADERS = \
 	include/libvaladate.h
 
 # The cli library which bootstraps cl tests

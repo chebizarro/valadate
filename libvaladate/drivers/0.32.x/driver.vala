@@ -25,22 +25,20 @@ namespace Valadate.Drivers {
 	public class Driver : Object, VapiDriver {
 		
 		private Vala.CodeContext context;
-		private VapiTestPlan plan;
-		private File file;
 		
-		public void load_test_plan(VapiTestPlan plan) {
+		public Driver() {
 			setup_context();
+		}
+
+		public void load_test_plan(VapiTestPlan plan) throws Error {
 			context.add_source_file (new Vala.SourceFile (
 				context, Vala.SourceFileType.PACKAGE, plan.plan.get_path()));
 			var parser = new Vala.Parser ();
 			parser.parse (context);
-			var visitor = new TestVisitor(plan);
+			var gatherer = new ClassGatherer(plan.assembly);
+			context.accept(gatherer);
+			var visitor = new TestVisitor(plan, gatherer);
 			context.accept(visitor);
-			/*
-			plan.config = visitor.get_config();
-			plan.result = visitor.get_result();
-			plan.runner = visitor.get_runner();
-			*/
 		}
 
 		private void setup_context() {
@@ -51,49 +49,82 @@ namespace Valadate.Drivers {
 			context.verbose_mode = false;
 		}
 
-		
 	}
 
 	
+	public class ClassGatherer : Vala.CodeVisitor {
+		
+		public HashTable<Type, Vala.Class> classes = 
+			new HashTable<Type, Vala.Class>(direct_hash, direct_equal);
+		
+		public Type config = typeof(TestConfig);
+		public Type runner = typeof(AsyncTestRunner);
+	
+		private TestAssembly assembly;
+	
+		public ClassGatherer(TestAssembly assembly) {
+			this.assembly = assembly;
+		}
+	
+		public override void visit_namespace(Vala.Namespace ns) {
+			ns.accept_children(this);
+		}
+		
+		public override void visit_class(Vala.Class cls) {
+			try {
+				var classtype = find_type(cls);
+				if (classtype.is_a(typeof(TestConfig)) && !classtype.is_abstract())
+					config = classtype;
+				else if (classtype.is_a(typeof(TestRunner)) && !classtype.is_abstract())
+					runner = classtype;
+				else
+					classes.insert(classtype, cls);
+			} catch (Error e) {
+				warning(e.message);
+			}
+			cls.accept_children(this);
+		}
+		
+		private Type find_type(Vala.Class cls) throws Error {
+			var attr = new Vala.CCodeAttribute (cls);
+			unowned TestPlan.GetType node_get_type =
+				(TestPlan.GetType)assembly.get_method(
+					"%sget_type".printf(attr.lower_case_prefix));
+			var ctype = node_get_type();
+			return ctype;
+		}
+
+	}
+	
 	public class TestVisitor : Vala.CodeVisitor {
 		public TestPlan plan {get;set;}
-		internal delegate void* Constructor(); 
-		
-		private Type[] _config = {};
-		private Type[] _result = {};
-		private Type[] _runner = {};
+		internal delegate TestCase Constructor(); 
 		
 		private TestSuite testsuite;
+		private TestCase testcase;
+		private ClassGatherer gatherer;
 
-		public TestVisitor(TestPlan plan) {
+		public TestVisitor(TestPlan plan, ClassGatherer gatherer) throws Error {
 			this.plan = plan;
+			this.gatherer = gatherer;
+			visit_config();
+			plan.result = new TestResult(plan.config);
+			visit_test_runner();
 		}
 
-		public TestRunner get_runner() {
-			if(_runner.length == 1)
-				TestRunner.register_default(_runner[0]);
-			return TestRunner.new(plan.config);
+		private void visit_config() {
+			plan.config = Object.new(gatherer.config, "options", plan.options) as TestConfig;
 		}
 
-		public TestConfig get_config() {
-			Type ctype = typeof(TestConfig);
-			if(_config.length == 1)
-				ctype = (_config[0] != Type.INVALID) ? _config[0] : ctype;
-			return Object.new(ctype, "options", plan.options) as TestConfig;
-		}
-
-		public TestResult get_result() {
-			Type rtype = typeof(TestResult);
-			if(_result.length == 1)
-				rtype = (_result[0] != Type.INVALID) ? _result[0] : rtype;
-			return Object.new(rtype, "config", plan.config) as TestResult;
+		public void visit_test_runner() {
+			TestRunner.register_default(gatherer.runner);
+			plan.runner = TestRunner.new(plan.config);
 		}
 
 		public override void visit_namespace(Vala.Namespace ns) {
-
 			if (ns.name != null) {
-				var currpath = "/" + ns.get_full_name();
-				if(plan.options.running_test != null)
+				var currpath = "/" + ns.get_full_name().replace(".","/");
+				if(plan.config.in_subprocess)
 					if(!plan.options.running_test.has_prefix(currpath))
 						return;
 
@@ -108,79 +139,103 @@ namespace Valadate.Drivers {
 		}
 		
 		public override void visit_class(Vala.Class cls) {
-			
+
 			try {
-				if (is_subtype_of(cls, "Valadate.TestCase"))
-					testsuite.add_test(visit_testcase(cls));
-				
-				else if (is_subtype_of(cls, "Valadate.TestSuite"))			
-					testsuite.add_test(visit_testsuite(cls));
+				if (is_subtype_of(cls, typeof(TestCase)) && !cls.is_abstract) {
+					unowned Constructor ctor = get_constructor(cls);
+					testcase = ctor();
+					testcase.name = cls.name;
+					testcase.label = "/%s".printf(cls.get_full_name().replace(".","/"));
+					testsuite.add_test(testcase);
+					visit_testcase(cls);
 
-				/*
-				else if (is_subtype_of(cls, "Valadate.TestRunner"))			
-					_runner += get_class_type(cls);
-
-				else if (is_subtype_of(cls, "Valadate.TestConfig"))			
-					_config += get_class_type(cls);
-
-				else if (is_subtype_of(cls, "Valadate.TestResult"))			
-					_result += get_class_type(cls);
-				*/
-
+				} else if (is_subtype_of(cls,typeof(TestSuite))) {
+					visit_testsuite(cls);
+				}
 			} catch (Error e) {
 				error(e.message);
 			}
 			cls.accept_children(this);
 		}
 
-		private bool is_subtype_of(Vala.Class cls, string typename) {
-			foreach(var basetype in cls.get_base_types())
-				if(((Vala.UnresolvedType)basetype).to_qualified_string() == typename)
-					return true;
+		private bool is_subtype_of(Vala.Class cls, Type type) {
+			var t = Type.from_name(cls.get_full_name().replace(".",""));
+			if(t.is_a(type))
+				return true;
 			return false;
 		}
 
-		private Type get_class_type(Vala.Class cls) {
-			var attr = new Vala.CCodeAttribute (cls);
-			return Type.from_name(attr.name);
-		}
-
-		private unowned Constructor get_constructor(Vala.Class cls) {
+		private unowned Constructor get_constructor(Vala.Class cls) throws Error {
 			var attr = new Vala.CCodeAttribute (cls.default_construction_method);
 			return (Constructor)plan.assembly.get_method(attr.name);
 		}
 
-		public TestCase visit_testcase(Vala.Class testclass)  {
-			
-			unowned Constructor meth = get_constructor(testclass); 
-			var testcase_test = meth() as TestCase;		
-			testcase_test.name = testclass.name;
-			
-			foreach(var method in testclass.get_methods()) {
+		public void visit_testcase(Vala.Class cls)  {
 
-				if (plan.options.running_test != null &&
-					plan.options.running_test != "/" + method.get_full_name().replace(".","/"))
-					continue;
+			var t = Type.from_name(cls.get_full_name().replace(".",""));
+			var p = t.parent();
+			if(p != typeof(TestCase)) {
+				var basecls = gatherer.classes.get(p);
+				if(basecls != null)
+					visit_testcase(basecls);
+			}
+
+			foreach(var method in cls.get_methods()) {
+
+				if(plan.config.in_subprocess)
+					if (plan.options.running_test != "%s/%s".printf(
+						testcase.label, method.name))
+						continue;
 
 				if(!is_test(method))
 					continue;
 
-				var adapter = new TestAdapter(method.name, plan.config.timeout);
+				var added = false;
+				foreach(var test in testcase)
+					if(test.name == method.name)
+						added=true;
+				if(added)
+					continue;
 
+				var adapter = new TestAdapter(method.name, plan.config.timeout);
 				annotate_label(adapter);
 				annotate(adapter, method);
 
-				
+				if(plan.config.in_subprocess && adapter.status != TestStatus.SKIPPED) {
+					var attr = new Vala.CCodeAttribute (method);
 
-					unowned TestPlan.TestMethod testmethod = null;
-					var attr = new Vala.CCodeAttribute(method);
-					testmethod = (TestPlan.TestMethod)plan.assembly.get_method(attr.name);
-
-					if (testmethod != null) {
-						//testcase_test.add_test_method(testmethod);
+					if(method.coroutine) {
+						try {
+							unowned TestPlan.AsyncTestMethod beginmethod = 
+								(TestPlan.AsyncTestMethod)plan.assembly.get_method(attr.name);
+							unowned TestPlan.AsyncTestMethodResult testmethod = 
+								(TestPlan.AsyncTestMethodResult)plan.assembly.get_method(attr.finish_real_name);
+							adapter.add_async_test(beginmethod, testmethod);
+						} catch (Error e) {
+							var message = e.message;
+							adapter.add_test_method(()=> {debug(message);});
+						}
+					} else {
+						try {
+							TestPlan.TestMethod testmethod =
+								(TestPlan.TestMethod)plan.assembly.get_method(attr.name);
+							adapter.add_test((owned)testmethod);
+						} catch (Error e) {
+							var message = e.message;
+							adapter.add_test_method(()=> {debug(message);});
+						}
 					}
+				} else {
+					adapter.add_test_method(()=> {assert_not_reached();});
 				}
-			return testcase_test;
+
+				adapter.label = "%s/%s".printf(
+					testcase.label,
+					adapter.label);
+
+				testcase.add_test(adapter);
+			}
+
 		}
 
 		private void annotate_label(Test test) {
@@ -207,22 +262,27 @@ namespace Valadate.Drivers {
 					if(attr.has_argument("skip")) {
 						adapter.status = TestStatus.SKIPPED;
 						adapter.status_message = attr.get_string("skip");
-					} else	if(attr.has_argument("todo")) {
+					} else if(attr.has_argument("todo")) {
 						adapter.status = TestStatus.SKIPPED;
 						adapter.status_message = attr.get_string("todo");
+					} else if(attr.has_argument("timeout")) {
+						adapter.timeout = int.parse(attr.get_string("timeout"));
 					}
 				}
 			}
-
 		}
 
 		private bool is_test(Vala.Method method) {
 			bool istest = false;
-			string name = method.name;
 			
-			if(	name.has_prefix("test_") ||
-				name.has_prefix("_test_") ||
-				name.has_prefix("todo_test_"))
+			if(method.is_virtual)
+				foreach(var test in testcase)
+					if(test.name == method.name)
+						return false;
+			
+			if (method.name.has_prefix("test_") ||
+				method.name.has_prefix("_test_") ||
+				method.name.has_prefix("todo_test_"))
 				istest = true;
 
 			foreach(var attr in method.attributes)
@@ -238,20 +298,11 @@ namespace Valadate.Drivers {
 			return istest;
 		}
 
-		public TestSuite visit_testsuite(Vala.Class testclass)  {
+		public TestSuite visit_testsuite(Vala.Class testclass) throws Error {
 			unowned Constructor meth = get_constructor(testclass); 
 			var testcase_test = meth() as TestSuite;
 			testcase_test.name = testclass.name;
 			return testcase_test;
-		}
-		
+		}	
 	}
-
-
 }
-
-public static Type vala_driver_register_type(Module module) {
-	return typeof(Valadate.Drivers.Driver);
-}
-
-

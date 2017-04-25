@@ -1,6 +1,6 @@
 /*
- * Valadate -- 
- * Copyright 2017 Chris Daley <bizarro@localhost.localdomain>
+ * Valadate - Unit testing library for GObject-based libraries.
+ * Copyright (C) 2017 Chris Daley <chebizarro@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,17 +31,17 @@ namespace Valadate {
 		
 		public XmlFile xml {get;set;}
 
+		private Xml.Node* testsuite;
+		private Xml.Node* oldtestsuite;
+		private int testcount = -1;
+		private int casecount = -1;
+
 		public XmlTestReportPrinter(TestConfig config) throws Error {
 			base(config);
 			this.config = config;
 			xml = new XmlFile.from_string(XML_DECL + TESTSUITES_XML);
 		}
-		
-		private Xml.Node* testsuite;
-		private Xml.Node* oldtestsuite;
-		private int testcount = -1;
-		private int casecount = -1;
-		
+	
 		public override void print(TestReport report) {
 			Xml.Node* root = xml.eval("//testsuites")[0];
 			Xml.Node* node = report.xml.eval("//testsuite | //testcase")[0];
@@ -64,11 +64,9 @@ namespace Valadate {
 				casecount--;
 				if(casecount == 0)
 					testsuite = oldtestsuite;
-			}
-			
+			}		
 			if(testcount == 0)
 				root->doc->dump_format(stdout);
 		}
-		
 	}
 }

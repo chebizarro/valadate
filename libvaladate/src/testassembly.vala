@@ -22,14 +22,12 @@
  
 namespace Valadate {
 
-	public class TestAssembly : Assembly {
+	public class TestAssembly : Loadable {
 
 		public File srcdir {get;set;}
 		public File builddir {get;set;}
 
 		public TestOptions options {get;set;}
-
-		private GLib.Module module;
 		
 		private string[] dependencies = {};
 		
@@ -131,22 +129,6 @@ namespace Valadate {
 			return new TestAssembly.copy(this);
 		}
 
-		private void load_module() throws AssemblyError {
-			module = GLib.Module.open (binary.get_path(), ModuleFlags.BIND_LAZY);
-			if (module == null)
-				throw new AssemblyError.LOAD(GLib.Module.error());
-			module.make_resident();
-		}
-		
-		public void* get_method(string method_name) throws AssemblyError {
-			if(module == null)
-				load_module();
-			void* function;
-			if(module.symbol (method_name, out function))
-				if (function != null)
-					return function;
-			throw new AssemblyError.METHOD(GLib.Module.error());
-		}
 	
 	}
 }

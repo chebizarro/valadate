@@ -1,6 +1,6 @@
 /*
- * Valadate -- 
- * Copyright 2017 Chris Daley <bizarro@localhost.localdomain>
+ * Valadate - Unit testing library for GObject-based libraries.
+ * Copyright (C) 2017 Chris Daley <chebizarro@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

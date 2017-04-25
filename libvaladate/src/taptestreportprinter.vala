@@ -38,8 +38,8 @@ namespace Valadate {
 		
 		public override void print(TestReport report) {
 
-			if(report.test is TestSuite) {
-				testcases = new List<TestCase>();
+			if(report.test is TestSuite && report.test.parent.name == "/") {
+				//testcases = new List<TestCase>();
 				stdout.printf("1..%d\n", report.test.count);
 				
 				var props = report.xml.eval("//properties/property");

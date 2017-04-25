@@ -32,12 +32,9 @@ namespace Valadate {
 		private const string TESTCASE_XML =
 			"""<testcase assertions="" classname="" name="" status="" time="" />""";
 		private const string MESSAGE_XML = "<%s message=\"%s\" type=\"%s\">%s</%s>";
-
 		private const string TESTCASE_START =
 			"<testcase assertions=\"\" classname=\"%s\" name=\"%s\" status=\"\" time=\"\">";
-
 		private const string VDX_NS = "xmlns:vdx=\"https://www.valadate.org/vdx\"";
-
 		private const string TESTCASE_TAG = "testcase";
 		private const string ROOT_TAG = "root";
 		private const string SKIP_TAG = "skipped";
@@ -47,7 +44,6 @@ namespace Valadate {
 		private const string TIMER_TAG = "timer";
 		private const string SYSTEM_OUT_TAG = "system-out";
 		private const string SYSTEM_ERR_TAG = "system-err";
-
 
 		public Test test {get;set;}
 		public bool subprocess {get;set;}
@@ -78,7 +74,6 @@ namespace Valadate {
 				new_testsuite();
 			else if (test is TestAdapter)
 				new_testcase();
-
 		}
 		
 		private void new_testsuite() throws Error {
@@ -169,16 +164,11 @@ namespace Valadate {
 			update_status();
 		}
 
-
 		private void add_message(string tag, string message) {
 			var escaped = Markup.escape_text(message);
 			if(subprocess) {
-
-				//var domain = e.domain.to_string().up().replace("-","_");
 				stderr.printf(MESSAGE_XML, tag, escaped, tag.up(), message, tag);
-
 			} else {
-
 				Xml.Node* child = new Xml.Node(null, tag);
 				child->set_content(escaped);
 				
@@ -193,8 +183,6 @@ namespace Valadate {
 				root->add_child(child);
 			}
 		}
-
-
 		/**
 		 * Adds arbitrary text to the TestReport. In the xml output this
 		 * text will be encapsulated in <system-out/> or <system-err/> tag
@@ -226,14 +214,12 @@ namespace Valadate {
 				root->set_prop("time",test.time.to_string());
 			}
 		}
-		
 
 		private static void emit_timer() {
 			end_time = get_monotonic_time();
 			var ms = "%f".printf(((double)(end_time-start_time))/1000);
 			stderr.printf(MESSAGE_XML, TIMER_TAG, ms, TIMER_TAG, ms, TIMER_TAG);
 		}
-
 
 		private static void printerr_func (string? text) {
 			if(text == null)
@@ -291,6 +277,5 @@ namespace Valadate {
 		public void add_stdout(string text) {
 			add_message(SYSTEM_OUT_TAG, text);
 		}
-
 	}
 }

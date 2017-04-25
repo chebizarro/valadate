@@ -9,7 +9,8 @@ namespace Valadate.Tests {
 		var builddir = Environment.get_variable("G_TEST_BUILDDIR");
 		testbinary = File.new_for_path(Path.build_filename(
 			builddir, "..", "data", ".libs", "testexe-0"));
-
+		var newbuilddir = File.new_for_path(Path.build_filename(builddir, "..", "data"));
+		Environment.set_variable("G_TEST_BUILDDIR", newbuilddir.get_path(), true);
 		var newenv = File.new_for_path(Path.build_filename(
 			Environment.get_variable("G_TEST_SRCDIR"), "..", "data"));
 		Environment.set_variable("G_TEST_SRCDIR", newenv.get_path(), true);
@@ -37,8 +38,7 @@ namespace Valadate.Tests {
 		GLib.Test.add_func ("/girtestplan/number of inherited tests", gir_test_plan_no_of_inherited_tests);
 		GLib.Test.add_func ("/girtestplan/tests with labels", gir_test_plan_tests_with_label);
 		GLib.Test.add_func ("/girtestplan/run single test", gir_test_plan_run_single_test);
-		
-		/*
+
 		GLib.Test.add_func ("/vapitestplan/new", new_vapi_test_plan);
 		GLib.Test.add_func ("/vapitestplan/number of testsuites", vapi_test_plan_no_of_testsuites);
 		GLib.Test.add_func ("/vapitestplan/number of tests", vapi_test_plan_no_of_tests);
@@ -46,7 +46,6 @@ namespace Valadate.Tests {
 		GLib.Test.add_func ("/vapitestplan/number of inherited tests", vapi_test_plan_no_of_inherited_tests);
 		GLib.Test.add_func ("/vapitestplan/tests with labels", vapi_test_plan_tests_with_label);
 		GLib.Test.add_func ("/vapitestplan/run single test", vapi_test_plan_run_single_test);
-		*/
 
 		// TestSuite
 		// TestCase

@@ -30,5 +30,4 @@ namespace Valadate {
 		ERROR,
 		FAILED
 	}
-
 }
