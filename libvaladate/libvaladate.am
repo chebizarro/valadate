@@ -4,9 +4,8 @@ libvaladate_sources = \
 	src/asynctestrunner.vala \
 	src/driver.vala \
 	src/girtestplan.vala \
-	src/gtestadapter.vala \
 	src/gnutestreportprinter.vala \
-	src/module.vala \
+	src/loadable.vala \
 	src/serialtestrunner.vala \
 	src/systemprogram.vala \
 	src/testreportprinter.vala \

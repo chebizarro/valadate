@@ -25,5 +25,9 @@ testutils_0_CFLAGS = \
 	-pie \
 	$(TESTS_CFLAGS)
 
+GITIGNOREFILES = \
+	*.gir \
+	*.test \
+	*.vapi
 
 -include $(top_srcdir)/git.mk

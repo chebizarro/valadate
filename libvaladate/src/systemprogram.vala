@@ -35,16 +35,15 @@ namespace Valadate {
 			return new SystemProgram(name);
 		}
 
-		public virtual Assembly pipe(string? command = null, InputStream input, Cancellable? cancellable = null) throws Error {
-			string[] args;
-			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
-			process = launcher.spawnv(args);
-			stdout = new DataInputStream (process.get_stdout_pipe());
-			stderr = new DataInputStream (process.get_stderr_pipe());
-			stdin = new DataOutputStream (process.get_stdin_pipe());
-			stdin.splice(input, OutputStreamSpliceFlags.CLOSE_TARGET);
-			process.wait_check(cancellable);
-			cancellable.set_error_if_cancelled();
+		// The run command must be run before the pip command
+		// otherwise it will throw an error
+		public virtual SystemProgram pipe(
+			string? command = null,
+			SystemProgram program,
+			Cancellable? cancellable = null)
+			throws Error {
+
+			program.stdin.splice(stdout, OutputStreamSpliceFlags.CLOSE_TARGET);
 			return this;
 		}
 

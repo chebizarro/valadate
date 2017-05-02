@@ -49,9 +49,12 @@ namespace Valadate {
 			var objdump = new SystemProgram("objdump");
 			var grep = new SystemProgram("grep");
 			var awk = new SystemProgram("awk");
-			objdump.run("-p %s".printf(binary.get_path()));
-			grep.pipe("NEEDED ", objdump.stdout);
-			awk.pipe("-F'               ' '{print $2}' ", grep.stdout);
+			var cmd = "-p %s".printf(binary.get_path());
+			var grepcmd = "NEEDED ";
+			var awkcmd = "-F'               ' '{print $2}' ";
+			
+			//objdump.run(cmd).pipe(grepcmd, grep).pipe(awkcmd, awk);
+
 			var awkout = awk.stdout as DataInputStream;
 			while(true) {
 				var dep = awkout.read_line();

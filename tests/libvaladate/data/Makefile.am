@@ -15,8 +15,7 @@ testexe_0_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
 	--library testexe-0 \
-	--symbols testexe-0.test \
-	--dump-tree testexe-0.tree
+	--symbols testexe-0.test
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
@@ -34,5 +33,10 @@ testexe_0_CFLAGS = \
 
 helloworld_SOURCES =  \
 	helloworld.vala
-	
+
+GITIGNOREFILES = \
+	*.gir \
+	*.test \
+	*.vapi
+
 -include $(top_srcdir)/git.mk

@@ -85,13 +85,15 @@ namespace Valadate.Drivers {
 			cls.accept_children(this);
 		}
 		
-		private Type find_type(Vala.Class cls) throws Error {
-			var attr = new Vala.CCodeAttribute (cls);
+		private Type find_type (Vala.Class cls) throws Error {
 			unowned TestPlan.GetType node_get_type =
-				(TestPlan.GetType)assembly.get_method(
-					"%sget_type".printf(attr.lower_case_prefix));
-			var ctype = node_get_type();
-			return ctype;
+				(TestPlan.GetType)assembly.get_method (
+					"%sget_type".printf (TestVisitor.get_ccode_lower_case_prefix (cls)));
+			var classtype = node_get_type ();
+			if (classtype.is_a (typeof (TestCase)) || classtype.is_a (typeof (TestSuite)))
+				classes.insert (classtype, cls);
+
+			return classtype;
 		}
 
 	}
@@ -140,6 +142,11 @@ namespace Valadate.Drivers {
 		
 		public override void visit_class(Vala.Class cls) {
 
+			var label = "/%s".printf (cls.get_full_name ().replace (".","/"));
+
+			if(!in_testpath (label))
+				return;
+
 			try {
 				if (is_subtype_of(cls, typeof(TestCase)) && !cls.is_abstract) {
 					unowned Constructor ctor = get_constructor(cls);
@@ -158,6 +165,24 @@ namespace Valadate.Drivers {
 			cls.accept_children(this);
 		}
 
+		private bool in_testpath (string path) {
+			if (plan.config.testpath == null)
+				return true;
+
+			var paths = path.split ("/");
+			var testpaths = plan.config.testpath.split ("/");
+
+			for (int i = 1; i < int.max (testpaths.length, paths.length); i++) {
+				if (testpaths[i] == null || paths[i] == null)
+					break;
+				if (testpaths[i] == "" || paths[i] == "")
+					break;
+				if (testpaths[i] != paths[i])
+					return false;
+			}
+			return true;
+		}
+
 		private bool is_subtype_of(Vala.Class cls, Type type) {
 			var t = Type.from_name(cls.get_full_name().replace(".",""));
 			if(t.is_a(type))
@@ -165,9 +190,9 @@ namespace Valadate.Drivers {
 			return false;
 		}
 
-		private unowned Constructor get_constructor(Vala.Class cls) throws Error {
-			var attr = new Vala.CCodeAttribute (cls.default_construction_method);
-			return (Constructor)plan.assembly.get_method(attr.name);
+
+		private unowned Constructor get_constructor (Vala.Class cls) throws Error {
+			return (Constructor)plan.assembly.get_method (get_symbol_name (cls.default_construction_method));
 		}
 
 		public void visit_testcase(Vala.Class cls)  {
@@ -182,9 +207,10 @@ namespace Valadate.Drivers {
 
 			foreach(var method in cls.get_methods()) {
 
-				if(plan.config.in_subprocess)
-					if (plan.options.running_test != "%s/%s".printf(
-						testcase.label, method.name))
+				var currpath = "%s/%s".printf (testcase.label, method.name);
+
+				if (plan.config.in_subprocess)
+					if (plan.config.running_test != currpath)
 						continue;
 
 				if(!is_test(method))
@@ -202,14 +228,12 @@ namespace Valadate.Drivers {
 				annotate(adapter, method);
 
 				if(plan.config.in_subprocess && adapter.status != TestStatus.SKIPPED) {
-					var attr = new Vala.CCodeAttribute (method);
-
 					if(method.coroutine) {
 						try {
-							unowned TestPlan.AsyncTestMethod beginmethod = 
-								(TestPlan.AsyncTestMethod)plan.assembly.get_method(attr.name);
-							unowned TestPlan.AsyncTestMethodResult testmethod = 
-								(TestPlan.AsyncTestMethodResult)plan.assembly.get_method(attr.finish_real_name);
+						unowned TestPlan.AsyncTestMethod beginmethod =
+							(TestPlan.AsyncTestMethod)plan.assembly.get_method (get_symbol_name (method));
+						unowned TestPlan.AsyncTestMethodResult testmethod =
+							(TestPlan.AsyncTestMethodResult)plan.assembly.get_method (get_finish_name (method));
 							adapter.add_async_test(beginmethod, testmethod);
 						} catch (Error e) {
 							var message = e.message;
@@ -218,24 +242,17 @@ namespace Valadate.Drivers {
 					} else {
 						try {
 							TestPlan.TestMethod testmethod =
-								(TestPlan.TestMethod)plan.assembly.get_method(attr.name);
+								(TestPlan.TestMethod)plan.assembly.get_method(get_symbol_name (method));
 							adapter.add_test((owned)testmethod);
 						} catch (Error e) {
 							var message = e.message;
 							adapter.add_test_method(()=> {debug(message);});
 						}
 					}
-				} else {
-					adapter.add_test_method(()=> {assert_not_reached();});
 				}
-
-				adapter.label = "%s/%s".printf(
-					testcase.label,
-					adapter.label);
-
+				adapter.label = "%s/%s".printf (testcase.label,adapter.label);
 				testcase.add_test(adapter);
 			}
-
 		}
 
 		private void annotate_label(Test test) {
@@ -298,11 +315,118 @@ namespace Valadate.Drivers {
 			return istest;
 		}
 
-		public TestSuite visit_testsuite(Vala.Class testclass) throws Error {
-			unowned Constructor meth = get_constructor(testclass); 
-			var testcase_test = meth() as TestSuite;
-			testcase_test.name = testclass.name;
-			return testcase_test;
-		}	
+		public void visit_testsuite (Vala.Class testclass) throws Error {
+			unowned Constructor meth = get_constructor (testclass);
+			var tsuite = meth () as TestSuite;
+			tsuite.name = testclass.name;
+			tsuite.label = "/%s".printf (testclass.get_full_name ().replace (".","/"));;
+			testsuite.add_test (tsuite);
+			testsuite = tsuite;
+		}
+
+		private string get_finish_name (Vala.Symbol sym) {
+			var ccode = sym.get_attribute ("CCode");
+			string finish_name = null;
+			
+			if (ccode != null) {
+				finish_name = ccode.get_string ("cnfinish_nameame");
+				if (finish_name == null) {
+					finish_name = ccode.get_string ("finish_function");
+				}
+			}
+			return finish_name ?? get_finish_name_for_basename (get_default_name (sym));
+		}
+
+		private string get_finish_name_for_basename (string basename) {
+			string result = basename;
+			if (result.has_suffix ("_async")) {
+				result = result.substring (0, result.length - "_async".length);
+			}
+			return "%s_finish".printf (result);
+		}
+
+		private string get_symbol_name (Vala.Symbol sym) {
+			var ccode = sym.get_attribute ("CCode");
+			string name = null;
+			
+			if (ccode != null)
+				name = ccode.get_string ("cname");
+			return name ?? get_default_name (sym);
+		}
+
+		private static string get_default_name (Vala.Symbol sym) {
+			if (sym is Vala.CreationMethod) {
+				var m = (Vala.CreationMethod) sym;
+				string infix = "new";
+				if (m.name == ".new") {
+					return "%s%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), infix);
+				} else {
+					return "%s%s_%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), infix, m.name);
+				}
+			} else if (sym is Vala.Method) {
+				var m = (Vala.Method) sym;
+				if (sym.name.has_prefix ("_")) {
+					return "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
+				} else {
+					return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
+				}
+			}
+			return sym.name;
+		}
+
+		public static string get_ccode_lower_case_prefix (Vala.Symbol sym) {
+			var ccode = sym.get_attribute ("CCode");
+			string lower_case_prefix = null;
+
+			if (ccode != null) {
+				lower_case_prefix = ccode.get_string ("lower_case_cprefix");
+				if (lower_case_prefix == null && (sym is Vala.ObjectTypeSymbol)) {
+					lower_case_prefix = ccode.get_string ("cprefix");
+				}
+			}
+			if (lower_case_prefix == null) {
+				if (sym is Vala.Namespace) {
+					if (sym.name == null) {
+						lower_case_prefix = "";
+					} else {
+						lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), Vala.Symbol.camel_case_to_lower_case (sym.name));
+					}
+				} else if (sym is Vala.Method) {
+					// for lambda expressions
+					lower_case_prefix = "";
+				} else {
+					lower_case_prefix = "%s%s_".printf (get_ccode_lower_case_prefix (sym.parent_symbol), get_ccode_lower_case_suffix (sym));
+				}
+			}
+			return lower_case_prefix;
+		}
+
+		private static string get_ccode_lower_case_suffix (Vala.Symbol sym) {
+			var ccode = sym.get_attribute ("CCode");
+			string lower_case_suffix = null;
+
+			if (ccode != null) {
+				lower_case_suffix = ccode.get_string ("lower_case_csuffix");
+			}
+			if (lower_case_suffix == null) {
+				if (sym is Vala.ObjectTypeSymbol) {
+					var csuffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
+					// remove underscores in some cases to avoid conflicts of type macros
+					if (csuffix.has_prefix ("type_")) {
+						csuffix = "type" + csuffix.substring ("type_".length);
+					} else if (csuffix.has_prefix ("is_")) {
+						csuffix = "is" + csuffix.substring ("is_".length);
+					}
+					if (csuffix.has_suffix ("_class")) {
+						csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
+					}
+					lower_case_suffix = csuffix;
+				} else if (sym.name != null) {
+					lower_case_suffix = Vala.Symbol.camel_case_to_lower_case (sym.name);
+				}
+			}
+			return lower_case_suffix;
+		}		
+		
 	}
 }

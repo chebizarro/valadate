@@ -22,8 +22,6 @@
  
 namespace Valadate {
 
-	using Valadate.Utils;
-
 	public class TestAdapter : Object, Test {
 
 		public string name {get;set;}

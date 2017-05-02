@@ -37,10 +37,8 @@ namespace Valadate {
 			
 			if(default_type != Type.INVALID)
 				runner_type = default_type;
-			else if(config.run_async)
-				runner_type = typeof(AsyncTestRunner);
 			else
-				runner_type = typeof(SerialTestRunner);
+				runner_type = typeof(AsyncTestRunner);
 
 			return Object.new(runner_type) as TestRunner;
 		}

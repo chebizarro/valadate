@@ -90,7 +90,5 @@ namespace Valadate {
 			if(process != null)
 				process.force_exit();
 		}
-		
-		public Type type;
 	}
 }

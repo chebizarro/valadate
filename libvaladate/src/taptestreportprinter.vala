@@ -33,13 +33,16 @@ namespace Valadate {
 			if(!config.list_only) {
 				stdout.printf("TAP version %s\n", TAP_VERSION);
 				stdout.printf("# random seed: %s\n", config.seed);
+
+				if (config.testpath != null)
+					stdout.printf ("# running tests in %s\n", config.testpath);
+
 			}
 		}
 		
 		public override void print(TestReport report) {
 
 			if(report.test is TestSuite && report.test.parent.name == "/") {
-				//testcases = new List<TestCase>();
 				stdout.printf("1..%d\n", report.test.count);
 				
 				var props = report.xml.eval("//properties/property");

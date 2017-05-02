@@ -15,7 +15,7 @@ tests_abstract_tests_0_SOURCES =  \
 tests_abstract_tests_0_VALAFLAGS = \
 	--pkg gmodule-2.0 \
 	--gir tests-abstract-tests-0.gir \
-	--library tests-abstract-tests \
+	--library tests-abstract-tests-0 \
 	$(TESTS_VALAFLAGS)
 
 tests_abstract_tests_0_LDADD = \

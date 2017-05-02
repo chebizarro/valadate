@@ -44,6 +44,12 @@ namespace Valadate {
 			}
 		}
 
+		public string? testpath {
+			get {
+				return options.testpath;
+			}
+		}
+
 		public string? running_test {
 			get {
 				return options.running_test;
@@ -53,12 +59,6 @@ namespace Valadate {
 		public bool in_subprocess {
 			get {
 				return options.running_test != null;
-			}
-		}
-
-		public virtual bool run_async {
-			get {
-				return options.run_async;
 			}
 		}
 
@@ -77,12 +77,6 @@ namespace Valadate {
 		public virtual int timeout {
 			get {
 				return options.timeout;
-			}
-		}
-
-		public virtual bool timed {
-			get {
-				return options.timed;
 			}
 		}
 

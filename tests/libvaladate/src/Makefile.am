@@ -45,4 +45,9 @@ tests_libvaladate_CPPFLAGS = \
 tests_libvaladate_CFLAGS = \
 	$(TESTS_CFLAGS)
 
+GITIGNOREFILES = \
+	*.gir \
+	*.test \
+	*.vapi
+
 -include $(top_srcdir)/git.mk
