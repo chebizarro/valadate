@@ -70,7 +70,7 @@ libvaladate_cli_2_0_la_VALAFLAGS = \
 
 libvaladate_cli_2_0_la_LIBADD = \
 	$(COVERAGE_LIBS) \
-	-dlopen	$(VALADATELIB) \
+	-dlopen $(VALADATELIB) \
 	$(VALADATE_CLI_LIBS)
 
 libvaladate_cli_2_0_la_LDFLAGS = \
