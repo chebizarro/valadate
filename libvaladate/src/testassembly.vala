@@ -36,6 +36,12 @@ namespace Valadate {
 		public TestAssembly(string[] args) throws Error {
 			base(File.new_for_path(args[0]));
 			options = new TestOptions(args);
+			
+			if (options.testpath != null)
+				Environment.set_variable ("V_TESTPATH", options.testpath, true);
+			if (options.running_test != null)
+				Environment.set_variable ("V_RUNNING_TEST", options.running_test, true);
+		
 			setup_dirs();
 			//list_deps();
 		}

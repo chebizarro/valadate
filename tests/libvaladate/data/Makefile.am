@@ -23,13 +23,25 @@ testexe_0_LDADD = \
 	-lm
 	
 testexe_0_CPPFLAGS = \
-	$(TESTS_CPPFLAGS) \
-	-fPIE
+	$(TESTS_CPPFLAGS)
 	
 testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
-	-I$(top_srcdir)/libvaladate/include \
-	-pie
+	-I$(top_srcdir)/libvaladate/include
+	
+
+if PLATFORM_WIN32
+
+testexe_0_LDFLAGS = -Wl,--export-all-symbols,--out-implib=testexe-0.dll.a
+
+else
+
+testexe_0_LDFLAGS = -rdynamic
+testexe_0_CPPFLAGS += -fPIE
+testexe_0_CFLAGS += -pie
+
+endif
+
 
 helloworld_SOURCES =  \
 	helloworld.vala

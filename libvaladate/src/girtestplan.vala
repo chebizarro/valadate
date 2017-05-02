@@ -136,6 +136,10 @@ namespace Valadate {
 
 				var oldpath = currpath;
 				currpath += "/" + testname;
+				
+				if(!in_testpath (currpath))
+					continue;
+				
 				var test = GLib.Object.new(node_type, "name", testname, "label", currpath) as Test;
 				testsuite.add_test(test);
 
@@ -269,7 +273,23 @@ namespace Valadate {
 		public int run() throws Error {
 			return runner.run_all(this);
 		}
-		
-	}
 
+		private bool in_testpath (string path) {
+			if (config.testpath == null)
+				return true;
+
+			var paths = path.split ("/");
+			var testpaths = config.testpath.split ("/");
+
+			for (int i = 1; i < int.max (testpaths.length, paths.length); i++) {
+				if (testpaths[i] == null || paths[i] == null)
+					break;
+				if (testpaths[i] == "" || paths[i] == "")
+					break;
+				if (testpaths[i] != paths[i])
+					return false;
+			}
+			return true;
+		}
+	}
 }
