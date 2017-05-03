@@ -1,15 +1,15 @@
-VERSIONED_VAPI_DIR = $(shell pkg-config libvala-0.22 --variable vapidir)
+VERSIONED_VAPI_DIR = $(shell pkg-config libvala-0.26 --variable vapidir)
 
 AM_CFLAGS = \
 	-I $(top_builddir)/libvaladate/include \
-	$(LIBVALA_0_22_X_CFLAGS) \
+	$(LIBVALA_0_26_X_CFLAGS) \
 	-g \
 	-w
 
 AM_VALAFLAGS = \
 	$(VALAFLAGS) \
 	--pkg libxml-2.0 \
-	--pkg libvala-0.22 \
+	--pkg libvala-0.26 \
 	--pkg libvaladate-2.0 \
 	--vapidir $(VERSIONED_VAPI_DIR) \
 	--vapidir $(top_srcdir)/vapi \
@@ -23,7 +23,7 @@ BUILT_SOURCES = driver.vala.stamp
 
 driver_LTLIBRARIES = driver.la
 
-driverdir = $(libdir)/valadate/drivers/0.22.x
+driverdir = $(libdir)/valadate/drivers/0.26.x
 
 driver_la_LDFLAGS = -module -avoid-version -no-undefined
 
@@ -33,13 +33,13 @@ driver_la_SOURCES = \
 driver.vala.stamp: $(driver_la_SOURCES) Makefile
 	$(VALAC) \
 		$(AM_VALAFLAGS) \
-		--pkg libvala-0.22 \
+		--pkg libvala-0.26 \
 		$(filter %.vala %.c,$^)
 	touch $@
 
 driver_la_LIBADD = \
 	$(top_builddir)/libvaladate/libvaladate-2.0.la \
 	$(LIBVALADATE_LIBS) \
-	$(LIBVALA_0_22_X_LIBS)
+	$(LIBVALA_0_26_X_LIBS)
 
 -include $(top_srcdir)/git.mk
