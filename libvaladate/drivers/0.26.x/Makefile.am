@@ -2,6 +2,7 @@ VERSIONED_VAPI_DIR = $(shell pkg-config libvala-0.26 --variable vapidir)
 
 AM_CFLAGS = \
 	-I $(top_builddir)/libvaladate/include \
+	-I $(top_srcdir)/libvaladate/include \
 	$(LIBVALA_0_26_X_CFLAGS) \
 	-g \
 	-w

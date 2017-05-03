@@ -231,8 +231,14 @@ AC_CONFIG_FILES([
 	libvaladate/libvaladate-2.0.pc
 	libvaladate/valadate-2.0.pc
 	libvaladate/drivers/Makefile
+	libvaladate/drivers/0.22.x/Makefile
+	libvaladate/drivers/0.24.x/Makefile
+	libvaladate/drivers/0.26.x/Makefile
+	libvaladate/drivers/0.28.x/Makefile
+	libvaladate/drivers/0.30.x/Makefile
 	libvaladate/drivers/0.32.x/Makefile
 	libvaladate/drivers/0.34.x/Makefile
+	libvaladate/drivers/0.36.x/Makefile
 	tests/Makefile
 	tests/genie/Makefile
 	tests/libvaladate/Makefile

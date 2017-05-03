@@ -15114,7 +15114,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-2.0.pc libvaladate/valadate-2.0.pc libvaladate/drivers/Makefile libvaladate/drivers/0.32.x/Makefile libvaladate/drivers/0.34.x/Makefile tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/libvaladate/gdb/Makefile tests/PIE/Makefile tests/abstract-tests/Makefile vapi/Makefile docs/Makefile"
+ac_config_files="$ac_config_files Makefile build/Makefile build/autotools/Makefile libvaladate/Makefile libvaladate/libvaladate-2.0.pc libvaladate/valadate-2.0.pc libvaladate/drivers/Makefile libvaladate/drivers/0.22.x/Makefile libvaladate/drivers/0.24.x/Makefile libvaladate/drivers/0.26.x/Makefile libvaladate/drivers/0.28.x/Makefile libvaladate/drivers/0.30.x/Makefile libvaladate/drivers/0.32.x/Makefile libvaladate/drivers/0.34.x/Makefile libvaladate/drivers/0.36.x/Makefile tests/Makefile tests/genie/Makefile tests/libvaladate/Makefile tests/libvaladate/data/Makefile tests/libvaladate/src/Makefile tests/libvaladate/utils/Makefile tests/libvaladate/gdb/Makefile tests/PIE/Makefile tests/abstract-tests/Makefile vapi/Makefile docs/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -16222,8 +16222,14 @@ do
     "libvaladate/libvaladate-2.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/libvaladate-2.0.pc" ;;
     "libvaladate/valadate-2.0.pc") CONFIG_FILES="$CONFIG_FILES libvaladate/valadate-2.0.pc" ;;
     "libvaladate/drivers/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/Makefile" ;;
+    "libvaladate/drivers/0.22.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.22.x/Makefile" ;;
+    "libvaladate/drivers/0.24.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.24.x/Makefile" ;;
+    "libvaladate/drivers/0.26.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.26.x/Makefile" ;;
+    "libvaladate/drivers/0.28.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.28.x/Makefile" ;;
+    "libvaladate/drivers/0.30.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.30.x/Makefile" ;;
     "libvaladate/drivers/0.32.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.32.x/Makefile" ;;
     "libvaladate/drivers/0.34.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.34.x/Makefile" ;;
+    "libvaladate/drivers/0.36.x/Makefile") CONFIG_FILES="$CONFIG_FILES libvaladate/drivers/0.36.x/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "tests/genie/Makefile") CONFIG_FILES="$CONFIG_FILES tests/genie/Makefile" ;;
     "tests/libvaladate/Makefile") CONFIG_FILES="$CONFIG_FILES tests/libvaladate/Makefile" ;;
