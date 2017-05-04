@@ -6,6 +6,8 @@ NO_DIST = \
 	test-driver \
 	tap-driver.sh
 
-GITIGNOREFILES = ar-lib test-driver
+GITIGNOREFILES = \
+	ar-lib \
+	test-driver
 
 -include $(top_srcdir)/git.mk

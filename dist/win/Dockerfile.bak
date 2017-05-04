@@ -1,0 +1,110 @@
+FROM ubuntu:latest
+MAINTAINER Chris Daley <chebizarro@gmail.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# ===== create user/setup environment =====
+# Replace 1000 with your user/group id
+RUN export uid=1000 gid=1000 && \
+    mkdir -p /home/developer && \
+    echo "developer:x:${uid}:${gid}:developer,,,:/home/developer:/bin/bash" >> /etc/passwd && \
+    echo "developer:x:${uid}:" >> /etc/group && \
+    chown ${uid}:${gid} -R /home/developer
+
+RUN apt-get update && apt-get dist-upgrade -y
+
+RUN apt-get update && apt-get install -y --fix-missing \
+	git \
+	mingw-w64 \
+	mingw-w64-tools
+	
+RUN apt-get install -y --fix-missing \
+	autoconf \
+	libtool \
+	libtool-bin \
+	automake \
+	valac
+
+RUN apt-get install -y --fix-missing \
+	libz-mingw-w64-dev \
+	wget
+
+ENV LOCALSOURCEDIR /tmp/src/
+ENV LOCALDESTDIR /usr
+ENV LOCALBUILDDIR /tmp/build/
+
+WORKDIR /tmp
+RUN mkdir /tmp/src/
+RUN mkdir /tmp/build/
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/nasm-2.12.02.tar.gz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xzf ${LOCALSOURCEDIR}/nasm-2.12.02.tar.gz && \
+	cd nasm-2.12.02 && \
+	./configure --prefix=${LOCALDESTDIR} && \
+	make && \
+	make install
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c --no-check-certificate http://pkgconfig.freedesktop.org/releases/pkg-config-0.29.1.tar.gz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xzf ${LOCALSOURCEDIR}/pkg-config-0.29.1.tar.gz && \
+	cd pkg-config-0.29.1 && \
+	./configure --prefix=${LOCALDESTDIR} && \
+	make && \
+	make install
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
+RUN cd ${LOCALBUILDDIR} && \
+	tar zxf ${LOCALSOURCEDIR}/libffi-3.2.1.tar.gz && \
+	cd libffi-3.2.1 && \
+	sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' \
+		-i include/Makefile.in && \
+	sed -e '/^includedir/ s/=.*$/=@includedir@/' \
+		-e 's/^Cflags: -I${includedir}/Cflags:/' \
+		-i libffi.pc.in        && \
+	./configure --build=x86_64-w64-mingw32 --prefix=${LOCALDESTDIR} && \
+	CCAS=nasm make && \
+	CCAS=nasm make install
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c http://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.4.tar.gz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xzf ${LOCALSOURCEDIR}/gettext-0.19.4.tar.gz && \
+	mv gettext-0.19.4 gettext-0.19.4-runtime && \
+	cd gettext-0.19.4-runtime && \
+	cat gettext-tools/woe32dll/gettextlib-exports.c | grep -v rpl_opt > gettext-tools/woe32dll/gettextlib-exports.c.new && \
+	mv gettext-tools/woe32dll/gettextlib-exports.c.new gettext-tools/woe32dll/gettextlib-exports.c && \
+	CFLAGS="-mms-bitfields -mthreads -O2" ./configure --prefix=${LOCALDESTDIR} --enable-threads=win32 --enable-relocatable && \
+	cd gettext-runtime && \
+	make && \
+	make install
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xzf ${LOCALSOURCEDIR}/libxml2-2.9.4.tar.gz && \
+	cd libxml2-2.9.4 && \
+	./configure --prefix=${LOCALDESTDIR} --with-zlib=${LOCALDESTDIR} --without-python && \
+	make && \
+	make install 
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c http://ftp.gnome.org/pub/gnome/sources/glib/2.48/glib-2.48.1.tar.xz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xJf ${LOCALSOURCEDIR}/glib-2.48.1.tar.xz && \
+	cd glib-2.48.1 && \
+	./configure --build=x86_64-w64-mingw32 --prefix=${LOCALDESTDIR} --with-pcre=internal --enable-debug=no --disable-gtk-doc && \
+	make && \
+	make install
+
+RUN cd ${LOCALSOURCEDIR} && \
+	wget -c http://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.48/gobject-introspection-1.48.0.tar.xz && \
+	cd ${LOCALBUILDDIR} && \
+	tar xJf ${LOCALSOURCEDIR}/gobject-introspection-1.48.0.tar.xz && \
+	cd gobject-introspection-1.48.0 && \
+	./configure --build=x86_64-w64-mingw32 --prefix=${LOCALDESTDIR} \
+	make && \
+	make install

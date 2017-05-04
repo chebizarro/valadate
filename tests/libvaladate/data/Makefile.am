@@ -34,7 +34,7 @@ testexe_0_CFLAGS = \
 if PLATFORM_WIN32
 testexe_0_CPPFLAGS += \
 	-Wl,-export-all-symbols \
-	-Wl,-out-implib testexe-0.exe.a
+	-Wl,-out-implib,testexe-0.exe.a
 endif
 
 

@@ -50,6 +50,8 @@ namespace Valadate {
 			var plan_name = Path.get_basename(assembly.binary.get_path());
 			if(plan_name.has_prefix("lt-"))
 				plan_name = plan_name.substring(3);
+			if(plan_name.has_suffix(".exe"))
+				plan_name = plan_name.substring(0, plan_name.length-4);
 
 			var plan_file = assembly.srcdir;
 			foreach(var key in plan_types.get_keys()) {
