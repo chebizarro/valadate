@@ -40,7 +40,7 @@ namespace Valadate {
 
 			plan_types = new HashTable<string, Type>(str_hash, str_equal);
 			plan_types.insert("gir", typeof(GirTestPlan));
-			plan_types.insert("vapi", typeof(VapiTestPlan));
+			//plan_types.insert("vapi", typeof(VapiTestPlan));
 
 		}
 

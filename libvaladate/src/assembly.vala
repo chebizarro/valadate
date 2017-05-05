@@ -38,6 +38,8 @@ namespace Valadate {
 					GLib.SubprocessFlags.STDIN_PIPE |
 					GLib.SubprocessFlags.STDOUT_PIPE |
 					GLib.SubprocessFlags.STDERR_PIPE);
+				foreach(var env in Environment.list_variables())
+					launcher.setenv(env, Environment.get_variable(env),true);
 				launcher.setenv("G_MESSAGES_DEBUG","all",true);
 				launcher.setenv("G_DEBUG","fatal-criticals fatal-warnings gc-friendly",true);
 				launcher.setenv("G_SLICE","always-malloc debug-blocks",true);
@@ -48,6 +50,7 @@ namespace Valadate {
 		public InputStream stderr {get;set;}
 		public OutputStream stdin {get;set;}
 		public InputStream stdout {get;set;}
+		public string pre {get;set;}
 
 		protected Subprocess process;
 
@@ -58,13 +61,14 @@ namespace Valadate {
 			if(!GLib.FileUtils.test(binary.get_path(), FileTest.IS_EXECUTABLE))
 				throw new FileError.PERM("The file %s is not executable", binary.get_path());
 			this.binary = binary;
+			this.pre = Environment.get_variable("CROSSCOMPILING_EMULATOR") ?? "";
 		}
 
 		public abstract Assembly clone() throws Error;
 
 		public virtual Assembly run(string? command = null, Cancellable? cancellable = null) throws Error {
 			string[] args;
-			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
+			Shell.parse_argv("%s %s %s".printf(pre, Shell.quote(binary.get_path()), command ?? ""), out args);
 			process = launcher.spawnv(args);
 			stdout = new DataInputStream (process.get_stdout_pipe());
 			stderr = new DataInputStream (process.get_stderr_pipe());
@@ -76,7 +80,7 @@ namespace Valadate {
 
 		public virtual async Assembly run_async(string? command = null, Cancellable? cancellable = null) throws Error {
 			string[] args;
-			Shell.parse_argv("%s %s".printf(binary.get_path(), command ?? ""), out args);
+			Shell.parse_argv("%s %s %s".printf(pre, Shell.quote(binary.get_path()), command ?? ""), out args);
 			process = launcher.spawnv(args);
 			stdout = new DataInputStream (process.get_stdout_pipe());
 			stderr = new DataInputStream (process.get_stderr_pipe());

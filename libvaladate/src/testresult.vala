@@ -108,8 +108,13 @@ namespace Valadate {
 
 		public void process_buffers(Test test, Assembly assembly) throws Error {
 			
+			assert(assembly != null);
+			
 			var rept = tests.get(test);
 			if(rept == null)
+				return;
+
+			if(!(assembly.stderr is InputStream))
 				return;
 
 			var bis = new BufferedInputStream (assembly.stderr);

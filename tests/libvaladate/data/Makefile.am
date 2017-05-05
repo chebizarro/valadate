@@ -14,8 +14,7 @@ testexe_0_VALAFLAGS = \
 	--vapi-comments \
 	--pkg gmodule-2.0 \
 	--gir testexe-0.gir \
-	--library testexe-0 \
-	--symbols testexe-0.test
+	--library testexe-0
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
@@ -23,18 +22,20 @@ testexe_0_LDADD = \
 	-lm
 	
 testexe_0_CPPFLAGS = \
-	$(TESTS_CPPFLAGS) \
-	-fPIE
+	$(TESTS_CPPFLAGS)
 	
 testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
-	-I$(top_srcdir)/libvaladate/include \
-	-pie
+	-I$(top_srcdir)/libvaladate/include
 
-if PLATFORM_WIN32
+if NATIVE_WIN32
+testexe_0_CFLAGS += \
+	-Wl,--export-all-symbols
+else
+testexe_0_CFLAGS += \
+	-pie
 testexe_0_CPPFLAGS += \
-	-Wl,-export-all-symbols \
-	-Wl,-out-implib,testexe-0.exe.a
+	-fPIE
 endif
 
 

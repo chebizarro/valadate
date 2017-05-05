@@ -136,3 +136,8 @@ namespace Valadate.Tests {
 
 	
 }
+
+public static void main(string[] args) {
+	//stdout.printf("Running tests..");
+	Valadate.main(args);
+}
