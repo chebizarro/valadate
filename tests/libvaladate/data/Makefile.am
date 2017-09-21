@@ -18,6 +18,7 @@ testexe_0_VALAFLAGS = \
 
 testexe_0_LDADD = \
 	$(TESTS_LIBS) \
+	$(VALADATELIB) \
 	$(TEST_RUNNER) \
 	-lm
 	
@@ -26,7 +27,7 @@ testexe_0_CPPFLAGS = \
 	
 testexe_0_CFLAGS = \
 	$(TESTS_CFLAGS) \
-	-I$(top_srcdir)/libvaladate/include
+	-I$(top_builddir)/libvaladate/include
 
 if NATIVE_WIN32
 testexe_0_CFLAGS += \

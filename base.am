@@ -27,8 +27,7 @@ VALADATE_VALAFLAGS = \
 	--pkg libxml-2.0 \
 	--pkg gmodule-2.0 \
 	--pkg config \
-	--target-glib=2.40.0 \
-	--hide-internal
+	--target-glib=2.40.0
 
 VALADATE_CPPFLAGS = \
 	$(valadate_conf) \

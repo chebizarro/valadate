@@ -1,4 +1,4 @@
 #! /bin/sh
 # run a GTest in tap mode. The test binary is passed as $1
 #echo "wrapper args: $*"
-$1 -k --tap
+$CROSSCOMPILING_EMULATOR $1 -k --tap

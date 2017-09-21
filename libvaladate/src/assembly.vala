@@ -61,14 +61,19 @@ namespace Valadate {
 			if(!GLib.FileUtils.test(binary.get_path(), FileTest.IS_EXECUTABLE))
 				throw new FileError.PERM("The file %s is not executable", binary.get_path());
 			this.binary = binary;
-			this.pre = Environment.get_variable("CROSSCOMPILING_EMULATOR") ?? "";
+			this.pre = ""; //Environment.get_variable("CROSSCOMPILING_EMULATOR") ?? "";
 		}
 
 		public abstract Assembly clone() throws Error;
 
 		public virtual Assembly run(string? command = null, Cancellable? cancellable = null) throws Error {
 			string[] args;
-			Shell.parse_argv("%s %s %s".printf(pre, Shell.quote(binary.get_path()), command ?? ""), out args);
+			var basedir = Path.get_dirname(binary.get_path());
+			var exe = Path.get_basename(binary.get_path());
+			if(exe.has_suffix(".exe") && basedir.has_suffix(".libs"))
+				basedir = basedir.substring(0, basedir.length-6);
+			exe = Shell.quote(Path.build_filename(basedir, exe));
+			Shell.parse_argv("%s %s".printf(exe, command ?? ""), out args);
 			process = launcher.spawnv(args);
 			stdout = new DataInputStream (process.get_stdout_pipe());
 			stderr = new DataInputStream (process.get_stderr_pipe());

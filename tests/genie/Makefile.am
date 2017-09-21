@@ -22,12 +22,20 @@ testgenie_0_LDADD = \
 	$(TEST_RUNNER)
 	
 testgenie_0_CPPFLAGS = \
-	$(TESTS_CPPFLAGS) \
-	-fPIE
+	$(TESTS_CPPFLAGS)
 	
 testgenie_0_CFLAGS = \
-	$(TESTS_CFLAGS) \
+	$(TESTS_CFLAGS)
+
+if NATIVE_WIN32
+testgenie_0_CFLAGS += \
+	-Wl,--export-all-symbols
+else
+testgenie_0_CFLAGS += \
 	-pie
+testgenie_0_CPPFLAGS += \
+	-fPIE
+endif
 
 MAINTAINERCLEANFILES += \
 	testgenie.c \

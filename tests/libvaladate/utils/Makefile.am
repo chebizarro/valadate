@@ -18,12 +18,21 @@ testutils_0_LDADD = \
 	$(TEST_RUNNER)
 
 testutils_0_CPPFLAGS = \
-	-fPIE \
 	$(TESTS_CPPFLAGS)
 	
 testutils_0_CFLAGS = \
-	-pie \
 	$(TESTS_CFLAGS)
+
+if NATIVE_WIN32
+testutils_0_CFLAGS += \
+	-Wl,--export-all-symbols
+else
+testutils_0_CFLAGS += \
+	-pie
+testutils_0_CPPFLAGS += \
+	-fPIE
+endif
+
 
 GITIGNOREFILES = \
 	*.gir \

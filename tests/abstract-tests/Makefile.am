@@ -24,12 +24,21 @@ tests_abstract_tests_0_LDADD = \
 	$(TEST_RUNNER)
 
 tests_abstract_tests_0_CPPFLAGS = \
-	$(TESTS_CPPFLAGS) \
-	-fPIE
+	$(TESTS_CPPFLAGS)
 	
 tests_abstract_tests_0_CFLAGS = \
-	$(TESTS_CFLAGS) \
+	$(TESTS_CFLAGS)
+
+if NATIVE_WIN32
+tests_abstract_tests_0_CFLAGS += \
+	-Wl,--export-all-symbols
+else
+tests_abstract_tests_0_CFLAGS += \
 	-pie
+tests_abstract_tests_0_CPPFLAGS += \
+	-fPIE
+endif
+
 
 CLEANFILES += \
 	*.vapi \
